@@ -28,6 +28,34 @@ export default function AuthPage() {
   const [userRefrar, setRefersID] =useState<string>("");
   const [loading, setLoading] = useState(false);
 
+
+
+
+
+
+
+const [deviceId, setDeviceId] = useState('');
+  const [userId, setUserId] = useState('');
+
+  useEffect(() => {
+    // ১. চেক করা ব্রাউজারে ইতিমধ্যে কোনো ডিভাইস আইডি তৈরি করা আছে কিনা
+    let storedDeviceId = localStorage.getItem('web_device_token');
+
+    if (!storedDeviceId) {
+      // যদি না থাকে, একটি নতুন ইউনিক আইডি তৈরি করা হচ্ছে (UUID)
+      storedDeviceId = 'web_' + crypto.randomUUID();
+      localStorage.setItem('web_device_token', storedDeviceId);
+    }
+
+    setDeviceId(storedDeviceId);
+  }, []);
+
+  
+  
+
+
+    
+
   const handleSubmit  = async (e: React.FormEvent<HTMLFormElement>) => {
   e.preventDefault();
     setLoading(true);
@@ -48,12 +76,14 @@ export default function AuthPage() {
   id: number;
   name: string;
   img: string;
+  uniqid: string;
 }
 
 const selectedItems = res.data.user.slice(0, 3).map((item: UserItem) => ({
             id: item.id,
             name: item.name,
             img: item.img,
+            uniqid: item.uniqid,
      
           }));
           localStorage.setItem("userData", JSON.stringify(selectedItems));

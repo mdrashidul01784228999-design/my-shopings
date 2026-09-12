@@ -1,18 +1,18 @@
 'use client';
 
 import { useState,useEffect } from 'react';
-import { User, Gift, RotateCcw, Users, Send } from 'lucide-react';
+import { User, Gift, RotateCcw, Users, Send, Router } from 'lucide-react';
 import { motion } from 'framer-motion';
 
 
 import CountUp from 'react-countup';
-import { redirect } from 'next/navigation';
+import { redirect, useRouter } from 'next/navigation';
 
 
 
 
 export default function WalletPage() {
-
+const router = useRouter();
 
 const [telegramCount, setTelegramCount] = useState(150);
   const [facebookCount, setFacebookCount] = useState(150);
@@ -32,7 +32,8 @@ const [telegramCount, setTelegramCount] = useState(150);
   const handleSend = () => {
     
  
-redirect('/earning-history');
+redirect('/profile/true');
+//redirect('/earning-history');
 
 
 };
@@ -75,12 +76,6 @@ setInterval(() => {
   
 
 }, 3000);
-
-
-
-
-
-
 
 
 
@@ -139,7 +134,7 @@ const handleAction = (label = "") => {
       break;
 
     case "Spin & Win":
-      alert("🎡 Spin Game Starting...");
+    router.push('/profile/tabs-coine/home');
       break;
 
     case "Invite & Earn":

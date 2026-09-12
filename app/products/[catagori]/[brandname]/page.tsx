@@ -1,10 +1,14 @@
-'use client';
 
+
+
+'use client';
 import { useEffect, useState } from 'react';
-import { motion } from 'framer-motion';
+import { AnimatePresence, motion } from 'framer-motion';
 import Api from '../../../api/Api';
 import Link from 'next/link';
-import { useParams } from 'next/navigation';
+import { useParams, useRouter } from 'next/navigation';
+
+
 
 export default function Home() {
   const [products, setProducts] = useState<any[]>([]);
@@ -16,6 +20,8 @@ export default function Home() {
   const currentCategory = params?.catagori as string | undefined;
   const barnds = params?.brandname as string | undefined;
 
+  const router = useRouter();
+  
   
   // 📡 API Data Load
   useEffect(() => {
@@ -47,384 +53,149 @@ export default function Home() {
   };
 
   return (
-    <main className="p-6 min-h-screen bg-gray-50 dark:bg-gray-900 transition-all">
-      {/* 🔄 Loading State */}
+       <main className="relative min-h-screen bg-[#050505] text-white overflow-hidden font-sans">
+      
+      {/* 🌈 Dynamic Animated Background */}
+      <div className="fixed inset-0 z-0">
+        <div className="absolute top-[-10%] left-[-10%] w-[50%] h-[50%] bg-purple-600/20 blur-[120px] rounded-full animate-pulse" />
+        <div className="absolute bottom-[0%] right-[-5%] w-[40%] h-[40%] bg-cyan-500/20 blur-[120px] rounded-full animate-bounce duration-[10s]" />
+        <div className="absolute top-[20%] right-[10%] w-[30%] h-[30%] bg-pink-500/10 blur-[100px] rounded-full" />
+      </div>
 
-   
-      {loading ? (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 p-4 animate-pulse">
-          {Array.from({ length: 8 }).map((_, i) => (
-            <div
-              key={i}
-              className="rounded-xl overflow-hidden bg-gray-200 dark:bg-gray-700 h-48"
-            ></div>
-          ))}
-        </div>
-      ) : (
-        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 p-4">
-          {products.map((product: any) => (
-            <motion.div
-              key={product.id}
-              whileHover={{ scale: 1.03 }}
-              whileTap={{ scale: 0.97 }}
-              onClick={() => handleProductClick(product)}
-              className="relative group rounded-xl overflow-hidden shadow-lg 
-                bg-white dark:bg-zinc-900 cursor-pointer transition-all 
-                border border-transparent hover:border-cyan-400 hover:shadow-cyan-400/50"
-            >
-              {/* Image Section */}
-              <div className="aspect-square overflow-hidden">
-                <img
-                  src={
-                    product.img
-                      ? `${process.env.NEXT_PUBLIC_IMAGE_URL}/uploads_product/${product.img}`
-                      : product.imglink           //this is a link img 
-                  }
-                  alt={product.brand || 'Product Image'}
-                  className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                
-                
-                 onClick={() => window.location.href = `/products/${currentCategory}/${product.catagori}/${product.brand}`}
-              
-              />
-              </div>
+      {/* 🌨️ Floating Particles Effect */}
+      <div className="absolute inset-0 z-0 opacity-30 pointer-events-none">
+        {[...Array(15)].map((_, i) => (
+          <motion.div
+            key={i}
+            animate={{
+              y: [0, -100, 0],
+              x: [0, Math.random() * 50, 0],
+              opacity: [0.2, 0.5, 0.2],
+            }}
+            transition={{
+              duration: Math.random() * 10 + 5,
+              repeat: Infinity,
+              ease: "linear",
+            }}
+            className="absolute bg-white rounded-full"
+            style={{
+              width: Math.random() * 4 + 'px',
+              height: Math.random() * 4 + 'px',
+              left: Math.random() * 100 + '%',
+              top: Math.random() * 100 + '%',
+            }}
+          />
+        ))}
+      </div>
 
-              {/* Overlay Text */}
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/80 to-transparent text-white p-3">
-                <h3 className="text-sm md:text-base font-semibold drop-shadow-lg">
-                  {product.brand}
-                </h3>
-              
-              </div>
-            </motion.div>
-          ))}
-        </div>
-      )}
+      <div className="relative z-10 max-w-7xl mx-auto px-6 py-12">
+        {/* 🔥 Header with Animated Underline */}
+        <header className="mb-16 text-center lg:text-left">
+          <motion.div
+            initial={{ opacity: 0, x: -50 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ duration: 0.8 }}
+          >
+            <h1 className="text-5xl md:text-7xl font-black italic tracking-tighter uppercase leading-none">
+              <span className="text-transparent bg-clip-text bg-gradient-to-r from-cyan-400 via-purple-500 to-pink-500 animate-gradient-x">
+                {currentCategory || "Explore"}
+              </span>
+            </h1>
+            <motion.div 
+              initial={{ width: 0 }}
+              animate={{ width: "120px" }}
+              transition={{ delay: 0.5, duration: 1 }}
+              className="h-2 bg-gradient-to-r from-cyan-400 to-purple-600 mt-4 rounded-full mx-auto lg:mx-0" 
+            />
+          </motion.div>
+        </header>
+
+        {/* 🔄 Loading State (Glass Skeleton) */}
+        {loading ? (
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8">
+            {Array.from({ length: 8 }).map((_, i) => (
+              <div key={i} className="aspect-[3/4] rounded-3xl bg-white/5 border border-white/10 animate-pulse" />
+            ))}
+          </div>
+        ) : (
+          <motion.div 
+            layout
+            className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-8"
+          >
+            <AnimatePresence>
+              {products.map((product, index) => (
+                <motion.div
+                  key={product.id || index}
+                  layout
+                  initial={{ opacity: 0, scale: 0.8, y: 30 }}
+                  animate={{ opacity: 1, scale: 1, y: 0 }}
+                  exit={{ opacity: 0, scale: 0.5 }}
+                  transition={{ delay: index * 0.08, type: "spring", stiffness: 100 }}
+                  whileHover={{ y: -12 }}
+                  onClick={() => router.push(`/products/${currentCategory}/${product.catagori}/${product.brand}`)}
+                  className="group relative"
+                >
+                  {/* Glowing Aura behind card */}
+                  <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-[2rem] blur opacity-25 group-hover:opacity-100 transition duration-1000 group-hover:duration-200"></div>
+                  
+                  <div className="relative aspect-[3/4] rounded-[1.8rem] bg-[#111] border border-white/10 overflow-hidden flex flex-col">
+                    
+                    {/* Image Wrap */}
+                    <div className="relative flex-1 overflow-hidden">
+                      <motion.img
+                        whileHover={{ scale: 1.15, rotate: 2 }}
+                        transition={{ duration: 0.6 }}
+                        src={product.img ? `${process.env.NEXT_PUBLIC_IMAGE_URL}/uploads_product/${product.img}` : product.imglink}
+                        alt={product.name}
+                        className="w-full h-full object-cover"
+                      />
+                      {/* Price Tag Overlay */}
+                      <div className="absolute top-4 right-4 bg-black/60 backdrop-blur-md px-3 py-1 rounded-full border border-white/20">
+                         <span className="text-xs font-bold text-cyan-400">PREMIUM</span>
+                      </div>
+                    </div>
+
+                    {/* Content Section */}
+                    <div className="p-5 bg-gradient-to-b from-transparent to-black/90">
+                      <h3 className="text-lg font-bold text-white group-hover:text-cyan-400 transition-colors uppercase tracking-tight">
+                     {product.name}
+                      </h3>
+                      <div className="mt-2 flex items-center justify-between">
+                        <span className="text-xs text-slate-400 font-medium">Click to view</span>
+                        <motion.div 
+                          whileHover={{ x: 5 }}
+                          className="w-8 h-8 rounded-full bg-white/10 flex items-center justify-center border border-white/10"
+                        >
+                            →
+                        </motion.div>
+                      </div>
+                    </div>
+                  </div>
+                </motion.div>
+              ))}
+            </AnimatePresence>
+
+            
+            
+
+          </motion.div>
+        )}
+      </div>
+
+      <style jsx global>{`
+        @keyframes gradient-x {
+          0%, 100% { background-position: 0% 50%; }
+          50% { background-position: 100% 50%; }
+        }
+        .animate-gradient-x {
+          background-size: 200% 200%;
+          animation: gradient-x 5s ease infinite;
+        }
+      `}</style>
     </main>
   );
 }
 
 
 
-
-
-
-
-// 'use client'
-
-// import Head from 'next/head';
-// import { useEffect, useState } from 'react';
-// import { motion } from 'framer-motion';
-
-// import Api from '../../api/Api';
-
-// import Link from 'next/link';
-
-
-
-// export default function Home() {
-
-
-
-//   const [products, setProducts] = useState<any[]>([]);
-//   const [brand, setBrand] = useState('');
-//   const [branNams, setBrnadnms] = useState('');
-//   const [getBrand, setProducts_brand] = useState<any[]>([]);
-
-
-
-
-  
-// const [actions_new_old, setAction] =useState<string>('old');
-
-//   useEffect(() => {
-//     const interval = setInterval(() => {
-//       const current = localStorage.getItem('oldOrNew');
-//       if (current !== actions_new_old) {
-//         setAction(current || 'old');
-//       }
-//     }, 1000); // প্রতি ১ সেকেন্ডে চেক করবে
-
-//     return () => clearInterval(interval);
-//   }, [actions_new_old]);
-
-
-
-
-
-
-//   useEffect(() => {
-//     const fetchData = () => {
-//       getAllProducts();
-//       getUserBrandName();
-//       getUserBrandNameFinal();
-//     };
-
-//     fetchData();
-//     const interval = setInterval(fetchData, 3000);
-//     return () => clearInterval(interval);
-//   }, [actions_new_old]);
-
-//   const getAllProducts = () => {
-//     Api.get(`/get_all_product/${actions_new_old}`)
-//       .then(res => {
-//         if (!brand) {
-//           setProducts(res.data.message);
-        
-
-//                   }
-//       })
-//       .catch(err => console.error('❌ Product load error:', err));
-//   };
-
-//   const getUserBrandName = () => {
-//     Api.get(`/get_all_product_brandName/${brand}/${actions_new_old}`)
-//       .then(res => {
-//         setProducts_brand(res.data.message);
-//         if (brand) setProducts(res.data.message);
-//       })
-//       .catch(err => console.error('❌ Brand get error:', err));
-//   };
-
-//   const getUserBrandNameFinal = () => {
-//     if (!branNams) return;
-//     Api.get(`/get_all_product_brandName_final/${brand}/${actions_new_old}/${branNams}`)
-//       .then(res => {
-//         setProducts_brand(res.data.message);
-//       })
-//       .catch(err => console.error('❌ Final brand category error:', err));
-//   };
-
-//   const handleProductClick = (product: any) => {
-//     if (brand) {
-//       setBrnadnms(product.brand);
-//     } else {
-//       setBrand(product.catagori);
-//     }
-//   };
-
-//   return (
-//     <>
-    
-
-
-//     <Head>
-//       <title>home product</title>
-//   <meta name="robots" content="index, follow" />
-//   <meta name="language" content="bn" />
-//   <meta name="author" content="বাংলা ই-কমার্স" />
-//   <link rel="canonical" href="https://yourdomain.com" />
-//   <link rel="alternate" hrefLang="bn" href="https://yourdomain.com" />
-// </Head>
-
-
-
-
-  
-
-
-
-//       <main className="p-6 min-h-screen bg-gray-50 dark:bg-gray-900 transition-all">
-
-  
-
-        
-
-
-
-
-//           <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5 p-4">
-//       {products.map((product: any) => (
-//         <motion.div
-//           key={product.id}
-//           whileHover={{ scale: 1.03 }}
-//           whileTap={{ scale: 0.97 }}
-//           onClick={() => handleProductClick(product)}
-//           className="relative group rounded-xl overflow-hidden shadow-md bg-white dark:bg-zinc-900 cursor-pointer transition-all"
-//         >
-//           {/* Image Section */}
-//           <div className="aspect-square overflow-hidden">
-//             <img
-//               src={
-//                 product.img
-//                   ? `http://localhost:8000/uploads_product/${product.img}`
-//                   : product.imglink
-//               }
-//               alt={product.name || 'Product Image'}
-//               className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-300"
-//             />
-//           </div>
-
-//           {/* Overlay Text */}
-//           <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/70 to-transparent text-white p-3">
-//             <h3 className="text-sm md:text-base font-semibold">
-//               {brand ? product.brand : product.catagori}
-//             </h3>
-//             <Link
-//               href={`/product-view/${product.id}`}
-//               className="text-xs text-cyan-300 underline"
-//             >
-//               বিস্তারিত দেখুন
-//             </Link>
-//           </div>
-//         </motion.div>
-//       ))}
-//     </div>
-
-
-
-   
-//       </main>
-//     </>
-//   );
-// }
-
-
-
-
-// "use client";
-
-
-        // <h1 className="text-2xl sm:text-3xl md:text-4xl font-extrabold text-gray-800 dark:text-white mb-3">
-        //   <Typewriter
-        //     options={{
-        //       strings: [
-        //         'পণ্য লোড হচ্ছে...',
-        //         'দয়া করে একটু অপেক্ষা করুন...',
-        //         'সেরা পণ্যটি আনছি আপনার জন্য!',
-        //       ],
-        //       autoStart: true,
-        //       loop: true,
-        //       delay: 60,
-        //     }}
-        //   />
-        // </h1>
-
-
-// import { useEffect, useState, useRef } from "react";
-// import { motion } from "framer-motion";
-// import Api from "../../api/Api";
-
-// export default function TopProductsPage({ actions_new_old = "new" }) {
-//   const [products, setProducts] = useState([]);
-//   const [loading, setLoading] = useState(true);
-//   const bagRef = useRef<HTMLDivElement>(null);
-//   const [cartCount, setCartCount] = useState(0);
-
-//   useEffect(() => {
-//     setLoading(true);
-//     Api.get(`/get_all_product/${actions_new_old}`)
-//       .then((res) => {
-//         setProducts(res.data.message || []);
-//         setLoading(false);
-//       })
-//       .catch((err) => {
-//         console.error("Error fetching products:", err);
-//         setLoading(false);
-//       });
-//   }, [actions_new_old]);
-
-//   const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
-//     const item = e.currentTarget.getBoundingClientRect();
-//     const bag = bagRef.current?.getBoundingClientRect();
-//     if (!bag) return;
-
-//     const flyingItem = document.createElement("div");
-//     flyingItem.innerText = "🛍️";
-//     flyingItem.style.position = "fixed";
-//     flyingItem.style.left = `${item.left}px`;
-//     flyingItem.style.top = `${item.top}px`;
-//     flyingItem.style.fontSize = "32px";
-//     flyingItem.style.zIndex = "9999";
-//     flyingItem.style.transition = "transform 0.8s ease-in-out";
-//     document.body.appendChild(flyingItem);
-
-//     requestAnimationFrame(() => {
-//       const dx = bag.left - item.left;
-//       const dy = bag.top - item.top;
-//       flyingItem.style.transform = `translate(${dx}px, ${dy}px) scale(0.5) rotate(360deg)`;
-//     });
-
-//     setTimeout(() => {
-//       flyingItem.remove();
-//       setCartCount((prev) => prev + 1);
-//     }, 800);
-//   };
-
-//   if (loading) {
-//     return (
-//       <div className="min-h-screen flex items-center justify-center text-xl text-gray-500">
-//         Loading products...
-//       </div>
-//     );
-//   }
-
-//   return (
-//     <div className="min-h-screen bg-gray-900 px-4 md:px-10 py-12">
-//       <header className="flex items-center justify-between mb-8">
-//         <h1 className="text-4xl font-extrabold text-yellow-400 neon-glow">
-//           Top Products
-//         </h1>
-
-//         <div ref={bagRef} className="relative text-white cursor-pointer">
-//           🛒
-//           {cartCount > 0 && (
-//             <span className="absolute -top-2 -right-2 bg-red-500 text-xs w-5 h-5 rounded-full flex items-center justify-center">
-//               {cartCount}
-//             </span>
-//           )}
-//         </div>
-//       </header>
-
-//       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-6">
-//         {products.map((product) => (
-//           <motion.div
-//             key={product.id}
-//             whileHover={{ scale: 1.05 }}
-//             className="relative rounded-xl overflow-hidden cursor-pointer shadow-lg"
-//           >
-//             {/* Lazy loading with shimmer */}
-//             <div className="relative w-full h-48 bg-gray-700 overflow-hidden rounded-xl">
-//               <img
-//                 src={
-//                   product.img
-//                     ? `http://localhost:8000/uploads_product/${product.img}`
-//                     : product.imglink
-//                 }
-//                 alt={product.name}
-//                 className="w-full h-full object-cover rounded-xl transition-transform duration-300 hover:scale-105"
-//                 loading="lazy"
-//               />
-//               <div className="absolute inset-0 animate-pulse bg-gradient-to-r from-gray-600 via-gray-700 to-gray-600 opacity-30" />
-//             </div>
-
-//             {/* Category / Name overlay */}
-//             <div className="absolute bottom-0 left-0 w-full bg-black bg-opacity-60 py-2 text-center">
-//               <h2 className="text-white font-bold text-sm sm:text-base neon-glow truncate">
-//                 {product.name}
-//               </h2>
-//               <p className="text-yellow-300 text-xs sm:text-sm neon-glow truncate">
-//                 {product.brand || "Unknown Category"}
-//               </p>
-//             </div>
-
-//             {/* Add to cart button */}
-//             <button
-//               onClick={handleAddToCart}
-//               className="absolute top-2 right-2 bg-yellow-400 text-black px-2 py-1 rounded-md font-semibold hover:bg-yellow-300 transition"
-//             >
-//               🛒
-//             </button>
-//           </motion.div>
-//         ))}
-//       </div>
-
-//       <style jsx>{`
-//         .neon-glow {
-//           text-shadow: 0 0 5px #facc15, 0 0 10px #f59e0b, 0 0 20px #f97316;
-//         }
-//       `}</style>
-//     </div>
-//   );
-// }
 

@@ -1,0 +1,106 @@
+
+
+
+
+
+
+
+
+
+
+
+// app/product/[id]/page.tsx
+
+import type { Metadata } from "next";
+import { getItemById } from "@/lib/Api";
+
+export async function generateMetadata({ params }): Promise<Metadata> {
+  const product = await getItemById(params.id);
+
+  return {
+    title: product?.name || "Product",
+    description: product?.description || "Best product in Bangladesh",
+    openGraph: {
+      title: product?.name,
+      description: product?.description,
+      images: [product?.image],
+    },
+  };
+}
+
+
+// app/product/[id]/page.tsx
+import { getItemById } from "@/lib/Api";
+
+type Props = {
+  params: { id: string };
+};
+
+export default async function ProductPage({ params }: Props) {
+  const product = await getItemById(params.id);
+
+  return (
+    <div className="p-6">
+      <h1 className="text-2xl font-bold">{product?.name}</h1>
+      <img src={product?.image} alt={product?.name} />
+      <p>{product?.description}</p>
+      <h2>৳ {product?.price}</h2>
+    </div>
+  );
+}
+
+
+
+// lib/Api.ts
+import axios from "axios";
+
+const Api = axios.create({
+  baseURL: process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api",
+  headers: {
+    "Content-Type": "application/json",
+    Accept: "application/json",
+  },
+});
+
+// 📦 All Products
+export const getItems = async () => {
+  const res = await Api.get("/get_all_product_brandName/");
+  return res.data;
+};
+
+// 📦 Single Product
+export const getItemById = async (id: number | string) => {
+  const res = await Api.get(`/items/${id}`);
+  return res.data;
+};
+
+export default Api;
+
+
+
+
+
+"use client";
+
+import { useEffect, useState } from "react";
+import { getItemById } from "@/lib/Api";
+
+export default function ProductClient({ id }) {
+  const [product, setProduct] = useState(null);
+
+  useEffect(() => {
+    getItemById(id).then(setProduct);
+  }, [id]);
+
+  if (!product) return <p>Loading...</p>;
+
+  return <div>{product.name}</div>;
+}
+
+
+
+
+
+
+
+

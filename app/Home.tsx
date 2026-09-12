@@ -5,7 +5,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { ShoppingBag, TrendingUp, Gamepad2, Gift, Layers, HeartIcon } from "lucide-react";
 import Image from "next/image";
 import Link from "next/link";
-import { FaFemale, FaMale } from "react-icons/fa";
+import { FaFemale, FaLaptopCode, FaMale } from "react-icons/fa";
 
 // টাইপস
 type Particle = {
@@ -75,6 +75,27 @@ export default function AllCategorySection() {
       color: "from-red-500 to-pink-600",
       link: "/Lottery",
     },
+
+
+{
+  title: "আইটি সমাধান",
+  icon: (
+    <div className="relative flex items-center justify-center w-12 h-12">
+      {/* গ্লো ইফেক্ট ও অ্যানিমেশনসহ মডার্ন ল্যাপটপ/কোড আইকন */}
+      <FaLaptopCode 
+        size={36} 
+        className="text-cyan-400 animate-pulse" 
+        style={{ filter: "drop-shadow(0 0 10px rgba(34, 211, 238, 0.9))" }}
+      />
+      
+    </div>
+  ),
+  img: "https://images.unsplash.com/photo-1603297631957-4b2c6313f93e",
+  // একটি ভাইব্রেন্ট টেক-নিয়ন গ্রেডিয়েন্ট
+  color: "from-cyan-500 via-blue-600 to-indigo-700 shadow-[0_0_20px_rgba(6,182,212,0.6)]",
+  link: "/it-solution", // লিংকটিও আইটির সাথে সামঞ্জস্যপূর্ণ করা হলো
+},
+
 
 {
   title: "বিবাহ বন্ধন বা ঘটক",

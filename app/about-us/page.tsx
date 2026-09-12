@@ -9,7 +9,7 @@ const stats = [
 ];
 
 const team = [
-  { name: 'রাশেদ খান', role: 'CEO', img: '/team/rashed.jpg' },
+  { name: 'রাশিদুল ইসলাম', role: '  CEO ‍And App Developer', img: '/mdrashidul.jpeg' },
   { name: 'সাবিনা ইয়াসমিন', role: 'Marketing Head', img: '/team/sabina.jpg' },
   { name: 'তানভীর হাসান', role: 'Lead Developer', img: '/team/tanvir.jpg' },
 ];

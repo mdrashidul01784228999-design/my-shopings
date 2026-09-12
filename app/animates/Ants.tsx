@@ -88,17 +88,13 @@ const [datetime, setDateTime] = useState('')
   // List of creatures
   const [creatures] = useState([
     { id: 1, image: Iimg2, speed: 5500 },
-    { id: 2, image: Iimg2, speed: 8500 },
-    { id: 3, image: Iimg2, speed: 9000 },
+
     { id: 4, image: Iimg4, speed: 9000 },
-    { id: 5, image: Iimg4, speed: 8500 },
-    { id: 6, image: Iimg4, speed: 5500 },
+  
     { id: 7, image: Iimg3, speed: 4500 },
-    { id: 8, image: Iimg3, speed: 5100 },
-    { id: 9, image: Iimg3, speed: 4900 },
+   
     { id: 10, image: Iimg1, speed: 8300 },
-    { id: 11, image: Iimg1, speed: 4300 },
-    { id: 12, image: Iimg1, speed: 6300 },
+
   ]);
 
   // const handleCreatureClick = (id: number) => {
@@ -289,17 +285,16 @@ if (uniid) {
         Api.post("/add_coin", {
  
   user_id:uniid,
-  coin:'500',
-  home_coin:'H'
-
+  coin:'200',
+  home_coin:'home_icon_coine'
 
         })
 
   .then(function (response) {
-    toast.success('আপনাকে স্বাগতম  কয়েন সংগ্রহ করার জন্য');
+    toast.success('আপনাকে স্বাগতম কয়েন সংগ্রহ করার জন্য');
 
     console.log('====================================');
-    console.log(response.data);
+    console.log(response.data.status);
     console.log('====================================');
   })
   .catch(function (error) {

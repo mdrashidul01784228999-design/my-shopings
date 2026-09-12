@@ -12,7 +12,7 @@ const nextConfig = {
  
   images: {
 
-     domains: ["localhost:3000", "my-shopings.com"], // এখানে img link যেই ডোমেইন থেকে আসবে সেটা লিখতে হবে
+     domains: ["localhost:3000", "localhost:8000", "my-shopings.com"], // এখানে img link যেই ডোমেইন থেকে আসবে সেটা লিখতে হবে
     remotePatterns: [
       {
         protocol: "http",

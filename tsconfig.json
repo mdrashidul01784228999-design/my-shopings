@@ -35,7 +35,7 @@
     ".next/types/**/*.ts",
     "app/not-found.jsx",
     ".next/dev/types/**/*.ts"
-  ],
+, "app/api/mess.js"  ],
   "exclude": [
     "node_modules"
   ]

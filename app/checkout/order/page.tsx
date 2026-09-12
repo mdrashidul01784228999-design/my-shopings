@@ -1,354 +1,3 @@
-// "use client";
-
-// import { useState,useEffect } from "react";
-// import { motion, AnimatePresence } from "framer-motion";
-// import { BsCheckCircleFill } from "react-icons/bs";
-// import { FaArrowRight } from "react-icons/fa";
-
-
-// import { TypeAnimation } from "react-type-animation";
-
-// import { FaMoneyCheckAlt, FaHashtag } from "react-icons/fa"; // আইকন ইমপোর্ট
-// import Fromss from './text'
-
-
-// import Api from '../../api/Api'
-
-
-// export default function OrderSteps() {
-//   const [step, setStep] = useState(1);
-//   const [getid, setUserid] = useState(null);
-// const[allname,setDatas]=useState([]);
-
-
-// const [cardvalue, setAllCartdata] = useState([]);
-
-// const [state, setstate] = useState(
-// {
-//   name: String,
-//  phone: Number,
-//   address: String,
-//  orderid:Number,
-
-
-// }
-// );
-  
-
-
-// useEffect(() => {
-
-//  const proDucts = JSON.parse(localStorage.getItem('cart-storage') || '[]');
-
-   
-// console.log('proDucts ====================================');
-// console.log(proDucts.state.items);
-
-// setAllCartdata(proDucts.state.items);
-
-// console.log('====================================');
-
-
-
-
-//  const userData = JSON.parse(localStorage.getItem('userData') || '[]');
-//     if (userData[0]) {
-//       setUserid(userData[0].id || 'no name fine');
-      
-//     }
-
-
-
-
-//   if (getid) {
-//       Api.get(`/wallate_get/${getid}`) // Laravel API URL
-//         .then(response => {
-// console.log('============ccccccccccccccccccccccoinnnnnnnnnnn=======================');
-// console.log(response.data);
-// console.log('====================================');
-//      console.log(getid+ 'userid         ====================================');
-//      console.log(response.data.data);
-//      console.log('====================================');
-//         })
-//         .catch(error => {
-//           console.error('Error fetching user:', error);
-       
- 
-//         });
-//     }
-
-
-
-
-
-
-
-
-
-//   if (getid) {
-//       Api.get(`/all_users/${getid}`) // Laravel API URL
-//         .then(response => {
-//           setDatas(response.data.data);
-//      console.log(getid+ 'userid         ====================================');
-//      console.log(response.data.data);
-//      console.log('====================================');
-//         })
-//         .catch(error => {
-//           console.error('Error fetching user:', error);
-       
- 
-//         });
-//     }
-//   }, [getid]);
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-//   const nextStep = () => {
-//     if (step < 3) setStep(step + 1);
-//   };
-
-//   const prevStep = () => {
-//     if (step > 1) setStep(step - 1);
-//   };
-
-//   const steps = [
-//     {
-//       title: "অর্ডার ঠিকানা",
-//       content: (
-//        <div className="space-y-4">
-//   <input
-//     type="text"
-//     placeholder ="আপনার  নাম "
-//    value={allname.name:}
-//   onChange={(e) => setstate({ ...state, name: e.target.value })}
-
-    
-//     className="w-full px-4 py-3 bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-xl placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all duration-300"
-//   />
-
-//     <input
-//     type="text"
-//     placeholder="আপনার মোবাইল নং"
-//        value={allname.phone}
-//   onChange={(e) => setstate({ ...state, phone: e.target.value })}
-
-//     className="w-full px-4 py-3 bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-xl placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all duration-300"
-//   />
-
-//   <input
-//     type="text"
-//     placeholder="আপনার ঠিকানা"
-
-//     value={allname.address}
-//   onChange={(e) => setstate({ ...state, address: e.target.value })}
-
-//     className="w-full px-4 py-3 bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-xl placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all duration-300"
-//   />
-// </div>
-
-
-//       ),
-//     },
-//     {
-//       title: "পেমেন্ট অপশন",
-//       content: (
-// <div className="space-y-4">
-//   {/* Select with icon */}
-//   <div className="relative">
-//     <FaMoneyCheckAlt className="absolute top-1/2 left-4 -translate-y-1/2 text-purple-400 text-lg pointer-events-none" />
-//     <select className="w-full pl-11 pr-4 py-3 bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-xl focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300 appearance-none">
-//       <option className="text-black">বিকাশ</option>
-//       <option className="text-black">নগদ</option>
-//       <option className="text-black">রকেট</option>
-//       <option className="text-black">কার্ড</option>
-//       <option value="cod" className="text-black">ক্যাশ অন ডেলিভারি</option>
-//     </select>
-//   </div>
-
-//   {/* Input with icon */}
-//   <div className="relative">
-//     <FaHashtag className="absolute top-1/2 left-4 -translate-y-1/2 text-purple-400 text-lg pointer-events-none" />
-//     <input
-//       type="text"
-//       placeholder="লেনদেন নম্বর (যদি প্রযোজ্য হয়)"
-//       className="w-full pl-11 pr-4 py-3 bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-xl placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-purple-500 transition-all duration-300"
-//     />
-//   </div>
-// </div>
-
-
-//       ),
-//     },
-//     {
-//       title: "অর্ডার কনফার্ম",
-//       content: (
-//         <div className="text-center space-y-2">
-
-
-
-
-        
-
-
-
-
-// <Fromss />
-
-
-
-
-
-
-
-
-
-
-
-//         </div>
-//       ),
-//     },
-//   ];
-
-//   return (
-//     <div className="min-h-screen bg-gradient-to-br from-gray-950 to-gray-900 text-white p-4 flex flex-col items-center justify-center space-y-8">
-//       <motion.div
-//         initial={{ opacity: 0, y: 40 }}
-//         animate={{ opacity: 1, y: 0 }}
-//         transition={{ duration: 0.6 }}
-//         className="w-full max-w-2xl bg-gradient-to-br from-gray-800/80 to-gray-700/80 backdrop-blur-md rounded-3xl shadow-2xl p-6 md:p-10 space-y-6 border border-gray-700"
-//       >
-//         {/* Header */}
-//         <div className="text-center mb-6">
-//           <h1 className="text-2xl md:text-3xl font-bold text-white">
-            
-
-//              <TypeAnimation
-//                 sequence={[
-            
-            
-//                  " অর্ডার ধাপ সম্পন্ন করুন",
-//                  1500,
-//                   "পেমেন্ট করুন", 
-//                   150,
-//                   "অর্ডার নিশ্চিত করুন" , // বাংলা
-//                    1500,
-//                                   ]}
-//                 wrapper="span"
-//                 cursor={true}
-//                 repeat={Infinity}
-//                 speed={60}
-//                 deletionSpeed={40}
-//               />
-//           </h1>
-//           <p className="text-gray-400 text-sm mt-1">ধাপে ধাপে অর্ডার করুন</p>
-//         </div>
-
-//         {/* Step Indicator */}
-//         <div className="flex justify-between items-center mb-6">
-//           {[1, 2, 3].map((s) => (
-//             <div
-//               key={s}
-//               className={`flex-1 h-2 mx-1 rounded-full ${
-//                 step >= s ? 'bg-gradient-to-r from-purple-500 to-pink-500' : 'bg-gray-700'
-//               }`}
-//             />
-//           ))}
-//         </div>
-
-//         {/* Step Content */}
-//         <AnimatePresence mode="wait">
-//           <motion.div
-//             key={step}
-//             initial={{ opacity: 0, x: 40 }}
-//             animate={{ opacity: 1, x: 0 }}
-//             exit={{ opacity: 0, x: -40 }}
-//             transition={{ duration: 0.4 }}
-//           >
-//             <h2 className="text-xl font-semibold text-purple-400 mb-3">
-//               {steps[step - 1].title}
-//             </h2>
-//             {steps[step - 1].content}
-//           </motion.div>
-//         </AnimatePresence>
-
-//         {/* Navigation Buttons */}
-//         <div className="flex justify-between items-center mt-8">
-//           {step > 1 ? (
-//             <button
-//               onClick={prevStep}
-//               className="bg-gray-700 text-white px-4 py-2 rounded-md hover:bg-gray-600 transition"
-//             >
-//               পূর্বের ধাপ
-//             </button>
-//           ) : <div></div>}
-
-//           {step < 3 ? (
-//             <button
-//               onClick={nextStep}
-//               className="bg-gradient-to-r from-purple-600 to-blue-500 text-white px-6 py-2 rounded-md hover:scale-105 flex items-center gap-2 transition-all duration-300"
-//             >
-//               পরবর্তী <FaArrowRight />
-//             </button>
-//           ) : null}
-//         </div>
-//       </motion.div>
-
-//       {/* Input Styling */}
-//       <style jsx>{`
-//         .input-style {
-//           @apply w-full px-4 py-2 rounded-lg bg-gray-800 text-white placeholder-gray-400 border border-gray-600 focus:outline-none focus:ring-2 focus:ring-purple-500;
-//         }
-//       `}</style>
-//     </div>
-//   );
-// }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 
@@ -374,6 +23,8 @@ export default function OrderSteps() {
     orderid: "",
   });
 
+  
+
   useEffect(() => {
     // Cart data
     const proDucts = JSON.parse(localStorage.getItem("cart-storage") || "{}");
@@ -398,8 +49,12 @@ export default function OrderSteps() {
           console.error("Error fetching wallet:", error);
         });
 
-      Api.get(`/all_users/${getid}`)
+      Api.get(`/all_users_id/${getid}`)
         .then((response) => {
+
+
+
+
           setDatas(response.data.data);
         })
         .catch((error) => {
@@ -424,21 +79,21 @@ export default function OrderSteps() {
           <input
             type="text"
             placeholder="আপনার নাম "
-            value={state.name}
+            value={allname.name}
             onChange={(e) => setState({ ...state, name: e.target.value })}
             className="w-full px-4 py-3 bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-xl placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all duration-300"
           />
           <input
             type="text"
             placeholder="আপনার মোবাইল নং"
-            value={state.phone}
+            value={allname.phone}
             onChange={(e) => setState({ ...state, phone: e.target.value })}
             className="w-full px-4 py-3 bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-xl placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all duration-300"
           />
           <input
             type="text"
             placeholder="আপনার ঠিকানা"
-            value={state.address}
+            value={allname.address}
             onChange={(e) => setState({ ...state, address: e.target.value })}
             className="w-full px-4 py-3 bg-white/5 backdrop-blur-md border border-white/10 text-white rounded-xl placeholder:text-gray-400 focus:outline-none focus:ring-2 focus:ring-cyan-400 transition-all duration-300"
           />

@@ -1,40 +1,69 @@
-// app/Login/[id]/page.tsx
-
-import React from 'react'
-
 import type { Metadata } from "next";
-
-import Homeps from './Home'
+import Homeps from "./Home";
 
 export const metadata: Metadata = {
-  title: "লগইন করুন ও রেফার করে আয় করুন | MyApp",
+  title: "লগইন করুন ও রেফার করে আয় করুন | MyApp 🚀",
   description:
-    "লগইন করুন এবং আপনার বন্ধুদের রেফার করুন। প্রতি সফল রেফারে আপনি পাবেন ৫/১০/২০ টাকা। এখনই রেফার লিংক শেয়ার করুন ও আয় শুরু করুন।",
-  keywords: ["রেফার এন্ড আর্ন", "লগইন", "বাংলা আয়", "অনলাইন ইনকাম", "রেফার লিংক"],
+    "এখনই লগইন করুন, বন্ধুদের রেফার করুন এবং প্রতি রেফারে ৫/১০/২০ টাকা আয় করুন। সহজে ইনকাম শুরু করুন অনলাইনে।",
+
+  keywords: [
+    "রেফার এন্ড আর্ন",
+    "লগইন",
+    "অনলাইন ইনকাম",
+    "বাংলা আয়",
+    "refer and earn",
+    "make money online",
+    "affiliate income",
+  ],
+
+  metadataBase: new URL("https://yourdomain.com"),
+
   openGraph: {
-    title: "রেফার করলেই আয় | MyApp",
+    title: "🔥 রেফার করলেই আয় শুরু করুন | MyApp",
     description:
-      "লগইন করুন, রেফার করুন আর প্রতি রেফারে ৫/১০/২০ টাকা পান। বেশি বেশি রেফার করুন, বেশি আয় করুন।",
+      "লগইন করুন, রেফার লিংক শেয়ার করুন এবং প্রতিটি সফল রেফারে আয় করুন ৫/১০/২০ টাকা।",
     url: "https://yourdomain.com/login",
     siteName: "MyApp",
+    type: "website",
+    locale: "bn_BD",
     images: [
       {
         url: "https://yourdomain.com/og-image.png",
         width: 1200,
         height: 630,
-        alt: "রেফার এন্ড আর্ন",
+        alt: "Refer & Earn Banner",
       },
     ],
-    locale: "bn_BD",
-    type: "website",
   },
+
+  twitter: {
+    card: "summary_large_image",
+    title: "রেফার করলেই আয় | MyApp",
+    description:
+      "লগইন করুন এবং রেফার করে আয় করুন সহজেই। এখনই শুরু করুন!",
+    images: ["https://yourdomain.com/og-image.png"],
+    creator: "@yourhandle",
+  },
+
+  robots: {
+    index: true,
+    follow: true,
+    googleBot: {
+      index: true,
+      follow: true,
+      "max-image-preview": "large",
+      "max-snippet": -1,
+      "max-video-preview": -1,
+    },
+  },
+
+  alternates: {
+    canonical: "https://yourdomain.com/login",
+  },
+
+  category: "finance",
 };
 
-export default function page() {
-  return (
- <>
-
- <Homeps />
- </>
-  )
+export default function Page() {
+  return <Homeps />;
 }

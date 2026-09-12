@@ -4,11 +4,11 @@ import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
 interface Product {
-  model: any;
   id: number;
   name: string;
   price: number;
-  qty: number;
+  qty?: number; // optional fix
+  model?: string; // optional fix
 }
 
 interface CartState {
@@ -24,25 +24,44 @@ export const useCartStore = create<CartState>()(
     (set, get) => ({
       cart: [],
 
+      // 🛒 ADD TO CART (DEFAULT QTY = 1 FIXED)
       addToCart: (product) => {
-        const existing = get().cart.find((p) => p.id === product.id);
+        const cart = get().cart;
+
+        const existing = cart.find((p) => p.id === product.id);
+
         if (existing) {
           set({
-            cart: get().cart.map((p) =>
-              p.id === product.id ? { ...p, qty: p.qty + product.qty } : p
+            cart: cart.map((p) =>
+              p.id === product.id
+                ? { ...p, qty: (p.qty || 1) + 1 }
+                : p
             ),
           });
         } else {
-          set({ cart: [...get().cart, product] });
+          set({
+            cart: [
+              ...cart,
+              {
+                ...product,
+                qty: 1, // 🔥 DEFAULT VALUE FIX HERE
+              },
+            ],
+          });
         }
       },
 
+      // ❌ REMOVE
       removeFromCart: (id) => {
-        set({ cart: get().cart.filter((p) => p.id !== id) });
+        set({
+          cart: get().cart.filter((p) => p.id !== id),
+        });
       },
 
+      // ➕➖ UPDATE QTY
       updateQty: (id, qty) => {
-        if (qty <= 0) return;
+        if (qty < 1) return;
+
         set({
           cart: get().cart.map((p) =>
             p.id === id ? { ...p, qty } : p
@@ -50,12 +69,11 @@ export const useCartStore = create<CartState>()(
         });
       },
 
-      clearCart: () => {
-        set({ cart: [] });
-      },
+      // 🧹 CLEAR CART
+      clearCart: () => set({ cart: [] }),
     }),
     {
-      name: "cart-storage", // localStorage key
+      name: "cart-storage",
     }
   )
 );

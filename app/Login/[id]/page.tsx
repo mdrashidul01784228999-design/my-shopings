@@ -20,6 +20,23 @@ export default function AuthPage() {
   const uerfree=uarams?.id;
  
 
+const [deviceId, setDeviceId] = useState('');
+  const [userId, setUserId] = useState('');
+
+  useEffect(() => {
+    // ১. চেক করা ব্রাউজারে ইতিমধ্যে কোনো ডিভাইস আইডি তৈরি করা আছে কিনা
+    let storedDeviceId = localStorage.getItem('web_device_token');
+
+    if (!storedDeviceId) {
+      // যদি না থাকে, একটি নতুন ইউনিক আইডি তৈরি করা হচ্ছে (UUID)
+      storedDeviceId = 'web_' + crypto.randomUUID();
+      localStorage.setItem('web_device_token', storedDeviceId);
+    }
+
+    setDeviceId(storedDeviceId);
+  }, []);
+
+  
 
   const [isLogin, setIsLogin] = useState(true); // Toggle login/register
   const [name, setName] = useState("");
@@ -51,6 +68,7 @@ export default function AuthPage() {
   id: number;
   name: string;
   img: string;
+  uniqid: string;
 }
 
 const selectedItems = res.data.user.slice(0, 3).map((item: UserItem) => ({
@@ -60,6 +78,9 @@ const selectedItems = res.data.user.slice(0, 3).map((item: UserItem) => ({
      
           }));
           localStorage.setItem("userData", JSON.stringify(selectedItems));
+          localStorage.setItem("deviceId_verify", deviceId);
+
+          
           toast.success("লগইন সফল হয়েছে!");
           window.location.href = "/";
         }
