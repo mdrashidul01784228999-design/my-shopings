@@ -1,12 +1,9 @@
-
-
-
 "use client";
 
 import React, { useState, useEffect } from "react";
 import Image from "next/image";
 import { 
-  Clock, TrendingUp, Search, Menu, User, 
+  Clock, Menu, User, 
   Moon, Sun, Bell, Zap, ChevronRight, X, 
   Settings, LogOut, Bookmark, Facebook, Youtube, Share2,
   Globe, PlayCircle, Eye, Flame, Newspaper, Radio, ArrowUpRight,
@@ -14,99 +11,71 @@ import {
 } from "lucide-react";
 import Api from "../../api/Api";
 
-
 const CATEGORIES = ["জাতীয়", "আন্তর্জাতিক", "খেলা", "প্রযুক্তি", "অর্থনীতি", "স্বাস্থ্য", "বিজ্ঞান"];
-Api
-export default function RashidulMegaPortal() {
 
-  const [mounted, setMounted] = useState(false);
-  const [darkMode, setDarkMode] = useState(true);
-  const [currentTime, setCurrentTime] = useState(new Date());
-  const [scrollProgress, setScrollProgress] = useState(0);
+// ================= TYPESCRIPT INTERFACES =================
+// Vercel Build Error এড়ানোর জন্য এই টাইপগুলো যুক্ত করা হয়েছে
+interface NewsItem {
+  id?: string | number;
+  name?: string;
+  title?: string;
+  view?: string | number;
+  [key: string]: any; // API থেকে আসা অন্যান্য ডাটার জন্য
+}
+// =========================================================
+
+export default function RashidulMegaPortal() {
+  const [mounted, setMounted] = useState<boolean>(false);
+  const [darkMode, setDarkMode] = useState<boolean>(true);
+  const [currentTime, setCurrentTime] = useState<Date>(new Date());
+  const [scrollProgress, setScrollProgress] = useState<number>(0);
   
   // Sidebar & Profile States
-  const [isSidebarOpen, setIsSidebarOpen] = useState(false);
-  const [isProfileOpen, setIsProfileOpen] = useState(false);
+  const [isSidebarOpen, setIsSidebarOpen] = useState<boolean>(false);
+  const [isProfileOpen, setIsProfileOpen] = useState<boolean>(false);
 
-  const [lodings, setLoading] = useState(true);
+  const [lodings, setLoading] = useState<boolean>(true);
+  const [alldatanews, setData] = useState<NewsItem[]>([]);
 
-  const [alldatanews, setData] = useState([]);
-
-
-
+  const [username, setUsername] = useState<string>("set-img");
+  const [userimglocalstoreage, setuserImgs] = useState<string>("");
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         const response = await Api.get('/peparindex');
-        // আপনার API স্ট্রাকচার অনুযায়ী response.data.data সেট করুন
-    setData(response.data.data ? [response.data.data] : []); 
-
-console.log('Data set successfully:', response.data.data);
-        console.log(response.data.data);
-        console.log('this data get');
-
+        const responseData = response.data?.data;
+        
+        // Array কিনা চেক করে ডাটা সেট করা হচ্ছে (Type Safety)
+        setData(Array.isArray(responseData) ? responseData : (responseData ? [responseData] : [])); 
+        console.log('Data set successfully:', responseData);
       } catch (err) {
-        console.error(err);
-        console.log('this a final code is ready'+err);
-
+        console.error('API Error:', err);
       } finally {
         setLoading(false);
-        console.log('this a final code is ready lgin false');
-        
       }
     };
-  fetchData();
-
-  // প্রতি ৩০ সেকেন্ড (৩০,০০০ মিলি-সেকেন্ড) পরপর ডাটা রিফ্রেশ করুন
-  const interval = setInterval(() => {
+    
     fetchData();
-  }, 30000); 
 
-  // কম্পোনেন্ট আনমাউন্ট হলে টাইমার পরিষ্কার করুন
-  return () => clearInterval(interval);
+    // প্রতি ৩০ সেকেন্ড পরপর ডাটা রিফ্রেশ
+    const interval = setInterval(() => {
+      fetchData();
+    }, 30000); 
+
+    // কম্পোনেন্ট আনমাউন্ট হলে টাইমার পরিষ্কার করুন
+    return () => clearInterval(interval);
   }, []);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-   const [username, setUsername] = useState("set-img");
-    const [userimglocalstoreage, setuserImgs] = useState("");
-    const [userid, setUserid] = useState("0");
-  
-    useEffect(() => {
-      if (typeof window !== 'undefined') {
-        const userData = JSON.parse(localStorage.getItem('userData') || '[]');
-        if (userData[0]) {
-          setUsername(userData[0].name || 'set-img');
-          setuserImgs(userData[0].img || '');
-          setUserid(userData[0].id || '55');
-        }
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      const userData = JSON.parse(localStorage.getItem('userData') || '[]');
+      if (userData[0]) {
+        setUsername(userData[0].name || 'set-img');
+        setuserImgs(userData[0].img || '');
       }
-    }, [])
-
-
-  // ১. প্রথমে আপনার ক্যাটাগরি থেকে হাইলাইট করা নিউজগুলো ফিল্টার করে নিন
-// const breakingNews = CATEGORIES.filter(cat => 
-//   cat.highlightType === 'top-news' || cat.highlightType === 'hilight-new'
-// );
-
-
-
-
-
+    }
+  }, []);
 
   useEffect(() => {
     setMounted(true);
@@ -140,8 +109,8 @@ console.log('Data set successfully:', response.data.data);
             <button onClick={() => setIsSidebarOpen(false)} className="p-2 hover:bg-red-500/10 rounded-full text-red-500 transition-colors"><X size={28}/></button>
           </div>
           <nav className="p-8 space-y-6">
-            {CATEGORIES.map(cat => (
-              <a key={cat} href="#" className="flex items-center justify-between group py-2 text-xl font-black hover:text-red-500 transition-all transform hover:translate-x-2">
+            {CATEGORIES.map((cat, idx) => (
+              <a key={idx} href="#" className="flex items-center justify-between group py-2 text-xl font-black hover:text-red-500 transition-all transform hover:translate-x-2">
                 {cat} <ChevronRight size={20} className="opacity-0 group-hover:opacity-100 transition-all text-red-500"/>
               </a>
             ))}
@@ -168,55 +137,31 @@ console.log('Data set successfully:', response.data.data);
       </div>
 
       {/* 🔴 2. PREMIUM MULTI-LAYER TOP MARQUEE */}
-
-
-
-
-
-{/* 🔴 2. PREMIUM MULTI-LAYER TOP MARQUEE */}
-{/* 🔴 2. PREMIUM MULTI-LAYER TOP MARQUEE */}
-<div className="relative bg-black border-b border-red-500/30 overflow-hidden">
-  <div className="absolute inset-0 bg-gradient-to-r from-red-600/20 via-transparent to-red-600/20" />
-  
-  {/* লোডিং এর সময় কিছু দেখানোর প্রয়োজন হলে এখানে কন্ডিশন দিতে পারেন */}
-  {lodings ? (
-    <div className="py-3 text-center text-white">Loading...</div>
-  ) : (
-    <div className="py-3 flex animate-marquee-fast whitespace-nowrap gap-12 items-center text-[11px] font-black uppercase text-white tracking-[0.2em]">
-      {/* মারকিউ ইফেক্টের জন্য লুপ */}
-      {[1, 2, 3].map((loop) => (
-        <div key={loop} className="flex gap-16 items-center">
-          {alldatanews.map((item) => (
-            <div key={item.id} className="flex items-center gap-4">
-              <span className="flex items-center gap-2 bg-red-600 px-4 py-1 rounded-full animate-pulse shadow-[0_0_15px_rgba(220,38,38,0.6)]">
-                <Zap size={14} className="fill-white"/> 
-                ব্রেকিং নিউজ
-              </span>
-              <span className="hover:text-red-500 transition-colors cursor-pointer">
-                {item.name}
-              </span>
-            </div>
-          ))}
-        </div>
-      ))}
-    </div>
-  )}
-</div>
-
-
-      {/* <div className="relative bg-black border-b border-red-500/30 overflow-hidden">
+      <div className="relative bg-black border-b border-red-500/30 overflow-hidden">
         <div className="absolute inset-0 bg-gradient-to-r from-red-600/20 via-transparent to-red-600/20" />
-        <div className="py-3 flex animate-marquee-fast whitespace-nowrap gap-12 items-center text-[11px] font-black uppercase text-white tracking-[0.2em]">
-          {[1, 2, 3].map(i => (
-            <div key={i} className="flex gap-16 items-center">
-              <span className="flex items-center gap-2 bg-red-600 px-4 py-1 rounded-full animate-pulse shadow-[0_0_15px_rgba(220,38,38,0.6)]"><Zap size={14} className="fill-white"/> ব্রেকিং নিউজ</span>
-              <span className="hover:text-red-500 transition-colors cursor-pointer">২০২৬ বিশ্বকাপে সরাসরি খেলবে বাংলাদেশ</span>
-              <span className="text-blue-400 flex items-center gap-2"><Globe size={14}/> প্রযুক্তিতে নতুন বিপ্লব আনছে রশিদুল পোর্টাল</span>
-              <span className="text-green-400 flex items-center gap-2"><ArrowUpRight size={14}/> ইউএস ডলার আজ ১১৮.৪০ ৳</span>
-            </div>
-          ))}
-        </div>
-      </div> */}
+        
+        {lodings ? (
+          <div className="py-3 text-center text-white text-xs font-bold tracking-widest">LOADING UPDATES...</div>
+        ) : (
+          <div className="py-3 flex animate-marquee-fast whitespace-nowrap gap-12 items-center text-[11px] font-black uppercase text-white tracking-[0.2em]">
+            {[1, 2, 3].map((loop) => (
+              <div key={loop} className="flex gap-16 items-center">
+                {alldatanews.map((item, idx) => (
+                  <div key={item.id || idx} className="flex items-center gap-4">
+                    <span className="flex items-center gap-2 bg-red-600 px-4 py-1 rounded-full animate-pulse shadow-[0_0_15px_rgba(220,38,38,0.6)]">
+                      <Zap size={14} className="fill-white"/> 
+                      ব্রেকিং নিউজ
+                    </span>
+                    <span className="hover:text-red-500 transition-colors cursor-pointer">
+                      {item.name || item.title || "নতুন আপডেট"}
+                    </span>
+                  </div>
+                ))}
+              </div>
+            ))}
+          </div>
+        )}
+      </div>
 
       {/* 🟢 3. MAIN STICKY HEADER */}
       <header className={`sticky top-0 z-50 backdrop-blur-3xl border-b transition-all duration-500 ${darkMode ? "bg-black/60 border-white/10" : "bg-white/80 border-slate-200"}`}>
@@ -244,16 +189,16 @@ console.log('Data set successfully:', response.data.data);
             <div className="relative">
               <div onClick={() => setIsProfileOpen(!isProfileOpen)} className="p-1 rounded-2xl bg-gradient-to-br from-red-600 via-orange-500 to-purple-600 cursor-pointer hover:scale-105 active:scale-90 transition-all">
                  <div className="w-10 h-10 rounded-xl overflow-hidden relative border-2 border-black/20">
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
                     <img 
-                src={
-                  userimglocalstoreage
-                    ? `${process.env.NEXT_PUBLIC_IMAGE_URL}/profile_users/${userimglocalstoreage}` 
-                    : `https://api.dicebear.com/7.x/avataaars/svg?seed=Felix`
-                } 
-                className="w-full h-full rounded-full object-cover border-2 border-emerald-500/30" 
-                alt="profile" 
-              />
-
+                      src={
+                        userimglocalstoreage
+                          ? `${process.env.NEXT_PUBLIC_IMAGE_URL}/profile_users/${userimglocalstoreage}` 
+                          : `https://api.dicebear.com/7.x/avataaars/svg?seed=Felix`
+                      } 
+                      className="w-full h-full rounded-full object-cover border-2 border-emerald-500/30" 
+                      alt="profile" 
+                    />
                  </div>
               </div>
               
@@ -283,39 +228,36 @@ console.log('Data set successfully:', response.data.data);
         <div className="h-1 bg-gradient-to-r from-red-600 via-orange-500 to-yellow-500 transition-all duration-300" style={{ width: `${scrollProgress}%` }} />
       </header>
 
-      {/* 📰 5. MAIN CONTENT LAYOUT (Big News with Neon Glow) */}
+      {/* 📰 5. MAIN CONTENT LAYOUT */}
       <main className="max-w-[1600px] mx-auto px-6 py-8">
         
         {/* 🔥 MAIN BENTO HERO SECTION */}
         <div className="grid lg:grid-cols-4 lg:grid-rows-2 gap-6 h-auto lg:h-[700px]">
           
           {/* Main Big News */}
-
-   {alldatanews.map((item) => (
-
-          <div className="lg:col-span-2 lg:row-span-2 relative group rounded-[2.5rem] overflow-hidden cursor-pointer shadow-2xl">
-          
-            
+          {alldatanews.map((item, index) => (
+            <div key={item.id || index} className="lg:col-span-2 lg:row-span-2 relative group rounded-[2.5rem] overflow-hidden cursor-pointer shadow-2xl min-h-[400px]">
+                {/* eslint-disable-next-line @next/next/no-img-element */}
                 <img 
-                src={
-                  userimglocalstoreage
-                    ? `${process.env.NEXT_PUBLIC_IMAGE_URL}/profile_users/${userimglocalstoreage}` 
-                    : `https://images.unsplash.com/photo-1516245834210-c4c142787335`
-                } 
-            
-             alt="Hero"  className="object-cover transition-transform duration-700 group-hover:scale-110 fill" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
-            <div className="absolute bottom-0 p-8 md:p-12">
-               <span className="px-4 py-1.5 bg-red-600 text-[10px] font-black rounded-full mb-4 inline-block">{item.name}</span>
-               <h2 className="text-3xl md:text-5xl font-black leading-tight text-white group-hover:text-red-500 transition-colors">{item.title}</h2>
-               <div className="flex items-center gap-6 mt-6 text-xs font-bold text-white/60">
-                  <span className="flex items-center gap-2"><Clock size={14}/> ২ ঘণ্টা আগে</span>
-                  <span className="flex items-center gap-2"><Eye size={14}/> {item.view || '0'} ভিউ</span>
-               </div>
+                  src={
+                    userimglocalstoreage
+                      ? `${process.env.NEXT_PUBLIC_IMAGE_URL}/profile_users/${userimglocalstoreage}` 
+                      : `https://images.unsplash.com/photo-1516245834210-c4c142787335`
+                  } 
+                  alt="Hero"  
+                  className="object-cover w-full h-full transition-transform duration-700 group-hover:scale-110" 
+                />
+              <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent" />
+              <div className="absolute bottom-0 p-8 md:p-12">
+                 <span className="px-4 py-1.5 bg-red-600 text-[10px] font-black rounded-full mb-4 inline-block text-white">{item.name || "ব্রেকিং নিউজ"}</span>
+                 <h2 className="text-3xl md:text-5xl font-black leading-tight text-white group-hover:text-red-500 transition-colors">{item.title || "শিরোনাম পাওয়া যায়নি"}</h2>
+                 <div className="flex items-center gap-6 mt-6 text-xs font-bold text-white/60">
+                   <span className="flex items-center gap-2"><Clock size={14}/> ২ ঘণ্টা আগে</span>
+                   <span className="flex items-center gap-2"><Eye size={14}/> {item.view || '0'} ভিউ</span>
+                 </div>
+              </div>
             </div>
-          </div>
-
-  ))}
+          ))}
 
           {/* Side Card 1 */}
           <div className="lg:col-span-2 relative group rounded-[2.5rem] overflow-hidden cursor-pointer h-[300px] lg:h-full">
@@ -331,7 +273,7 @@ console.log('Data set successfully:', response.data.data);
             <Image src="https://images.unsplash.com/photo-1511512578047-dfb367046420" alt="Tech" fill className="object-cover transition-transform duration-700 group-hover:scale-110" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent" />
             <div className="absolute bottom-0 p-6">
-               <h4 className="font-bold text-white">게미용 인더스트리에 오느 바 코의 하</h4>
+               <h4 className="font-bold text-white">গে미용 인더스트리에 오느 바 코의 하</h4>
             </div>
           </div>
 
@@ -342,7 +284,6 @@ console.log('Data set successfully:', response.data.data);
              <p className="text-white/80 font-bold mt-2">সব খেলার সব আপডেট এক ক্লিকে পান এখানে।</p>
              <button className="mt-6 bg-white text-red-600 px-6 py-2 rounded-full font-black text-xs self-start hover:scale-105 transition-transform">সব দেখুন</button>
           </div>
-
         </div>
 
         {/* 📢 DYNAMIC FEED & TRENDING */}
@@ -467,7 +408,7 @@ console.log('Data set successfully:', response.data.data);
       </footer>
 
       {/* ✨ CSS ANIMATIONS */}
-      <style jsx global>{`
+      <style>{`
         @keyframes marquee-fast {
           0% { transform: translateX(100%); }
           100% { transform: translateX(-100%); }
@@ -486,12 +427,9 @@ console.log('Data set successfully:', response.data.data);
           display: none;
         }
       `}</style>
-
     </div>
   );
 }
-
-
 
 
 // "use client";

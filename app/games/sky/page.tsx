@@ -4,19 +4,56 @@ import React, { useState, useEffect, useRef } from "react";
 const MAX_DAILY_PLAYS = 3;
 const COINS_PER_KILL = 15;
 
+// ================= TYPESCRIPT INTERFACES =================
+// Vercel Build Error এড়ানোর জন্য এই টাইপগুলো যুক্ত করা হয়েছে
+interface Player {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  speed: number;
+}
+
+interface Bullet {
+  x: number;
+  y: number;
+  speed: number;
+}
+
+interface Enemy {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+  speed: number;
+  color: string;
+}
+
+interface GameStateRef {
+  player: Player;
+  bullets: Bullet[];
+  enemies: Enemy[];
+  coinsEarned: number;
+  score: number;
+  lives: number;
+  keys: Record<string, boolean>;
+  shootCooldown: number;
+}
+// =========================================================
+
 export default function PremiumGalaxyShooter() {
-  const canvasRef = useRef(null);
-  const [gameState, setGameState] = useState("MENU"); // MENU, PLAYING, GAME_OVER, NO_PLAYS, SHOP
-  const [coins, setCoins] = useState(0);
-  const [dailyPlaysLeft, setDailyPlaysLeft] = useState(MAX_DAILY_PLAYS);
-  const [score, setScore] = useState(0);
-  const [lives, setLives] = useState(3);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+  const [gameState, setGameState] = useState<string>("MENU"); // MENU, PLAYING, GAME_OVER, NO_PLAYS, SHOP
+  const [coins, setCoins] = useState<number>(0);
+  const [dailyPlaysLeft, setDailyPlaysLeft] = useState<number>(MAX_DAILY_PLAYS);
+  const [score, setScore] = useState<number>(0);
+  const [lives, setLives] = useState<number>(3);
 
   // Upgrades states
-  const [fireRateLevel, setFireRateLevel] = useState(1);
-  const [speedLevel, setSpeedLevel] = useState(1);
+  const [fireRateLevel, setFireRateLevel] = useState<number>(1);
+  const [speedLevel, setSpeedLevel] = useState<number>(1);
 
-  const stateRef = useRef({
+  const stateRef = useRef<GameStateRef>({
     player: { x: 0, y: 0, width: 44, height: 44, speed: 5 },
     bullets: [],
     enemies: [],
@@ -56,7 +93,7 @@ export default function PremiumGalaxyShooter() {
   }, []);
 
   // Buy Upgrades Logic
-  const buyUpgrade = (type) => {
+  const buyUpgrade = (type: "firerate" | "speed") => {
     const cost = type === "firerate" ? fireRateLevel * 150 : speedLevel * 150;
     if (coins >= cost) {
       const nextCoins = coins - cost;
@@ -89,6 +126,8 @@ export default function PremiumGalaxyShooter() {
     setDailyPlaysLeft(MAX_DAILY_PLAYS - (currentCount + 1));
 
     const canvas = canvasRef.current;
+    if (!canvas) return; // Null safety added
+
     // Bereken snelheden op basis van gekochte upgrades
     const calculatedSpeed = 5 + speedLevel * 0.8;
 
@@ -113,16 +152,19 @@ export default function PremiumGalaxyShooter() {
     if (gameState !== "PLAYING") return;
 
     const canvas = canvasRef.current;
+    if (!canvas) return;
     const ctx = canvas.getContext("2d");
-    let animationId;
+    if (!ctx) return; // Null safety added
+
+    let animationId: number;
     let spawnTimer = 0;
 
-    const handleKeyDown = (e) => (stateRef.current.keys[e.key] = true);
-    const handleKeyUp = (e) => (stateRef.current.keys[e.key] = false);
+    const handleKeyDown = (e: KeyboardEvent) => (stateRef.current.keys[e.key] = true);
+    const handleKeyUp = (e: KeyboardEvent) => (stateRef.current.keys[e.key] = false);
 
     // Responsive Touch & Drag voor Mobiel
-    const handleTouchMove = (e) => {
-      if (!e.touches[0]) return;
+    const handleTouchMove = (e: TouchEvent) => {
+      if (!e.touches[0] || !canvas) return;
       const rect = canvas.getBoundingClientRect();
       const scaleX = canvas.width / rect.width; 
       const touchX = (e.touches[0].clientX - rect.left) * scaleX;
@@ -135,7 +177,7 @@ export default function PremiumGalaxyShooter() {
 
     window.addEventListener("keydown", handleKeyDown);
     window.addEventListener("keyup", handleKeyUp);
-    canvas.addEventListener("touchmove", handleTouchMove, { passive: true });
+    canvas.addEventListener("touchmove", handleTouchMove as unknown as EventListener, { passive: true });
 
     const updateGame = () => {
       const state = stateRef.current;
@@ -177,7 +219,7 @@ export default function PremiumGalaxyShooter() {
         ctx.shadowBlur = 0; // reset
       });
 
-      // 5. Spawn vijandelijke ruimteschepen (Geïnspireerd op Galaxy-sky-shooting---3.png)
+      // 5. Spawn vijandelijke ruimteschepen
       spawnTimer++;
       if (spawnTimer % 35 === 0) {
         state.enemies.push({
@@ -279,6 +321,9 @@ export default function PremiumGalaxyShooter() {
       cancelAnimationFrame(animationId);
       window.removeEventListener("keydown", handleKeyDown);
       window.removeEventListener("keyup", handleKeyUp);
+      if (canvas) {
+        canvas.removeEventListener("touchmove", handleTouchMove as unknown as EventListener);
+      }
     };
   }, [gameState, fireRateLevel, speedLevel, coins]);
 
@@ -305,7 +350,7 @@ export default function PremiumGalaxyShooter() {
       {/* --- GAME CANVAS SCREEN --- */}
       <div className="relative w-full max-w-md aspect-[9/16] bg-[#050510] border-x border-b border-cyan-500/20 rounded-b-2xl overflow-hidden shadow-[0_20px_50px_rgba(0,0,0,0.8)]">
         
-        {/* In-game Lives Overlay (Geïnspireerd op Galaxy-sky-shooting---3.png) */}
+        {/* In-game Lives Overlay */}
         {gameState === "PLAYING" && (
           <div className="absolute top-4 left-4 flex gap-1 z-10 drop-shadow-[0_2px_5px_rgba(255,0,0,0.5)]">
             {Array.from({ length: 3 }).map((_, idx) => (
@@ -457,7 +502,6 @@ export default function PremiumGalaxyShooter() {
     </div>
   );
 }
-
 
 
 

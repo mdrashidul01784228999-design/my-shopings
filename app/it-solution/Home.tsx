@@ -3,10 +3,27 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { FaLaptopCode, FaServer, FaShieldAlt, FaMobileAlt, FaFacebookF, FaYoutube, FaTimes, FaPaperPlane, FaUser, FaCog, FaSignOutAlt, FaThLarge } from 'react-icons/fa';
 import Link from 'next/link';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion, AnimatePresence, Variants } from 'framer-motion'; // Variants যুক্ত করা হয়েছে
+
+// ================= TYPESCRIPT INTERFACES =================
+interface Service {
+  title: string;
+  desc: string;
+  icon: React.ReactNode;
+  colorCode: string;
+  gradient: string;
+  tag: string;
+}
+
+interface FormData {
+  name: string;
+  email: string;
+  message: string;
+}
+// =========================================================
 
 // সার্ভিসের ডাটা অ্যারে
-const services = [
+const services: Service[] = [
   {
     title: "ওয়েব অ্যাপ্লিকেশন",
     desc: "Next.js ও React দিয়ে তৈরি আল্ট্রা-ফাস্ট ও রেসপনসিভ লাইভ ওয়েব সলিউশন।",
@@ -57,23 +74,24 @@ const services = [
   }
 ];
 
-// Framer Motion Variants
-const fadeInUp = {
+// Framer Motion Variants (এখানে Variants টাইপ দেওয়া হয়েছে)
+const fadeInUp: Variants = {
   hidden: { opacity: 0, y: 40 },
   visible: { opacity: 1, y: 0, transition: { duration: 0.6, ease: "easeOut" } }
 };
 
-const staggerContainer = {
+const staggerContainer: Variants = {
   hidden: { opacity: 0 },
   visible: { opacity: 1, transition: { staggerChildren: 0.12 } }
 };
 
 export default function GTSolutionPage() {
-  const [selectedService, setSelectedService] = useState(null);
-  const [dropdownOpen, setDropdownOpen] = useState(false);
-  const [formData, setFormData] = useState({ name: '', email: '', message: '' });
+  // Typescript State Definitions
+  const [selectedService, setSelectedService] = useState<Service | null>(null);
+  const [dropdownOpen, setDropdownOpen] = useState<boolean>(false);
+  const [formData, setFormData] = useState<FormData>({ name: '', email: '', message: '' });
   
-  const dropdownRef = useRef(null);
+  const dropdownRef = useRef<HTMLDivElement | null>(null);
 
   // ইউজারের ডামি ডাটা
   const user = {
@@ -84,8 +102,8 @@ export default function GTSolutionPage() {
 
   // মেনুর বাইরে ক্লিক করলে ড্রপডাউন বন্ধ করার লজিক
   useEffect(() => {
-    function handleClickOutside(event) {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
+    function handleClickOutside(event: MouseEvent) {
+      if (dropdownRef.current && !dropdownRef.current.contains(event.target as Node)) {
         setDropdownOpen(false);
       }
     }
@@ -93,13 +111,17 @@ export default function GTSolutionPage() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  const handleInputChange = (e) => {
+  // Event type added for onChange
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleFormSubmit = (e) => {
+  // Event type added for onSubmit
+  const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    alert(`ধন্যবাদ! আপনার "${selectedService.title}" সার্ভিসের রিকোয়েস্ট সফলভাবে পাঠানো হয়েছে।`);
+    if (selectedService) {
+      alert(`ধন্যবাদ! আপনার "${selectedService.title}" সার্ভিসের রিকোয়েস্ট সফলভাবে পাঠানো হয়েছে।`);
+    }
     setFormData({ name: '', email: '', message: '' });
     setSelectedService(null);
   };
@@ -133,6 +155,7 @@ export default function GTSolutionPage() {
               className="relative group focus:outline-none"
             >
               <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-purple-600 rounded-full opacity-70 group-hover:opacity-100 blur transition duration-300"></div>
+              {/* eslint-disable-next-line @next/next/no-img-element */}
               <img 
                 src={user.avatar} 
                 alt="Profile" 
@@ -350,6 +373,7 @@ export default function GTSolutionPage() {
     </div>
   );
 }
+
 
 
 // "use client";

@@ -4,11 +4,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { Sparkles, Languages, Binary, Copy, Check, CircleDollarSign } from "lucide-react";
 
 export default function UltimateConverter() {
-  const [number, setNumber] = useState("");
-  const [copiedType, setCopiedType] = useState(null);
+  const [number, setNumber] = useState<string>("");
+  const [copiedType, setCopiedType] = useState<string | null>(null);
 
   // ================= ENGLISH MAIN LOGIC =================
-  const rawEnglishWords = (n) => {
+  const rawEnglishWords = (n: number): string => {
     const ones = ["", "One", "Two", "Three", "Four", "Five", "Six", "Seven", "Eight", "Nine", "Ten", "Eleven", "Twelve", "Thirteen", "Fourteen", "Fifteen", "Sixteen", "Seventeen", "Eighteen", "Nineteen"];
     const tens = ["", "", "Twenty", "Thirty", "Forty", "Fifty", "Sixty", "Seventy", "Eighty", "Ninety"];
     
@@ -20,8 +20,8 @@ export default function UltimateConverter() {
     return rawEnglishWords(Math.floor(n / 10000000)) + " Crore" + (n % 10000000 !== 0 ? " " + rawEnglishWords(n % 10000000) : "");
   };
 
-  const convertToEnglishWords = (numStr) => {
-    if (!numStr || isNaN(numStr) || parseFloat(numStr) < 0) return "";
+  const convertToEnglishWords = (numStr: string): string => {
+    if (!numStr || isNaN(Number(numStr)) || parseFloat(numStr) < 0) return "";
     
     const parts = numStr.split(".");
     const takaPart = parseInt(parts[0]) || 0;
@@ -43,9 +43,9 @@ export default function UltimateConverter() {
   };
 
   // ================= BANGLA MAIN LOGIC =================
-  const rawBanglaWords = (n) => {
+  const rawBanglaWords = (n: number): string => {
     const bnNumbers = [
-      "", "এক", "দুই", "তিন", "চার", "পাঁচ", "ছয়", "সাত", "আট", "নয়", "দশ", "এগারো", "বারো", "তেরো", "চোদ্দ", "পনেরো", "ষোলো", "সতেরো", "আঠারো", "উনিশ", "বিশ", "একুশ", "বাইশ", "তেইশ", "চব্বিশ", "পঁচিশ", "ছাব্বিশ", "সাতাশ", "আটআশ", "উনত্রিশ", "ত্রিশ", "একত্রিশ", "বত্রিশ", "তেত্রিশ", "চৌত্রিশ", "পঁয়ত্রিশ", "ছত্রিশ", "সাইত্রিশ", "আটত্রিশ", "ঊনচল্লিশ", "চল্লিশ", "একচল্লিশ", "বিয়াল্লিশ", "তেтал্লিশ", "চৌয়াল্লিশ", "পঁয়তাল্লিশ", "ছেচল্লিশ", "চল্লিশ", "আটচল্লিশ", "ঊনপঞ্চাশ", "পঞ্চাশ", "একান্ন", "বায়ান্ন", "তিরিশ", "চৌয়ান্ন", "পঞ্চান্ন", "ছাপ্পান্ন", "সাতান্ন", "আটান্ন", "ঊনষাট", "ষাট", "একষট্টি", "বাষট্টি", "তেষট্টি", "চৌষট্টি", "পঁয়ষট্টি", "ছেষট্টি", "সাতষট্টি", "আটষট্টি", "ঊনসত্তর", "সত্তর", "একাত্তর", "বাহাত্তর", "তেহাত্তর", "চৌহাত্তর", "পঁচাত্তর", "ছেয়াত্তর", "সাতাত্তর", "আটাত্তর", "ঊনআশি", "আশি", "একাশি", "বিরাশি", "তিরাশি", "চৌরাশি", "পঁচিশ", "ছেঁড়াশি", "সাতাসি", "অষ্টআশি", "ঊননব্বই", "নব্বই", "একানব্বই", "বিরানব্বই", "তিরানব্বই", "চৌরানব্বই", "পঁচানব্বই", "ছেয়ানব্বই", "সাতানব্বই", "আটানব্বই", "নিরানব্বই"
+      "", "এক", "দুই", "তিন", "চার", "পাঁচ", "ছয়", "সাত", "আট", "নয়", "দশ", "এগারো", "বারো", "তেরো", "চোদ্দ", "পনেরো", "ষোলো", "সতেরো", "আঠারো", "উনিশ", "বিশ", "একুশ", "বাইশ", "তেইশ", "চব্বিশ", "পঁচিশ", "ছাব্বিশ", "সাতাশ", "আটআশ", "উনত্রিশ", "ত্রিশ", "একত্রিশ", "বত্রিশ", "তেত্রিশ", "চৌত্রিশ", "পঁয়ত্রিশ", "ছত্রিশ", "সাইত্রিশ", "আটত্রিশ", "ঊনচল্লিশ", "চল্লিশ", "একচল্লিশ", "বিয়াল্লিশ", "তেতাল্লিশ", "চৌয়াল্লিশ", "পঁয়তাল্লিশ", "ছেচল্লিশ", "চল্লিশ", "আটচল্লিশ", "ঊনপঞ্চাশ", "পঞ্চাশ", "একান্ন", "বায়ান্ন", "তিরিশ", "চৌয়ান্ন", "পঞ্চান্ন", "ছাপ্পান্ন", "সাতান্ন", "আটান্ন", "ঊনষাট", "ষাট", "একষট্টি", "বাষট্টি", "তেষট্টি", "চৌষট্টি", "পঁয়ষট্টি", "ছেষট্টি", "সাতষট্টি", "আটষট্টি", "ঊনসত্তর", "সত্তর", "একাত্তর", "বাহাত্তর", "তেহাত্তর", "চৌহাত্তর", "পঁচাত্তর", "ছেয়াত্তর", "সাতাত্তর", "আটাত্তর", "ঊনআশি", "আশি", "একাশি", "বিরাশি", "তিরাশি", "চৌরাশি", "পঁচিশ", "ছেঁড়াশি", "সাতাসি", "অষ্টআশি", "ঊননব্বই", "নব্বই", "একানব্বই", "বিরানব্বই", "তিরানব্বই", "চৌরানব্বই", "পঁচানব্বই", "ছেয়ানব্বই", "সাতানব্বই", "আটানব্বই", "নিরানব্বই"
     ];
 
     if (n < 100) return bnNumbers[n];
@@ -55,8 +55,8 @@ export default function UltimateConverter() {
     return rawBanglaWords(Math.floor(n / 10000000)) + " কোটি " + (n % 10000000 !== 0 ? rawBanglaWords(n % 10000000) : "");
   };
 
-  const convertToBanglaWords = (numStr) => {
-    if (!numStr || isNaN(numStr) || parseFloat(numStr) < 0) return "";
+  const convertToBanglaWords = (numStr: string): string => {
+    if (!numStr || isNaN(Number(numStr)) || parseFloat(numStr) < 0) return "";
 
     const parts = numStr.split(".");
     const takaPart = parseInt(parts[0]) || 0;
@@ -72,12 +72,12 @@ export default function UltimateConverter() {
     }
     if (poishaNum > 0) {
       if (takaPart > 0) result += " ";
-      result += rawBanglaWords(poishaNum) + " পয়সা";
+      result += rawBanglaWords(poishaNum) + " পয়সা";
     }
     return result.trim().replace(/\s+/g, ' ') + " মাত্র";
   };
 
-  const copyToClipboard = (text, type) => {
+  const copyToClipboard = (text: string, type: string): void => {
     if (!text) return;
     navigator.clipboard.writeText(text);
     setCopiedType(type);
@@ -97,7 +97,7 @@ export default function UltimateConverter() {
         transition={{ duration: 0.5 }}
         className="w-full max-w-2xl bg-slate-900/40 backdrop-blur-3xl border border-slate-800 rounded-[2rem] shadow-[0_30px_100px_-15px_rgba(6,182,212,0.15)] p-6 md:p-10 relative z-10"
       >
-        {/* প্রিমিয়াম নিয়ন লাইন */}
+        {/* প্রিমিয়াম নিয়ন লাইন */}
         <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-transparent via-cyan-500 to-fuchsia-500" />
 
         {/* হেডার */}
@@ -109,21 +109,21 @@ export default function UltimateConverter() {
             Fin<span className="bg-gradient-to-r from-cyan-400 to-purple-400 bg-clip-text text-transparent">Word</span> Smart
           </h1>
           <p className="text-slate-400 text-xs md:text-sm mt-1.5 tracking-wider font-medium flex items-center gap-1.5">
-            <Sparkles className="w-4 h-4 text-fuchsia-400 animate-pulse" /> টাকা ও পয়সার অল-ইন-ওয়ান কনভার্টার
+            <Sparkles className="w-4 h-4 text-fuchsia-400 animate-pulse" /> টাকা ও পয়সার অল-ইন-ওয়ান কনভার্টার
           </p>
         </div>
 
-        {/* ইনপুট ফিল্ড (দশমিক ও পয়সা সাপোর্ট সহ) */}
+        {/* ইনপুট ফিল্ড (দশমিক ও পয়সা সাপোর্ট সহ) */}
         <div className="mb-8 relative group">
           <div className="absolute -inset-0.5 bg-gradient-to-r from-cyan-500 to-purple-500 rounded-2xl blur opacity-20 group-hover:opacity-40 transition duration-300" />
           <div className="relative bg-slate-950/60 border border-slate-800 rounded-2xl p-4 flex items-center gap-4 focus-within:border-cyan-500/40 transition-all">
             <Binary className="w-6 h-6 text-slate-500 shrink-0 hidden sm:block" />
             <input
               type="number"
-              step="0.01" // এর মাধ্যমে টাকা ও পয়সা একসাথে ইনপুট দেওয়া যাবে
+              step="0.01" 
               value={number}
               onChange={(e) => setNumber(e.target.value)}
-              placeholder="টাকা ও পয়সা লিখুন (যেমন: ৪২০.৫০)"
+              placeholder="টাকা ও পয়সা লিখুন (যেমন: ৪২০.৫০)"
               className="w-full bg-transparent text-2xl md:text-3xl font-bold tracking-wide text-white focus:outline-none placeholder-slate-700"
             />
           </div>
@@ -136,7 +136,7 @@ export default function UltimateConverter() {
             {/* বাংলা কার্ড */}
             <motion.div layout className="relative bg-gradient-to-b from-slate-950/40 to-transparent border border-slate-800/60 rounded-2xl p-5 hover:border-cyan-500/20 transition-all duration-300">
               <div className="flex justify-between items-center mb-2">
-                <span className="text-[10px] font-bold tracking-widest uppercase text-cyan-400 bg-cyan-500/5 px-2.5 py-1 rounded-md border border-cyan-500/10">বাংলায় কথা</span>
+                <span className="text-[10px] font-bold tracking-widest uppercase text-cyan-400 bg-cyan-500/5 px-2.5 py-1 rounded-md border border-cyan-500/10">বাংলায় কথা</span>
                 {number && (
                   <button onClick={() => copyToClipboard(convertToBanglaWords(number), 'bn')} className="text-slate-500 hover:text-white p-1.5 hover:bg-slate-800/50 rounded-lg transition">
                     {copiedType === 'bn' ? <Check className="w-4 h-4 text-emerald-400" /> : <Copy className="w-4 h-4" />}
