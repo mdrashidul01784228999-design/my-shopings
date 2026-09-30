@@ -36,7 +36,8 @@ export default function AllCategorySection() {
   const [isOpen, setIsOpen] = useState(false);
   const [coins, setCoins] = useState(1250); // লাইভ কয়েন স্টেট
   const [isCoinAnimating, setIsCoinAnimating] = useState(false);
-
+ const [names, setNames] = useState<string | null>(null);
+  const [images, setImages] = useState<string>('');
   // লাইভ কয়েন কাউন্টারের মোশন ডেমো (প্রতি ৭ সেকেন্ডে টেস্ট করার জন্য কয়েন আপডেট হবে)
   useEffect(() => {
     const interval = setInterval(() => {
@@ -49,6 +50,29 @@ export default function AllCategorySection() {
     return () => clearInterval(interval);
   }, []);
 
+
+
+
+
+
+
+
+
+
+
+
+
+    useEffect(() => {
+      const userData = JSON.parse(localStorage.getItem('userData') || '[]');
+      if (userData[0]) {
+        setNames(userData[0].name || 'test-name');
+        setImages(userData[0].img || '');
+      }
+    }, []);
+
+
+
+
   const categories: Category[] = [
     {
       id: "games-general",
@@ -57,7 +81,7 @@ export default function AllCategorySection() {
       img: "https://images.unsplash.com/photo-1606813902818-87952c3b42e0",
       color: "from-amber-600/40 via-orange-600/30 to-black/95",
       glowColor: "rgba(245, 158, 11, 0.25)",
-      link: "/games",
+      link: "/games/game1",
       description: "জনপ্রিয় অনলাইন ও অ্যাকশন গেমসের সেরা কালেকশন খেলুন কোনো ডাউনলোড ছাড়াই।",
     },
     {
@@ -110,6 +134,20 @@ export default function AllCategorySection() {
       link: "/gifts",
       description: "আপনার জমানো কয়েন দিয়ে রিডিম করুন গুগল প্লে, স্টিম এবং এক্সবক্স গিফট কার্ড।",
     },
+
+
+     {
+      id: " babull ",
+      title: "বাবুল সুটার গেম",
+      icon: <Gift className="w-6 h-6 md:w-8 md:h-8 text-red-400" />,
+      img: "https://images.unsplash.com/photo-1549465220-1a8b9238cd48",
+      color: "from-red-600/40 via-rose-700/30 to-black/95",
+      glowColor: "rgba(239, 68, 68, 0.25)",
+      link: "/games/babull",
+      description: "আপনার জমানো কয়েন দিয়ে রিডিম করুন গুগল প্লে, স্টিম এবং এক্সবক্স গিফট কার্ড।",
+    },
+
+
   ];
 
   // এসইও ক্রলারের জন্য JSON-LD Structured Data
@@ -204,17 +242,24 @@ export default function AllCategorySection() {
               className="flex items-center gap-1.5 sm:gap-2 group focus:outline-none"
             >
               <div className="relative w-8 h-8 sm:w-10 sm:h-10 rounded-full overflow-hidden border-2 border-purple-500/50 shadow-[0_0_15px_rgba(168,85,247,0.4)] group-hover:border-purple-400 transition-all duration-300">
-                <Image
-                  src="https://images.unsplash.com/photo-1535713875002-d1d0cf377fde"
-                  alt="User Profile"
-                  fill
-                  className="object-cover"
+                <img
+                 src={
+    images 
+      ? `${process.env.NEXT_PUBLIC_API_URL?.replace('/api', '')}/profile_users/${images}` 
+      : `https://api.dicebear.com/7.x/avataaars/svg?seed=Felix`
+  } 
+                   alt="avatar" 
+  className="w-full h-full object-cover" 
                 />
+
+
+
+
               </div>
 
               <div className="hidden md:flex flex-col items-start text-left">
                 <span className="text-xs font-bold text-white group-hover:text-neutral-200 transition-colors">
-                  তানভীর রহমান
+                {names}
                 </span>
                 <span className="text-[9px] text-purple-400 font-semibold uppercase tracking-wider flex items-center gap-0.5">
                   PRO VIP <Sparkles className="w-2.5 h-2.5" />
