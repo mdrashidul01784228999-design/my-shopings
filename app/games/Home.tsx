@@ -94,6 +94,28 @@ export default function AllCategorySection() {
       link: "/shopping",
       description: "সেরা ব্র্যান্ডের গিজমোস, প্রিমিয়াম অ্যাক্সেসরিজ ও ট্রেন্ডি কালেকশন।",
     },
+
+
+
+
+
+ {
+      id: "shopping",
+      title: "Shoter",
+      icon: <ShoppingBag className="w-6 h-6 md:w-8 md:h-8 text-pink-400" />,
+      img: "https://images.unsplash.com/photo-1483985988355-763728e1935b",
+      color: "from-rose-600/40 via-pink-600/30 to-black/95",
+      glowColor: "rgba(244, 63, 94, 0.25)",
+      link: "/games/shoter",
+      description: "সেরা ব্র্যান্ডের গিজমোস, প্রিমিয়াম অ্যাক্সেসরিজ ও ট্রেন্ডি কালেকশন।",
+    },
+
+
+
+
+
+
+
     {
       id: "trending",
       title: "ট্রেন্ডিং নাউ",
