@@ -1,0 +1,548 @@
+[
+  {
+    "id": "fashion99",
+    "name": "NOVA FASHION-99",
+    "subtitle": "Premium Fashion999999",
+    "style": "fashion99",
+    "accent": "#7c3aed",
+    "products": [
+      {
+        "name": "Premium T-Shirt",
+        "price": 1800,
+        "kind": "tshirt",
+        "color": "#2563eb"
+      },
+      {
+        "name": "Urban Jacket",
+        "price": 5200,
+        "kind": "jacket",
+        "color": "#1e293b"
+      },
+      {
+        "name": "Classic Sunglasses",
+        "price": 2400,
+        "kind": "glasses",
+        "color": "#111827"
+      },
+      {
+        "name": "Running Sneaker",
+        "price": 4200,
+        "kind": "sneaker",
+        "color": "#ef4444"
+      },
+      {
+        "name": "Leather Handbag",
+        "price": 3800,
+        "kind": "bag",
+        "color": "#92400e"
+      },
+      {
+        "name": "Denim Jacket",
+        "price": 3200,
+        "kind": "jacket",
+        "color": "#2563eb"
+      }
+    ]
+  },
+  {
+    "id": "tech9999",
+    "name": "TECHHUB-999",
+    "subtitle": "Smart Devices999999",
+    "style": "tech99",
+    "accent": "#0891b2",
+    "products": [
+      {
+        "name": "Smart Watch",
+        "price": 4500,
+        "kind": "watch",
+        "color": "#1e293b"
+      },
+      {
+        "name": "Mirrorless Camera",
+        "price": 62000,
+        "kind": "camera",
+        "color": "#cbd5e1"
+      },
+      {
+        "name": "Wireless Headphones",
+        "price": 6800,
+        "kind": "headphone",
+        "color": "#111827"
+      },
+      {
+        "name": "Flagship Phone",
+        "price": 92000,
+        "kind": "phone",
+        "color": "#64748b"
+      },
+      {
+        "name": "Budget Phone",
+        "price": 18500,
+        "kind": "phone",
+        "color": "#0ea5e9"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      },
+      {
+        "name": "Action Camera",
+        "price": 21000,
+        "kind": "camera",
+        "color": "#f97316"
+      }
+    ]
+  },
+  {
+    "id": "home",
+    "name": "URBAN HOME-09",
+    "subtitle": "Furniture & Decor",
+    "style": "home",
+    "accent": "#d97706",
+    "products": [
+      {
+        "name": "Designer Chair",
+        "price": 8500,
+        "kind": "chair",
+        "color": "#d97706"
+      },
+      {
+        "name": "Modern Table Lamp",
+        "price": 3200,
+        "kind": "lamp",
+        "color": "#facc15"
+      },
+      {
+        "name": "Indoor Plant",
+        "price": 900,
+        "kind": "plant",
+        "color": "#16a34a"
+      },
+      {
+        "name": "Wooden Chair",
+        "price": 6200,
+        "kind": "chair",
+        "color": "#6b4a2e"
+      },
+      {
+        "name": "Photo Frame",
+        "price": 1500,
+        "kind": "frame",
+        "color": "#1e293b"
+      },
+      {
+        "name": "Reading Lamp",
+        "price": 2200,
+        "kind": "lamp",
+        "color": "#38bdf8"
+      }
+    ]
+  },
+  {
+    "id": "market",
+    "name": "FRESH MART",
+    "subtitle": "Grocery & Food",
+    "style": "market",
+    "accent": "#16a34a",
+    "products": [
+      {
+        "name": "Organic Honey",
+        "price": 950,
+        "kind": "jar",
+        "color": "#d9901a"
+      },
+      {
+        "name": "Imported Chocolate",
+        "price": 1500,
+        "kind": "chocolate",
+        "color": "#7c3aed"
+      },
+      {
+        "name": "Premium Rice 10KG",
+        "price": 1800,
+        "kind": "sack",
+        "color": "#f1f5f9"
+      },
+      {
+        "name": "Fresh Coffee",
+        "price": 1250,
+        "kind": "coffee",
+        "color": "#1e293b"
+      },
+      {
+        "name": "Mango Juice",
+        "price": 350,
+        "kind": "bottle",
+        "color": "#f59e0b"
+      },
+      {
+        "name": "Gift Box",
+        "price": 800,
+        "kind": "box",
+        "color": "#ec4899"
+      }
+    ]
+  },
+  {
+    "id": "books",
+    "name": "BOOK WORLD",
+    "subtitle": "Books & Stationery",
+    "style": "home",
+    "accent": "#0ea5e9",
+    "products": [
+      {
+        "name": "Story Book",
+        "price": 450,
+        "kind": "book",
+        "color": "#ef4444"
+      },
+      {
+        "name": "Novel Collection",
+        "price": 1200,
+        "kind": "book",
+        "color": "#2563eb"
+      },
+      {
+        "name": "Study Lamp",
+        "price": 1800,
+        "kind": "lamp",
+        "color": "#fde047"
+      },
+      {
+        "name": "Desk Plant",
+        "price": 700,
+        "kind": "plant",
+        "color": "#22c55e"
+      },
+      {
+        "name": "Art Diary",
+        "price": 520,
+        "kind": "book",
+        "color": "#14b8a6"
+      },
+      {
+        "name": "Gift Box",
+        "price": 900,
+        "kind": "box",
+        "color": "#f97316"
+      }
+    ]
+  },
+  {
+    "id": "sports",
+    "name": "SPORTS ZONE",
+    "subtitle": "Sports & Outdoor",
+    "style": "fashion",
+    "accent": "#ef4444",
+    "products": [
+      {
+        "name": "Sports Sneaker",
+        "price": 4800,
+        "kind": "sneaker",
+        "color": "#2563eb"
+      },
+      {
+        "name": "Training T-Shirt",
+        "price": 1300,
+        "kind": "tshirt",
+        "color": "#ef4444"
+      },
+      {
+        "name": "Gym Bag",
+        "price": 2600,
+        "kind": "bag",
+        "color": "#111827"
+      },
+      {
+        "name": "Sports Watch",
+        "price": 3900,
+        "kind": "watch",
+        "color": "#16a34a"
+      },
+      {
+        "name": "Water Bottle",
+        "price": 450,
+        "kind": "bottle",
+        "color": "#0ea5e9"
+      },
+      {
+        "name": "Windbreaker",
+        "price": 3600,
+        "kind": "jacket",
+        "color": "#f97316"
+      }
+    ]
+  },
+  {
+    "id": "gadget",
+    "name": "GADGET ZONE",
+    "subtitle": "Mobile & Gadgets",
+    "style": "tech",
+    "accent": "#14b8a6",
+    "products": [
+      {
+        "name": "Smartphone Pro",
+        "price": 74000,
+        "kind": "phone",
+        "color": "#1e293b"
+      },
+      {
+        "name": "Smartphone Lite",
+        "price": 24000,
+        "kind": "phone",
+        "color": "#14b8a6"
+      },
+      {
+        "name": "Bluetooth Headphone",
+        "price": 3900,
+        "kind": "headphone",
+        "color": "#7c3aed"
+      },
+      {
+        "name": "Vlog Camera",
+        "price": 38000,
+        "kind": "camera",
+        "color": "#111827"
+      },
+      {
+        "name": "Smart Watch Pro",
+        "price": 7800,
+        "kind": "watch",
+        "color": "#ef4444"
+      },
+      {
+        "name": "Studio Headphone",
+        "price": 9800,
+        "kind": "headphone",
+        "color": "#0ea5e9"
+      }
+    ]
+  },
+  {
+    "id": "gift",
+    "name": "GIFT CORNER",
+    "subtitle": "Gifts & Sweets",
+    "style": "market",
+    "accent": "#ec4899",
+    "products": [
+      {
+        "name": "Gift Box Large",
+        "price": 1800,
+        "kind": "box",
+        "color": "#ec4899"
+      },
+      {
+        "name": "Chocolate Box",
+        "price": 1700,
+        "kind": "chocolate",
+        "color": "#7c3aed"
+      },
+      {
+        "name": "Honey Jar Premium",
+        "price": 1250,
+        "kind": "jar",
+        "color": "#d9901a"
+      },
+      {
+        "name": "Rose Plant",
+        "price": 950,
+        "kind": "plant",
+        "color": "#f43f5e"
+      },
+      {
+        "name": "Photo Frame Gold",
+        "price": 2100,
+        "kind": "frame",
+        "color": "#facc15"
+      },
+      {
+        "name": "Coffee Gift Pack",
+        "price": 1600,
+        "kind": "coffee",
+        "color": "#78350f"
+      }
+    ]
+  }
+]

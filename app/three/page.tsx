@@ -7,6 +7,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
 
 /* ============================ টাইপ ও ধ্রুবক ============================ */
+
 type Product = { id: string; name: string; price: number; image: string; kind: string; color: number };
 type Sel = Product & { shop: string };
 type CartItem = Sel & { count: number };
@@ -107,7 +108,7 @@ const genProducts = (style: string, n: number, seed: number, pre: string): Produ
     return { id: `${pre}${i}`, name: `${ADJ[Math.floor(r() * ADJ.length)]} ${BASE[kind]} ${i + 1}`, price, image: IMG[kind] ?? ph(kind, color), kind, color };
   });
 };
-const SHOP_A = ['NOVA', 'ZEN', 'ROYAL', 'URBAN', 'PRIME', 'LUXE', 'SKY', 'METRO', 'ALPHA', 'BLUE', 'GOLDEN', 'SMART', 'FRESH', 'MEGA', 'ELITE'];
+const SHOP_A = ['NOVA1-999', 'ZEN', 'ROYAL', 'URBAN', 'PRIME', 'LUXE', 'SKY', 'METRO', 'ALPHA', 'BLUE', 'GOLDEN', 'SMART', 'FRESH', 'MEGA', 'ELITE'];
 const SHOP_B: Record<string, string> = { fashion: 'FASHION', tech: 'TECH', home: 'HOME', market: 'MART' };
 const SHOP_SUB: Record<string, string> = { fashion: 'Premium Fashion', tech: 'Smart Devices', home: 'Furniture & Decor', market: 'Grocery & Food' };
 const genShop = (i: number, slot: { x: number; z: number }, nProducts: number): Shop => {
@@ -125,7 +126,7 @@ const toNum = (v: unknown, d: number) => {
 };
 const SAMPLE_JSON = JSON.stringify([
   { name: 'DEMO STORE', subtitle: 'JSON থেকে তৈরি', style: 'fashion', accent: '#e11d48', products: [
-    { name: 'ডেনিম জ্যাকেট', price: 3200, kind: 'jacket', color: '#2563eb', image: IMG.jacket },
+    { name: 'ডেনিম জ্যাকেট-999' , price: 3200, kind: 'jacket', color: '#2563eb', image: IMG.jacket },
     { name: 'স্পোর্টস জুতা', price: 2800, kind: 'sneaker', color: '#ef4444', image: IMG.sneaker },
     { name: 'নিজের ছবির পণ্য', price: 999, image: 'https://example.com/apnar-chobi.jpg' },
   ] },
@@ -140,7 +141,7 @@ const SAMPLE_JSON = JSON.stringify([
 // kind : tshirt jacket sneaker glasses bag watch phone camera headphone chair lamp plant book jar chocolate sack coffee bottle box frame
 // image না দিলে kind অনুযায়ী ডিফল্ট ছবি বসে; নিজের ছবির লিংক দিলে সেটাই দেখাবে। নতুন দোকান = অ্যারেতে নতুন অবজেক্ট।
 const MALL_DATA: RawShop[] = [
-  { id: 'fashion', name: 'NOVA FASHION', subtitle: 'Premium Fashion', style: 'fashion', accent: '#7c3aed', products: [
+  { id: 'fashion', name: 'NOVA FASHION-99', subtitle: 'Premium Fashion', style: 'fashion', accent: '#7c3aed', products: [
     { name: 'Premium T-Shirt', price: 1800, kind: 'tshirt', color: '#2563eb' },
     { name: 'Urban Jacket', price: 5200, kind: 'jacket', color: '#1e293b' },
     { name: 'Classic Sunglasses', price: 2400, kind: 'glasses', color: '#111827' },
@@ -148,15 +149,29 @@ const MALL_DATA: RawShop[] = [
     { name: 'Leather Handbag', price: 3800, kind: 'bag', color: '#92400e' },
     { name: 'Denim Jacket', price: 3200, kind: 'jacket', color: '#2563eb' },
   ] },
-  { id: 'tech', name: 'TECHHUB', subtitle: 'Smart Devices', style: 'tech', accent: '#0891b2', products: [
+  { id: 'tech', name: 'TECHHUB-9', subtitle: 'Smart Devices', style: 'tech', accent: '#0891b2', products: [
     { name: 'Smart Watch', price: 4500, kind: 'watch', color: '#1e293b' },
     { name: 'Mirrorless Camera', price: 62000, kind: 'camera', color: '#cbd5e1' },
     { name: 'Wireless Headphones', price: 6800, kind: 'headphone', color: '#111827' },
     { name: 'Flagship Phone', price: 92000, kind: 'phone', color: '#64748b' },
     { name: 'Budget Phone', price: 18500, kind: 'phone', color: '#0ea5e9' },
     { name: 'Action Camera', price: 21000, kind: 'camera', color: '#f97316' },
+    { name: 'Action Camera', price: 21000, kind: 'camera', color: '#f97316' },{ name: 'Action Camera', price: 21000, kind: 'camera', color: '#f97316' },
+    { name: 'Action Camera', price: 21000, kind: 'camera', color: '#f97316' },{ name: 'Action Camera', price: 21000, kind: 'camera', color: '#f97316' },
+    { name: 'Action Camera', price: 21000, kind: 'camera', color: '#f97316' },{ name: 'Action Camera', price: 21000, kind: 'camera', color: '#f97316' },
+    { name: 'Action Camera', price: 21000, kind: 'camera', color: '#f97316' },{ name: 'Action Camera', price: 21000, kind: 'camera', color: '#f97316' },
+    { name: 'Action Camera', price: 21000, kind: 'camera', color: '#f97316' },{ name: 'Action Camera', price: 21000, kind: 'camera', color: '#f97316' },
+    { name: 'Action Camera', price: 21000, kind: 'camera', color: '#f97316' },{ name: 'Action Camera', price: 21000, kind: 'camera', color: '#f97316' },
+    { name: 'Action Camera', price: 21000, kind: 'camera', color: '#f97316' },{ name: 'Action Camera', price: 21000, kind: 'camera', color: '#f97316' },
+    { name: 'Action Camera', price: 21000, kind: 'camera', color: '#f97316' },{ name: 'Action Camera', price: 21000, kind: 'camera', color: '#f97316' },
+    { name: 'Action Camera', price: 21000, kind: 'camera', color: '#f97316' },{ name: 'Action Camera', price: 21000, kind: 'camera', color: '#f97316' },
+    { name: 'Action Camera', price: 21000, kind: 'camera', color: '#f97316' },{ name: 'Action Camera', price: 21000, kind: 'camera', color: '#f97316' },
+    { name: 'Action Camera', price: 21000, kind: 'camera', color: '#f97316' },{ name: 'Action Camera', price: 21000, kind: 'camera', color: '#f97316' },
+    { name: 'Action Camera', price: 21000, kind: 'camera', color: '#f97316' },{ name: 'Action Camera', price: 21000, kind: 'camera', color: '#f97316' },
+    { name: 'Action Camera', price: 21000, kind: 'camera', color: '#f97316' },{ name: 'Action Camera', price: 21000, kind: 'camera', color: '#f97316' },
+    { name: 'Action Camera', price: 21000, kind: 'camera', color: '#f97316' },
   ] },
-  { id: 'home', name: 'URBAN HOME', subtitle: 'Furniture & Decor', style: 'home', accent: '#d97706', products: [
+  { id: 'home', name: 'URBAN HOME-09', subtitle: 'Furniture & Decor', style: 'home', accent: '#d97706', products: [
     { name: 'Designer Chair', price: 8500, kind: 'chair', color: '#d97706' },
     { name: 'Modern Table Lamp', price: 3200, kind: 'lamp', color: '#facc15' },
     { name: 'Indoor Plant', price: 900, kind: 'plant', color: '#16a34a' },
@@ -670,7 +685,7 @@ function addCity(scene: THREE.Scene) {
   };
 
   /* সামনের সারি: নিচে দোকান (সাইনবোর্ড, শামিয়ানা, আলোকিত কাচ) */
-  const NAMES = ['BAZAAR', 'CAFE', 'PHARMACY', 'FASHION', 'BOOKS', 'MOBILE', 'BAKERY', 'ELECTRO', 'GROCERY', 'TAILOR'];
+  const NAMES = ['BAZAAR-99', 'CAFE', 'PHARMACY', 'FASHION', 'BOOKS', 'MOBILE', 'BAKERY', 'ELECTRO', 'GROCERY', 'TAILOR'];
   const AWN = [0xdc2626, 0x2563eb, 0x16a34a, 0xf59e0b, 0x7c3aed, 0xec4899];
   for (let i = -9; i <= 9; i++) {
     const x = i * 17, w = 15, d = 14, fi = i + 9, fz = 92 - d / 2 - 0.06;
