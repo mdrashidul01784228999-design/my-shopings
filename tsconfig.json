@@ -33,7 +33,7 @@
     "**/*.ts",
     "**/*.tsx",
     ".next/types/**/*.ts",
-    "app/not-found.jsx",
+    "app/not-found.tsx",
     ".next/dev/types/**/*.ts"
 , "app/api/mess.js", "next.config.js"  ],
   "exclude": [
