@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { SITE_URL } from '@/lib/seo';
+import { SITE_URL } from './seo';
 
 // /robots.txt নিজে থেকেই তৈরি হবে
 export default function robots(): MetadataRoute.Robots {

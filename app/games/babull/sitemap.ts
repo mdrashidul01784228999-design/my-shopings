@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next';
-import { ROUTES, SITE_URL } from '@/lib/seo';
+import { ROUTES, SITE_URL } from './seo';
 
 // /sitemap.xml নিজে থেকেই তৈরি হবে
 export default function sitemap(): MetadataRoute.Sitemap {
