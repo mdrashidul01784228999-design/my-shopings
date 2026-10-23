@@ -111,7 +111,7 @@ const categories: Category[] = [
     img: img("photo-1542751371-adc38448a05e"),
     color: "from-cyan-600/50 via-blue-700/30 to-black/95",
     glow: "6,182,212",
-    link: "/games/Jamgam",
+    link: "/games/Jam",
     description: "মাল্টিপ্লেয়ার গেমপ্লে এবং দৈনিক জ্যাম টুর্নামেন্টে অংশ নিয়ে পয়েন্ট জিতুন।",
   },
   {
@@ -134,6 +134,63 @@ const categories: Category[] = [
     link: "/games/babull",
     description: "বাবুলের সাথে অ্যাকশন-প্যাকড শুটার গেম খেলুন এবং কয়েন জিতুন।",
   },
+
+    {
+    id: "games-number-messanig",
+    title: "জেমিতিক্স গেম এন্ড কয়েন আর্নিং গেম",
+    icon: <Crosshair className={`${ic} text-fuchsia-300`} />,
+    img: img("photo-1511512578047-dfb367046420"),
+    color: "from-fuchsia-600/50 via-purple-800/30 to-black/95",
+    glow: "217,70,239",
+    link: "/games/qs",
+    description: "বাবুলের সাথে অ্যাকশন-প্যাকড শুটার গেম খেলুন এবং কয়েন জিতুন।",
+  },
+
+
+  {
+    id: "games-number-messanig",
+    title: "নাম্বার গেম  ক্লিক এন্ড কয়েন আর্নিং গেম",
+    icon: <Crosshair className={`${ic} text-fuchsia-300`} />,
+    img: img("photo-1511512578047-dfb367046420"),
+    color: "from-fuchsia-600/50 via-purple-800/30 to-black/95",
+    glow: "217,70,239",
+    link: "/games/number",
+    description: "বাবুলের সাথে অ্যাকশন-প্যাকড শুটার গেম খেলুন এবং কয়েন জিতুন।",
+  },
+{
+    id: "games-shopings",
+    title: "ভাসুয়েল মার্কেট ",
+    icon: <Crosshair className={`${ic} text-fuchsia-300`} />,
+    img: img("photo-1511512578047-dfb367046420"),
+    color: "from-fuchsia-600/50 via-purple-800/30 to-black/95",
+    glow: "217,70,239",
+    link: "/real_shop",
+    description: "বাবুলের সাথে অ্যাকশন-প্যাকড শুটার গেম খেলুন এবং কয়েন জিতুন।",
+  },
+
+{
+    id: "games-shopings",
+    title: "ভাসুয়েল মার্কেট ",
+    icon: <Crosshair className={`${ic} text-fuchsia-300`} />,
+    img: img("photo-1511512578047-dfb367046420"),
+    color: "from-fuchsia-600/50 via-purple-800/30 to-black/95",
+    glow: "217,70,239",
+    link: "/call/app",
+    description: "বাবুলের সাথে অ্যাকশন-প্যাকড শুটার গেম খেলুন এবং কয়েন জিতুন।",
+  },
+
+
+{
+    id: "games-coin-earning-game",
+    title: "কয়েন আর্নিং গেম",
+    icon: <Crosshair className={`${ic} text-fuchsia-300`} />,
+    img: img("photo-1511512578047-dfb367046420"),
+    color: "from-fuchsia-600/50 via-purple-800/30 to-black/95",
+    glow: "217,70,239",
+    link: "/games/real",
+    description: "বাবুলের সাথে অ্যাকশন-প্যাকড শুটার গেম খেলুন এবং কয়েন জিতুন।",
+  },
+
 ];
 
 const gridVariants: Variants = {
