@@ -1,16 +1,17 @@
 "use client";
 import { useState } from "react";
+import Icon from "./Icons";
 
 const DEVICES = {
-  pc: { icon: "🖥️", name: "ডেস্কটপ পিসি", hint: "যেমন: Core i5, Gigabyte H410", chips: ["চালু হয় না", "বারবার রিস্টার্ট", "ধীর গতি", "মনিটরে ডিসপ্লে নেই", "ভাইরাস/উইন্ডোজ সমস্যা"] },
-  laptop: { icon: "💻", name: "ল্যাপটপ", hint: "যেমন: Dell Inspiron 15 3520", chips: ["চার্জ হয় না", "স্ক্রিন ভাঙা", "অতিরিক্ত গরম", "কিবোর্ড কাজ করে না", "ব্যাটারি ব্যাকআপ নেই"] },
-  mobile: { icon: "📱", name: "মোবাইল", hint: "যেমন: Samsung Galaxy A34", chips: ["ডিসপ্লে ভাঙা", "চার্জ ঢোকে না", "পানিতে পড়েছে", "হ্যাং করে", "ব্যাটারি দ্রুত শেষ"] },
-  tv: { icon: "📺", name: "টিভি", hint: "যেমন: Sony Bravia 43 inch LED", chips: ["ছবি আসে না", "শব্দ নেই", "স্ক্রিনে লাইন", "চালু হয় না", "রিমোট কাজ করে না"] },
-  fridge: { icon: "🧊", name: "ফ্রিজ", hint: "যেমন: Walton 250L Double Door", chips: ["ঠান্ডা হয় না", "কম্প্রেসার চলে না", "পানি পড়ে", "অতিরিক্ত শব্দ", "বরফ জমে যায়"] },
-  ac: { icon: "❄️", name: "এসি", hint: "যেমন: Gree 1.5 Ton Inverter", chips: ["ঠান্ডা কম", "পানি পড়ে", "গ্যাস লিক", "আউটডোর চলে না", "গ্যাস ভরা"] },
-  wm: { icon: "🧺", name: "ওয়াশিং মেশিন", hint: "যেমন: LG 7kg Front Load", chips: ["ঘোরে না", "পানি জমে থাকে", "শব্দ করে", "চালু হয় না", "ড্রাইয়ার কাজ করে না"] },
-  printer: { icon: "🖨️", name: "প্রিন্টার", hint: "যেমন: HP LaserJet 1020", chips: ["প্রিন্ট হয় না", "পেপার জ্যাম", "কালি সমস্যা", "ঝাপসা প্রিন্ট", "ড্রাইভার সমস্যা"] },
-  other: { icon: "🔧", name: "অন্যান্য", hint: "ডিভাইসের নাম ও মডেল লিখুন", chips: ["চালু হয় না", "শব্দ করে", "গরম হয়", "পার্টস নষ্ট", "পরীক্ষা করাতে চাই"] },
+  pc: { icon: "pc", name: "ডেস্কটপ পিসি", hint: "যেমন: Core i5, Gigabyte H410", chips: ["চালু হয় না", "বারবার রিস্টার্ট", "ধীর গতি", "মনিটরে ডিসপ্লে নেই", "ভাইরাস/উইন্ডোজ সমস্যা"] },
+  laptop: { icon: "laptop", name: "ল্যাপটপ", hint: "যেমন: Dell Inspiron 15 3520", chips: ["চার্জ হয় না", "স্ক্রিন ভাঙা", "অতিরিক্ত গরম", "কিবোর্ড কাজ করে না", "ব্যাটারি ব্যাকআপ নেই"] },
+  mobile: { icon: "mobile", name: "মোবাইল", hint: "যেমন: Samsung Galaxy A34", chips: ["ডিসপ্লে ভাঙা", "চার্জ ঢোকে না", "পানিতে পড়েছে", "হ্যাং করে", "ব্যাটারি দ্রুত শেষ"] },
+  tv: { icon: "tv", name: "টিভি", hint: "যেমন: Sony Bravia 43 inch LED", chips: ["ছবি আসে না", "শব্দ নেই", "স্ক্রিনে লাইন", "চালু হয় না", "রিমোট কাজ করে না"] },
+  fridge: { icon: "fridge", name: "ফ্রিজ", hint: "যেমন: Walton 250L Double Door", chips: ["ঠান্ডা হয় না", "কম্প্রেসার চলে না", "পানি পড়ে", "অতিরিক্ত শব্দ", "বরফ জমে যায়"] },
+  ac: { icon: "ac", name: "এসি", hint: "যেমন: Gree 1.5 Ton Inverter", chips: ["ঠান্ডা কম", "পানি পড়ে", "গ্যাস লিক", "আউটডোর চলে না", "গ্যাস ভরা"] },
+  wm: { icon: "wm", name: "ওয়াশিং মেশিন", hint: "যেমন: LG 7kg Front Load", chips: ["ঘোরে না", "পানি জমে থাকে", "শব্দ করে", "চালু হয় না", "ড্রাইয়ার কাজ করে না"] },
+  printer: { icon: "printer", name: "প্রিন্টার", hint: "যেমন: HP LaserJet 1020", chips: ["প্রিন্ট হয় না", "পেপার জ্যাম", "কালি সমস্যা", "ঝাপসা প্রিন্ট", "ড্রাইভার সমস্যা"] },
+  other: { icon: "other", name: "অন্যান্য", hint: "ডিভাইসের নাম ও মডেল লিখুন", chips: ["চালু হয় না", "শব্দ করে", "গরম হয়", "পার্টস নষ্ট", "পরীক্ষা করাতে চাই"] },
 };
 const TYPES = ["মেরামত রিকোয়েস্ট", "অভিযোগ", "ওয়ারেন্টি ক্লেইম", "মূল্য জানতে চাই"];
 const DURATIONS = ["আজ থেকে", "১-৩ দিন", "১ সপ্তাহ", "১ মাস", "১ মাসের বেশি"];
@@ -40,7 +41,7 @@ export default function RequestForm() {
   if (state.s === "done")
     return (
       <div className="panel done" role="status">
-        <div className="tick">✓</div>
+        <div className="tick"><Icon name="check" size={34} /></div>
         <h3>রিকোয়েস্ট পাঠানো হয়েছে</h3>
         <p>আপনার ট্র্যাকিং কোড: <b>{state.msg}</b></p>
         <p>আমরা শীঘ্রই {f.phone} নম্বরে যোগাযোগ করব।</p>
@@ -51,18 +52,18 @@ export default function RequestForm() {
 
   return (
     <div className="panel">
-      <h3 id="pick">১. কোন ডিভাইসে সমস্যা?</h3>
+      <h3 id="pick"><i className="n">১</i>কোন ডিভাইসে সমস্যা?</h3>
       <div className="devices" role="radiogroup" aria-labelledby="pick">
         {Object.entries(DEVICES).map(([k, d]) => (
           <button key={k} type="button" role="radio" aria-checked={dev === k} className={"dev" + (dev === k ? " on" : "")} onClick={() => setDev(k)}>
-            <span className="ico" aria-hidden="true">{d.icon}</span>{d.name}
+            <span className="ico"><Icon name={d.icon} size={30} /></span>{d.name}
           </button>
         ))}
       </div>
 
       {dev && (
         <form onSubmit={submit} className="form" key={dev}>
-          <h3>২. {DEVICES[dev].name} এর বিবরণ দিন</h3>
+          <h3><i className="n">২</i>{DEVICES[dev].name} এর বিবরণ দিন</h3>
           <div className="seg" role="radiogroup" aria-label="ধরন">
             {TYPES.map((t) => <button type="button" key={t} role="radio" aria-checked={f.type === t} className={f.type === t ? "on" : ""} onClick={() => set("type", t)}>{t}</button>)}
           </div>
