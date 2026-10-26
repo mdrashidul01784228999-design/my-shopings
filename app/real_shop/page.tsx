@@ -1,16 +1,20 @@
+
+
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
 import * as THREE from 'three';
-import SHOPS_JSON from './shops.json';
-import PRODUCTS_JSON from './products.json';
+import { RoomEnvironment } from 'three/examples/jsm/environments/RoomEnvironment.js';
+import localProducts from './data.json';
+import localShops from './shops.json';
 
 /* ============================ টাইপ ও ধ্রুবক ============================ */
+
 
 type Product = { id: string; name: string; price: number; image: string; kind: string; color: number };
 type Sel = Product & { shop: string };
 type CartItem = Sel & { count: number };
-type Shop = { id: string; name: string; subtitle: string; x: number; z: number; accent: number; style: string; products: Product[] };
+type Shop = { id: string; name: string; subtitle: string; x: number; z: number; accent: number; style: string; products: Product[]; remote?: boolean };
 type Profile = { name: string; photo: string };
 type Box2 = { minX: number; maxX: number; minZ: number; maxZ: number };
 type Slot = { x: number; y: number; z: number; ry: number; s: number };
@@ -117,11 +121,18 @@ const genShop = (i: number, slot: { x: number; z: number }, nProducts: number): 
 
 /* ============================ JSON ইমপোর্ট (দোকান ও পণ্য ডাইনামিক) ============================ */
 type RawProduct = { id?: string | number; name?: string; price?: number | string; image?: string; kind?: string; color?: string | number };
-type RawShop = { id?: string; name?: string; subtitle?: string; style?: string; accent?: string | number; products?: RawProduct[] };
+type RawShop = { id?: string | number; name?: string; subtitle?: string; style?: string; accent?: string | number; products?: RawProduct[] };
 const toNum = (v: unknown, d: number) => {
   if (typeof v === 'number' && isFinite(v)) return v;
   if (typeof v === 'string') { const m = v.trim().replace('#', '').replace(/^0x/i, ''); if (/^[0-9a-f]{6}$/i.test(m)) return parseInt(m, 16); }
   return d;
+};
+/* দাম পড়া: 1200, "1200", "1,200", "৳1200", "১২০০" সবই চলবে */
+const BN = '০১২৩৪৫৬৭৮৯';
+const toPrice = (v: unknown) => {
+  if (typeof v === 'number') return v;
+  const s = String(v ?? '').replace(/[০-৯]/g, (d) => String(BN.indexOf(d))).replace(/[^\d.]/g, '');
+  return Number(s);
 };
 const SAMPLE_JSON = JSON.stringify([
   { name: 'DEMO STORE', subtitle: 'JSON থেকে তৈরি', style: 'fashion', accent: '#e11d48', products: [
@@ -135,23 +146,56 @@ const SAMPLE_JSON = JSON.stringify([
   ] },
 ], null, 2);
 
-// ================= ডেটা আলাদা ফাইলে =================
-// shops.json    → দোকানের তালিকা (id, name, subtitle, style, accent)
-// products.json → পণ্যের তালিকা (প্রতিটিতে shopId দিয়ে দোকানের সাথে জোড়া)
+// ================= লাইভ ডেটা (রিয়েলটাইম লোড) =================
+// প্রথমে সার্ভার থেকে আনা হয় (পেজ চলা অবস্থাতেই, প্রতি LIVE_MS পরপর পরিবর্তন খোঁজা হয়):
+//   public/data/shops.json → দোকানের তালিকা (id, name, subtitle, style, accent)
+//   public/data/data.json  → পণ্যের তালিকা (প্রতিটিতে shopId দিয়ে দোকানের সাথে জোড়া)
+// সার্ভারের ফাইল না পেলে কোডের পাশের ./shops.json ও ./data.json (বিল্ডে ঢোকানো) ব্যবহার হয়।
 // style: fashion | tech | home | market
 // kind : tshirt jacket sneaker glasses bag watch phone camera headphone chair lamp plant book jar chocolate sack coffee bottle box frame
-// image না দিলে kind অনুযায়ী ডিফল্ট ছবি বসে; নিজের ছবির লিংক দিলে সেটাই দেখাবে।
-type JsonShop = { id: string; name: string; subtitle?: string; style?: string; accent?: string };
-type JsonProduct = RawProduct & { shopId: string };
+// image: যেকোনো ছবির লিংক (https://...)। না দিলে kind অনুযায়ী ডিফল্ট ছবি বসে।
+const DATA_URLS = { shops: '/data/shops.json', products: '/data/data.json' };
+const LIVE_MS = 5000;
+const nowStr = () => new Date().toLocaleTimeString('en-GB');
+type JsonShop = { id: string | number; name: string; subtitle?: string; style?: string; accent?: string | number; products?: RawProduct[] };
+type JsonProduct = RawProduct & { shopId: string | number };
+const unwrap = (v: unknown, key: string): unknown[] => {
+  if (Array.isArray(v)) return v;
+  const inner = v && typeof v === 'object' ? (v as Record<string, unknown>)[key] : undefined;
+  return Array.isArray(inner) ? inner : [];
+};
+/* shopId ও id সংখ্যা/স্ট্রিং যা-ই হোক, স্ট্রিং বানিয়ে মেলানো হয় */
 const buildMallData = (shopList: JsonShop[], productList: JsonProduct[]): RawShop[] => {
   const by = new Map<string, RawProduct[]>();
-  productList.forEach((p) => { const a = by.get(p.shopId); if (a) a.push(p); else by.set(p.shopId, [p]); });
-  return shopList.map((sh) => ({ ...sh, products: by.get(sh.id) ?? [] }));
+  productList.forEach((p) => {
+    if (!p || typeof p !== 'object') return;
+    const k = String(p.shopId);
+    const a = by.get(k);
+    if (a) a.push(p); else by.set(k, [p]);
+  });
+  return shopList
+    .filter((sh) => sh && typeof sh === 'object')
+    .map((sh) => { const k = String(sh.id); return { ...sh, id: k, products: [...(sh.products ?? []), ...(by.get(k) ?? [])] }; });
 };
-const MALL_DATA = buildMallData(SHOPS_JSON as unknown as JsonShop[], PRODUCTS_JSON as unknown as JsonProduct[]);
-/* JSON ফাইল বদলালে সেভ করা পুরনো ডেটা বাদ দিয়ে নতুন JSON থেকে লোড হবে */
 const hashStr = (t: string) => { let h = 5381; for (let i = 0; i < t.length; i++) h = ((h << 5) + h + t.charCodeAt(i)) | 0; return String(h); };
-const DATA_VER = hashStr(JSON.stringify(SHOPS_JSON) + JSON.stringify(PRODUCTS_JSON));
+/* প্রথমে সার্ভার (/data/*.json), ব্যর্থ হলে কোডের পাশের ফাইল (./shops.json, ./data.json) */
+const loadRemote = async (): Promise<{ raw: RawShop[]; ver: string } | null> => {
+  let raw: RawShop[] = [];
+  try {
+    const get = async (url: string) => {
+      const res = await fetch(`${url}${url.includes('?') ? '&' : '?'}t=${Date.now()}`, { cache: 'no-store' });
+      if (!res.ok) throw new Error(String(res.status));
+      return res.json();
+    };
+    const [sh, pr] = await Promise.all([get(DATA_URLS.shops), get(DATA_URLS.products)]);
+    raw = buildMallData(unwrap(sh, 'shops') as JsonShop[], unwrap(pr, 'products') as JsonProduct[]);
+  } catch { /* ফলব্যাকে যাবে */ }
+  if (!raw.length) {
+    raw = buildMallData(unwrap(localShops, 'shops') as JsonShop[], unwrap(localProducts, 'products') as JsonProduct[]);
+  }
+  if (!raw.length) return null;
+  return { raw, ver: hashStr(JSON.stringify(raw)) };
+};
 
 /* raw JSON → Shop[]। একই নামের দোকান থাকলে সেখানে পণ্য যোগ হয়, না থাকলে নতুন দোকান */
 const normalizeShops = (raw: unknown, existing: Shop[], replace: boolean) => {
@@ -171,13 +215,13 @@ const normalizeShops = (raw: unknown, existing: Shop[], replace: boolean) => {
       if (base.length >= MAX_SHOPS) return;
       const slot = nextSlots(base, 1)[0]; if (!slot) return;
       const style = r.style && STYLE_KINDS[r.style] ? r.style : 'market';
-      shop = { id: r.id ? String(r.id) : `j${stamp}${si}`, name, subtitle: String(r.subtitle ?? SHOP_SUB[style]).slice(0, 32), ...slot, accent: toNum(r.accent, PAL[(base.length * 5 + 1) % (PAL.length - 1)]), style, products: [] };
+      shop = { id: r.id != null && String(r.id) !== '' ? String(r.id) : `j${stamp}${si}`, name, subtitle: String(r.subtitle ?? SHOP_SUB[style]).slice(0, 32), ...slot, accent: toNum(r.accent, PAL[(base.length * 5 + 1) % (PAL.length - 1)]), style, products: [] };
       idx = base.push(shop) - 1; added++;
     }
     const kinds = STYLE_KINDS[shop.style] ?? STYLE_KINDS.market;
     (Array.isArray(r.products) ? r.products : []).forEach((p, pi) => {
       if (!p || typeof p !== 'object' || shop.products.length >= MAX_PRODUCTS) return;
-      const pname = String(p.name ?? '').trim(), price = Number(p.price);
+      const pname = String(p.name ?? '').trim(), price = toPrice(p.price);
       if (!pname || !(price > 0)) return;
       const kind = p.kind && KINDS.some(([k]) => k === p.kind) ? p.kind : kinds[pi % kinds.length];
       const color = toNum(p.color, PAL[pi % PAL.length]);
@@ -188,7 +232,12 @@ const normalizeShops = (raw: unknown, existing: Shop[], replace: boolean) => {
   });
   return { shops: base, added, products };
 };
-const defaultShops = (): Shop[] => normalizeShops(MALL_DATA, [], true).shops;
+/* লাইভ ডেটা + ব্যবহারকারীর নিজের যোগ করা দোকান মিলিয়ে নতুন তালিকা */
+const mergeRemote = (existing: Shop[], raw: RawShop[]): Shop[] => {
+  const out: Shop[] = normalizeShops(raw, [], true).shops.map((x) => ({ ...x, remote: true }));
+  existing.filter((x) => !x.remote).forEach((x) => { const slot = nextSlots(out, 1)[0]; if (slot) out.push({ ...x, ...slot }); });
+  return out;
+};
 
 /* ============================ IndexedDB (বড় ডেটার জন্য) ============================ */
 const openDB = () => new Promise<IDBDatabase>((res, rej) => {
@@ -341,6 +390,19 @@ const modelNo = (p: { id: string; kind: string }) => {
   let h = 7; for (const ch of p.id) h = (h * 31 + ch.charCodeAt(0)) % 9000;
   return `${p.kind.slice(0, 2).toUpperCase()}-${1000 + h}`;
 };
+/* রিয়েলিস্টিক পণ্য তথ্য: ডিসকাউন্ট, পুরনো দাম, রেটিং, স্টক, বিবরণ (পণ্যের id থেকে স্থির) */
+const extra = (p: { id: string; kind: string; name: string; price: number }) => {
+  let h = 11; for (const ch of p.id) h = (h * 131 + ch.charCodeAt(0)) % 100000;
+  const off = [0, 0, 10, 15, 20, 25][h % 6];
+  return {
+    off,
+    old: off ? Math.round(p.price / (1 - off / 100) / 10) * 10 : 0,
+    rating: Math.round((3.8 + (h % 12) / 10) * 10) / 10,
+    reviews: 12 + (h % 480),
+    stock: 3 + (h % 40),
+    desc: `${BASE[p.kind] ?? p.name} — উচ্চমানের, টেকসই ও আরামদায়ক। ১ বছরের ওয়ারেন্টি ও ৭ দিনের রিটার্ন সুবিধা।`,
+  };
+};
 const LBC = new Map<string, THREE.MeshBasicMaterial>();
 const labelMat = (p: { id: string; name: string; price: number; kind: string; color: number }) => {
   const key = `${p.id}|${p.name}|${p.price}`;
@@ -351,9 +413,18 @@ const labelMat = (p: { id: string; name: string; price: number; kind: string; co
       x.fillStyle = gr; x.fillRect(0, 0, 512, 256);
       x.fillStyle = hex(p.color); x.fillRect(0, 0, 512, 10);
       x.textAlign = 'center'; x.textBaseline = 'middle';
-      x.fillStyle = '#fff'; x.font = '800 54px Arial'; x.fillText(p.name, 256, 72, 480);
-      x.fillStyle = '#facc15'; x.font = '900 76px Arial'; x.fillText(taka(p.price), 256, 156, 480);
-      x.fillStyle = '#94a3b8'; x.font = '600 34px Arial'; x.fillText('Model: ' + modelNo(p), 256, 220, 480);
+      const ex = extra(p);
+      x.fillStyle = '#fff'; x.font = '800 50px Arial'; x.fillText(p.name, 256, 62, 470);
+      x.fillStyle = '#facc15'; x.font = '900 72px Arial'; x.fillText(taka(p.price), ex.off ? 210 : 256, 140, 380);
+      if (ex.off) {
+        const ot = taka(ex.old);
+        x.fillStyle = '#94a3b8'; x.font = '600 30px Arial'; x.fillText(ot, 430, 150, 130);
+        const w = Math.min(130, x.measureText(ot).width); x.fillRect(430 - w / 2, 150, w, 3);
+        x.fillStyle = '#ef4444'; x.fillRect(380, 90, 100, 34);
+        x.fillStyle = '#fff'; x.font = '900 26px Arial'; x.fillText(`-${ex.off}%`, 430, 108);
+      }
+      x.fillStyle = '#fbbf24'; x.font = '700 30px Arial'; x.fillText(`★ ${ex.rating} (${ex.reviews})`, 140, 215, 250);
+      x.fillStyle = '#94a3b8'; x.font = '600 28px Arial'; x.fillText('Model: ' + modelNo(p), 380, 215, 230);
     });
     t.userData.keep = true;
     m = new THREE.MeshBasicMaterial({ map: t, toneMapped: false }); m.userData.keep = true; LBC.set(key, m);
@@ -951,6 +1022,44 @@ const fmtHour = (h: number) => { const hh = Math.floor(h) % 24, mm = Math.round(
 
 type Built = { shop: Shop; g: THREE.Group; col: Box2[]; hits: { box: THREE.Box3; p: Product }[]; idlers: { h: Human; base: number }[]; screen: (t: number) => void; light: THREE.Vector3 };
 
+/* পণ্যের ছবি জুম: মাউস হুইল, ডাবল-ক্লিক, পিঞ্চ, ＋/− বাটন, ড্র্যাগ করে সরানো */
+const ZoomImage = ({ src, alt, onErr }: { src: string; alt: string; onErr: (e: React.SyntheticEvent<HTMLImageElement>) => void }) => {
+  const [s, setS] = useState(1), [o, setO] = useState({ x: 0, y: 0 });
+  const pts = useRef(new Map<number, { x: number; y: number }>()), last = useRef(0);
+  const lim = (z: number) => (z - 1) * 140;
+  const cl = (x: number, y: number, z: number) => ({ x: Math.max(-lim(z), Math.min(lim(z), x)), y: Math.max(-lim(z), Math.min(lim(z), y)) });
+  const zoom = (z: number) => { const n = Math.min(4, Math.max(1, z)); setS(n); setO((v) => (n === 1 ? { x: 0, y: 0 } : cl(v.x, v.y, n))); };
+  const down = (e: React.PointerEvent) => {
+    e.currentTarget.setPointerCapture(e.pointerId); pts.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pts.current.size === 2) { const [a, b] = [...pts.current.values()]; last.current = Math.hypot(a.x - b.x, a.y - b.y); }
+  };
+  const move = (e: React.PointerEvent) => {
+    const p = pts.current.get(e.pointerId); if (!p) return;
+    const dx = e.clientX - p.x, dy = e.clientY - p.y; pts.current.set(e.pointerId, { x: e.clientX, y: e.clientY });
+    if (pts.current.size === 2) {
+      const [a, b] = [...pts.current.values()], d = Math.hypot(a.x - b.x, a.y - b.y);
+      if (last.current) zoom((s * d) / last.current); last.current = d;
+    } else if (s > 1) setO((v) => cl(v.x + dx, v.y + dy, s));
+  };
+  const up = (e: React.PointerEvent) => { pts.current.delete(e.pointerId); last.current = 0; };
+  const zb = 'grid h-9 w-9 place-items-center rounded-full bg-black/60 text-lg font-black backdrop-blur transition hover:bg-black/80 active:scale-90';
+  return (
+    <div className="relative h-60 w-full touch-none overflow-hidden bg-black md:h-72" style={{ cursor: s > 1 ? 'grab' : 'zoom-in' }}
+      onWheel={(e) => zoom(s - e.deltaY * 0.002)} onDoubleClick={() => zoom(s > 1 ? 1 : 2.5)}
+      onPointerDown={down} onPointerMove={move} onPointerUp={up} onPointerCancel={up}>
+      <img src={src} alt={alt} draggable={false} onError={onErr} className="h-full w-full select-none object-cover"
+        style={{ transform: `translate(${o.x}px, ${o.y}px) scale(${s})`, transition: pts.current.size ? 'none' : 'transform .15s' }} />
+      <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
+      <div className="absolute bottom-10 right-3 z-10 flex flex-col gap-1.5" onPointerDown={(e) => e.stopPropagation()}>
+        <button className={zb} onClick={() => zoom(s + 0.5)} aria-label="Zoom in">＋</button>
+        <button className={zb} onClick={() => zoom(s - 0.5)} aria-label="Zoom out">−</button>
+        {s > 1 && <button className={`${zb} text-xs`} onClick={() => zoom(1)}>1×</button>}
+      </div>
+      <span className="pointer-events-none absolute bottom-10 left-3 rounded-full bg-black/60 px-2 py-0.5 text-[10px] font-bold">🔍 {s.toFixed(1)}×</span>
+    </div>
+  );
+};
+
 export default function Page() {
   const containerRef = useRef<HTMLDivElement>(null);
   const tipRef = useRef<HTMLDivElement>(null);
@@ -963,8 +1072,9 @@ export default function Page() {
   const sunCmdRef = useRef(false);
   const dayRef = useRef({ a: 0.65, auto: true });
   const rideCmdRef = useRef(0);
+  const verRef = useRef('');
 
-  const [shops, setShops] = useState<Shop[]>(defaultShops);
+  const [shops, setShops] = useState<Shop[]>([]);
   const [profile, setProfile] = useState<Profile>({ name: 'আমি', photo: '' });
   const [cart, setCart] = useState<CartItem[]>([]);
   const [balance, setBalance] = useState(100000);
@@ -990,6 +1100,10 @@ export default function Page() {
   const [riding, setRiding] = useState(false);
   const [nearBike, setNearBike] = useState(false);
   const [menuOpen, setMenuOpen] = useState(false);
+  const [dotsOpen, setDotsOpen] = useState(false);
+  const [showMsg, setShowMsg] = useState(true);
+  const [live, setLive] = useState(true);
+  const [syncAt, setSyncAt] = useState('');
   const [daily, setDaily] = useState<{ date: string; done: string[] }>({ date: todayKey(), done: [] });
   const [jsonText, setJsonText] = useState('');
   const [jsonMsg, setJsonMsg] = useState('');
@@ -997,6 +1111,9 @@ export default function Page() {
   const [shopTab, setShopTab] = useState<'products' | 'add' | 'shop' | 'json'>('products');
   const dailyRef = useRef(daily); dailyRef.current = daily;
   const doneToday = daily.date === todayKey() ? daily.done : [];
+
+  /* বার্তা ৩.৫ সেকেন্ড পর নিজে লুকিয়ে যায় */
+  useEffect(() => { setShowMsg(true); const t = setTimeout(() => setShowMsg(false), 3500); return () => clearTimeout(t); }, [message]);
 
   /* দৈনিক টাস্ক সম্পন্ন (দিনে প্রতিটি একবার, সর্বোচ্চ ৪টি) */
   const complete = (id: string) => {
@@ -1032,22 +1149,48 @@ export default function Page() {
           if (typeof ls.balance === 'number') setBalance(ls.balance); if (typeof ls.score === 'number') setScore(ls.score);
         }
       } catch { /* ignore */ }
-      const saved = (await kv.get('shops-v4')) as { ver?: string; shops?: Shop[] } | undefined;
-      if (alive && saved && saved.ver === DATA_VER && Array.isArray(saved.shops) && saved.shops.length) { setShops(saved.shops); setSid(saved.shops[0].id); }
-      if (alive) setLoaded(true);
+      const saved = (await kv.get('shops-v5')) as { shops?: Shop[] } | undefined;
+      let cur: Shop[] = saved && Array.isArray(saved.shops) ? saved.shops : [];
+      const remote = await loadRemote();
+      if (remote) { cur = mergeRemote(cur, remote.raw); verRef.current = remote.ver; setSyncAt(nowStr()); }
+      if (!alive) return;
+      setShops(cur); setSid(cur[0]?.id ?? ''); setLoaded(true);
+      if (!remote) setMessage('⚠️ ডেটা পাওয়া যায়নি — shops.json ও data.json ফাইল চেক করুন');
     })();
     return () => { alive = false; };
   }, []);
   useEffect(() => {
     if (!loaded) return;
-    const t = setTimeout(() => { kv.set('shops-v4', { ver: DATA_VER, shops }); }, 500);
-    return () => clearTimeout(t);
+    const save = () => { kv.set('shops-v5', { shops }); };
+    const t = setTimeout(save, 250);
+    window.addEventListener('pagehide', save);
+    return () => { clearTimeout(t); window.removeEventListener('pagehide', save); };
   }, [loaded, shops]);
   useEffect(() => {
     if (!loaded) return;
     try { localStorage.setItem(LS_KEY, JSON.stringify({ profile, cart, balance, score, daily })); } catch { /* ignore */ }
   }, [loaded, profile, cart, balance, score, daily]);
   useEffect(() => { meRef.current?.setName(profile.name, profile.photo); }, [profile]);
+  useEffect(() => { if (shops.length && !shops.some((x) => x.id === sid)) setSid(shops[0].id); }, [shops, sid]);
+
+  /* ---- রিয়েলটাইম সিঙ্ক: নির্দিষ্ট সময় পরপর + ট্যাবে ফিরলে ডেটা চেক; বদলালেই মলে আপডেট ---- */
+  const sync = async (manual = false) => {
+    const r = await loadRemote();
+    if (!r) { if (manual) setMessage('❌ ডেটা আনা যায়নি — ফাইল ঠিক আছে কিনা দেখুন'); return; }
+    setSyncAt(nowStr());
+    if (r.ver === verRef.current) { if (manual) setMessage('✅ ডেটা আগের মতোই আছে — কোনো পরিবর্তন নেই'); return; }
+    verRef.current = r.ver;
+    setShops((prev) => mergeRemote(prev, r.raw));
+    setMessage('🔄 নতুন ডেটা লাইভ লোড হয়েছে');
+  };
+  const syncRef = useRef(sync); syncRef.current = sync;
+  useEffect(() => {
+    if (!loaded || !live) return;
+    const run = () => { if (!document.hidden) syncRef.current(); };
+    const id = setInterval(run, LIVE_MS);
+    document.addEventListener('visibilitychange', run);
+    return () => { clearInterval(id); document.removeEventListener('visibilitychange', run); };
+  }, [loaded, live]);
 
   /* ============================ 3D দৃশ্য ============================ */
   useEffect(() => {
@@ -1063,6 +1206,10 @@ export default function Page() {
     renderer.outputColorSpace = THREE.SRGBColorSpace; renderer.toneMapping = THREE.ACESFilmicToneMapping;
     container.appendChild(renderer.domElement);
     renderer.domElement.style.touchAction = 'none';
+    renderer.toneMappingExposure = 1.05;
+    const pmrem = new THREE.PMREMGenerator(renderer);
+    scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+    (scene as THREE.Scene & { environmentIntensity?: number }).environmentIntensity = 0.35;
 
     const hemi = new THREE.HemisphereLight(0xcfe6ff, 0x3a4252, 1.6); scene.add(hemi);
     const sun = new THREE.DirectionalLight(0xffffff, 1.6);
@@ -1336,7 +1483,7 @@ export default function Page() {
       if (down.moved < 8 && performance.now() - down.t < 500) { const h = pickAt(e.clientX, e.clientY); if (h) { setQty(1); setSelected({ ...h.p, shop: h.shop }); completeRef.current('view'); } }
       down = null;
     };
-    const onWheel = (e: WheelEvent) => { camDist = THREE.MathUtils.clamp(camDist + e.deltaY * 0.01, 6, 18); };
+    const onWheel = (e: WheelEvent) => { camDist = THREE.MathUtils.clamp(camDist + e.deltaY * 0.01, 3, 22); };
     el.addEventListener('pointerdown', onDown); el.addEventListener('pointermove', onMove);
     el.addEventListener('pointerup', onUp); el.addEventListener('pointercancel', onUp); el.addEventListener('wheel', onWheel, { passive: true });
 
@@ -1551,6 +1698,7 @@ export default function Page() {
       el.removeEventListener('pointerup', onUp); el.removeEventListener('pointercancel', onUp); el.removeEventListener('wheel', onWheel);
       built.forEach((b) => disposeTree(b.g)); built.clear();
       disposeTree(scene);
+      pmrem.dispose();
       renderer.dispose();
       if (renderer.domElement.parentNode === container) container.removeChild(renderer.domElement);
     };
@@ -1586,7 +1734,7 @@ export default function Page() {
   };
   const addProduct = () => {
     if (!shop) return;
-    const price = Number(np.price);
+    const price = toPrice(np.price);
     if (!np.name.trim() || !(price > 0)) return setMessage('✏️ পণ্যের নাম ও সঠিক দাম দিন');
     if (shop.products.length >= MAX_PRODUCTS) return setMessage(`❌ একটি দোকানে সর্বোচ্চ ${MAX_PRODUCTS}টি পণ্য`);
     const color = parseInt(np.color.slice(1), 16);
@@ -1596,9 +1744,9 @@ export default function Page() {
   const addDemo = () => {
     const need = Math.min(100, MAX_SHOPS) - shops.length;
     const slots = nextSlots(shops, Math.max(0, need));
-    const extra = slots.map((s, i) => genShop(shops.length + i, s, 100));
+    const extraShops = slots.map((s, i) => genShop(shops.length + i, s, 100));
     const filled = shops.map((s) => (s.products.length < 100 ? { ...s, products: [...s.products, ...genProducts(s.style, 100 - s.products.length, s.id.length * 7, s.id + '_x')] } : s));
-    setShops([...filled, ...extra]); setMessage(`🎲 ডেমো তৈরি: মোট ${filled.length + extra.length}টি দোকান, প্রতিটিতে ১০০টি পণ্য`);
+    setShops([...filled, ...extraShops]); setMessage(`🎲 ডেমো তৈরি: মোট ${filled.length + extraShops.length}টি দোকান, প্রতিটিতে ১০০টি পণ্য`);
   };
   const importJson = (replace: boolean) => {
     try {
@@ -1617,6 +1765,12 @@ export default function Page() {
     try { const r = await fetch(jsonUrl.trim()); if (!r.ok) throw new Error('x'); setJsonText(await r.text()); setJsonMsg('✅ লিংক থেকে ডেটা এসেছে — এবার "যোগ করুন" চাপুন'); }
     catch { setJsonMsg('❌ লিংক থেকে আনা যায়নি (ভুল লিংক বা CORS বন্ধ)। ফাইল আপলোড বা সরাসরি পেস্ট করুন'); }
   };
+  const resetLive = async () => {
+    const r = await loadRemote();
+    if (!r) return setMessage('❌ ডেটা আনা যায়নি');
+    verRef.current = r.ver; setSyncAt(nowStr());
+    const next = mergeRemote([], r.raw); setShops(next); setSid(next[0]?.id ?? ''); setMessage('🔄 ফাইলের ডেটা থেকে রিসেট হয়েছে');
+  };
   const teleport = (s: Shop) => { tpRef.current = { x: 0, z: s.z }; setPanel(''); setMessage(`📍 ${s.name} এর সামনে এসেছেন`); };
 
   const joyMove = (e: React.PointerEvent<HTMLDivElement>) => {
@@ -1634,9 +1788,9 @@ export default function Page() {
   const isNight = hour < 5.5 || hour >= 18.5;
 
   /* ============================ UI ============================ */
-  const closeAll = () => { setPanel(''); setCartOpen(false); setMenuOpen(false); };
-  const togglePanel = (p: '' | 'profile' | 'shops' | 'tasks' | 'help') => { setCartOpen(false); setMenuOpen(false); setPanel(panel === p ? '' : p); };
-  const sheet = (w: string) => `absolute inset-x-0 bottom-0 z-50 max-h-[86dvh] overflow-y-auto rounded-t-3xl p-4 md:inset-x-auto md:bottom-auto md:right-[76px] md:top-16 md:max-h-[calc(100dvh-5rem)] md:rounded-3xl ${w} ${glass}`;
+  const closeAll = () => { setPanel(''); setCartOpen(false); setMenuOpen(false); setDotsOpen(false); };
+  const togglePanel = (p: '' | 'profile' | 'shops' | 'tasks' | 'help') => { setCartOpen(false); setMenuOpen(false); setDotsOpen(false); setPanel(panel === p ? '' : p); };
+  const sheet = (w: string) => `absolute inset-x-0 bottom-0 z-50 max-h-[86dvh] overflow-y-auto rounded-t-3xl p-4 md:inset-x-auto md:bottom-auto md:right-3 md:top-16 md:max-h-[calc(100dvh-5rem)] md:rounded-3xl ${w} ${glass}`;
   const head = (icon: string, title: string, sub?: string) => (
     <div className="mb-3 flex items-center gap-3">
       <div className="grid h-10 w-10 shrink-0 place-items-center rounded-xl bg-gradient-to-br from-cyan-400/30 to-violet-500/30 text-xl">{icon}</div>
@@ -1645,13 +1799,16 @@ export default function Page() {
     </div>
   );
   const dock: { k: string; icon: string; label: string; badge?: number; active: boolean; on: () => void }[] = [
-    { k: 'shops', icon: '🏪', label: 'দোকান', active: panel === 'shops', on: () => togglePanel('shops') },
-    { k: 'cart', icon: '🛒', label: 'কার্ট', badge: cartCount, active: cartOpen, on: () => { setPanel(''); setMenuOpen(false); setCartOpen((v) => !v); } },
-    { k: 'tasks', icon: '🎯', label: 'টাস্ক', badge: TASKS.length - doneToday.length, active: panel === 'tasks', on: () => togglePanel('tasks') },
+    { k: 'shops', icon: '🏪', label: 'দোকান ম্যানেজার', active: panel === 'shops', on: () => togglePanel('shops') },
+    { k: 'cart', icon: '🛒', label: 'কার্ট', badge: cartCount, active: cartOpen, on: () => { setPanel(''); setMenuOpen(false); setDotsOpen(false); setCartOpen((v) => !v); } },
+    { k: 'tasks', icon: '🎯', label: 'দৈনিক টাস্ক', badge: TASKS.length - doneToday.length, active: panel === 'tasks', on: () => togglePanel('tasks') },
     { k: 'profile', icon: '👤', label: 'প্রোফাইল', active: panel === 'profile', on: () => togglePanel('profile') },
     { k: 'help', icon: '📖', label: 'গাইড', active: panel === 'help', on: () => togglePanel('help') },
-    { k: 'set', icon: '⚙️', label: 'সেটিংস', active: menuOpen, on: () => { setPanel(''); setCartOpen(false); setMenuOpen((v) => !v); } },
+    { k: 'bike', icon: '🏍️', label: riding ? 'বাইক থেকে নামুন (F)' : nearBike ? 'বাইকে চড়ুন (F)' : 'বাইক ডাকুন (F)', active: riding, on: () => { rideCmdRef.current = 1; setDotsOpen(false); } },
+    { k: 'refresh', icon: '🔄', label: 'ডেটা রিফ্রেশ', active: false, on: () => { setDotsOpen(false); sync(true); } },
+    { k: 'set', icon: '⚙️', label: 'সেটিংস', active: menuOpen, on: () => { setPanel(''); setCartOpen(false); setDotsOpen(false); setMenuOpen((v) => !v); } },
   ];
+  const menuBadge = cartCount + (TASKS.length - doneToday.length);
   const tabs: ['products' | 'add' | 'shop' | 'json', string][] = [['products', '📦 পণ্য'], ['add', '➕ নতুন পণ্য'], ['shop', '🏪 দোকান'], ['json', '{ } JSON']];
   const label = 'mb-1 block text-[11px] font-bold text-slate-400';
 
@@ -1666,52 +1823,55 @@ export default function Page() {
       )}
       {!hover && <div ref={tipRef} className="hidden" />}
 
-      {/* ---------- উপরের HUD ---------- */}
-      <header className="pointer-events-none absolute inset-x-0 top-0 z-30 flex items-start justify-between gap-2 p-3">
-        <div className={`pointer-events-auto flex items-center gap-2.5 rounded-2xl py-1.5 pl-1.5 pr-4 ${glass}`}>
-          <div className="grid h-10 w-10 place-items-center rounded-xl bg-gradient-to-br from-cyan-400 to-violet-500 text-xl shadow-lg shadow-cyan-500/30">🏬</div>
-          <div className="leading-tight">
-            <div className="text-[13px] font-black tracking-widest">GRAND MALL</div>
-            <div className="text-[10px] text-slate-400">{isNight ? '🌙' : '☀️'} {fmtHour(hour)} · {shops.length}টি দোকান</div>
-          </div>
-        </div>
-        <div className="pointer-events-auto flex gap-2">
-          <div className={`rounded-2xl px-3 py-1.5 text-right leading-tight ${glass}`}><div className="text-[9px] font-bold tracking-wider text-slate-400">ব্যালেন্স</div><div className="text-sm font-black text-yellow-300">{taka(balance)}</div></div>
-          <div className={`rounded-2xl px-3 py-1.5 text-right leading-tight ${glass}`}><div className="text-[9px] font-bold tracking-wider text-slate-400">স্কোর</div><div className="text-sm font-black text-emerald-300">⭐ {score}</div></div>
-        </div>
+      {/* ---------- শুধু ⋮ আইকন ---------- */}
+      <header className="pointer-events-none absolute right-0 top-0 z-30 p-3">
+        <button onClick={() => { setPanel(''); setCartOpen(false); setMenuOpen(false); setDotsOpen((v) => !v); }} aria-label="Menu"
+          className={`pointer-events-auto relative grid h-[46px] w-[46px] place-items-center rounded-2xl text-2xl font-black leading-none transition active:scale-90 ${glass} ${dotsOpen ? 'ring-1 ring-cyan-400/70' : ''}`}>
+          ⋮{menuBadge > 0 ? <span className="absolute -right-1 -top-1 grid h-4 min-w-[16px] place-items-center rounded-full bg-rose-500 px-1 text-[9px] font-black">{menuBadge}</span> : null}
+        </button>
       </header>
 
-      {/* ---------- বার্তা ---------- */}
-      <div key={message} className="pointer-events-none absolute left-1/2 top-[70px] z-30 w-[min(92vw,460px)] -translate-x-1/2 rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-2.5 text-center text-xs leading-5 text-slate-100 shadow-xl backdrop-blur-md">{message}</div>
+      {/* ---------- বার্তা (কয়েক সেকেন্ড পর লুকায়) ---------- */}
+      {showMsg && <div key={message} className="pointer-events-none absolute left-1/2 top-[70px] z-30 w-[min(92vw,460px)] -translate-x-1/2 rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-2.5 text-center text-xs leading-5 text-slate-100 shadow-xl backdrop-blur-md">{message}</div>}
 
-      {/* ---------- ডান পাশের ডক ---------- */}
-      <nav className={`absolute right-3 top-1/2 z-40 flex -translate-y-1/2 flex-col gap-1.5 rounded-3xl p-1.5 ${glass}`}>
-        {dock.map((d) => (
-          <button key={d.k} onClick={d.on} aria-label={d.label}
-            className={`group relative grid h-12 w-12 place-items-center rounded-2xl text-xl transition active:scale-90 ${d.active ? 'bg-gradient-to-br from-cyan-400 to-violet-500 shadow-lg shadow-cyan-500/30' : 'hover:bg-white/10'}`}>
-            {d.icon}
-            {d.badge ? <span className="absolute -right-0.5 -top-0.5 grid h-4 min-w-[16px] place-items-center rounded-full bg-rose-500 px-1 text-[9px] font-black">{d.badge}</span> : null}
-            <span className="pointer-events-none absolute right-14 hidden whitespace-nowrap rounded-lg bg-slate-950/95 px-2 py-1 text-[11px] font-bold opacity-0 shadow-lg transition group-hover:opacity-100 md:block">{d.label}</span>
-          </button>
-        ))}
-      </nav>
+      {/* ---------- তিন-ডট মেনু (সব অপশন এক জায়গায়) ---------- */}
+      {dotsOpen && <button aria-label="Close menu" className="absolute inset-0 z-40 cursor-default" onClick={() => setDotsOpen(false)} />}
+      {dotsOpen && (
+        <nav className={`absolute right-3 top-[68px] z-50 w-60 rounded-3xl p-2 ${glass}`}>
+          {dock.map((d) => (
+            <button key={d.k} onClick={d.on}
+              className={`flex w-full items-center gap-3 rounded-2xl px-3 py-2.5 text-left text-[13px] font-bold transition active:scale-[0.98] ${d.active ? 'bg-gradient-to-r from-cyan-400/90 to-violet-500/90 text-slate-950' : 'hover:bg-white/10'}`}>
+              <span className="text-lg">{d.icon}</span><span className="flex-1">{d.label}</span>
+              {d.badge ? <span className="grid h-5 min-w-[20px] place-items-center rounded-full bg-rose-500 px-1.5 text-[10px] font-black text-white">{d.badge}</span> : null}
+            </button>
+          ))}
+          <div className="mt-1 flex justify-between border-t border-white/10 px-3 pt-2 text-xs">
+            <span>💰 <b className="text-yellow-300">{taka(balance)}</b></span>
+            <span>⭐ <b className="text-emerald-300">{score}</b></span>
+          </div>
+          <div className="px-3 pb-1 pt-1.5 text-[10px] text-slate-400">{isNight ? '🌙' : '☀️'} {fmtHour(hour)} · {shops.length}টি দোকান · {live ? '🟢 লাইভ' : '⏸ লাইভ বন্ধ'}{syncAt ? ` · ${syncAt}` : ''}</div>
+        </nav>
+      )}
 
       {/* ---------- পণ্যের বিস্তারিত ---------- */}
       {selected && (
         <div className="absolute inset-0 z-[60] grid place-items-end bg-black/60 backdrop-blur-sm md:place-items-center md:p-4" onClick={() => setSelected(null)}>
           <div className={`w-full max-w-md overflow-hidden rounded-t-3xl md:rounded-3xl ${glass}`} onClick={(e) => e.stopPropagation()}>
             <div className="relative">
-              <img src={selected.image} alt={selected.name} className="h-60 w-full object-cover md:h-72"
-                onError={(e) => { (e.target as HTMLImageElement).src = ph(selected.kind, selected.color, selected.name); }} />
-              <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/10 to-transparent" />
-              <span className="absolute left-3 top-3 rounded-full bg-black/60 px-3 py-1 text-[11px] font-bold backdrop-blur">🏪 {selected.shop}</span>
-              <button onClick={() => setSelected(null)} className="absolute right-3 top-3 grid h-8 w-8 place-items-center rounded-full bg-black/60 text-sm backdrop-blur transition hover:bg-black/80" aria-label="Close">✕</button>
+              <ZoomImage src={selected.image} alt={selected.name} onErr={(e) => { (e.target as HTMLImageElement).src = ph(selected.kind, selected.color, selected.name); }} />
+              <span className="absolute left-3 top-3 z-10 rounded-full bg-black/60 px-3 py-1 text-[11px] font-bold backdrop-blur">🏪 {selected.shop}</span>
+              <button onClick={() => setSelected(null)} className="absolute right-3 top-3 z-10 grid h-8 w-8 place-items-center rounded-full bg-black/60 text-sm backdrop-blur transition hover:bg-black/80" aria-label="Close">✕</button>
             </div>
             <div className="relative -mt-8 p-5 pt-0">
               <div className="text-xl font-black leading-tight">{selected.name}</div>
-              <div className="mt-1 inline-block rounded-full bg-white/10 px-2.5 py-0.5 text-[11px] text-slate-300">মডেল নং: {modelNo(selected)}</div>
+              <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[11px]">
+                <span className="rounded-full bg-white/10 px-2.5 py-0.5 text-slate-300">মডেল নং: {modelNo(selected)}</span>
+                <span className="rounded-full bg-amber-400/15 px-2.5 py-0.5 font-bold text-amber-300">★ {extra(selected).rating} ({extra(selected).reviews})</span>
+                <span className={`rounded-full px-2.5 py-0.5 font-bold ${extra(selected).stock < 8 ? 'bg-rose-500/20 text-rose-300' : 'bg-emerald-500/15 text-emerald-300'}`}>{extra(selected).stock < 8 ? `মাত্র ${extra(selected).stock}টি বাকি` : 'স্টকে আছে'}</span>
+              </div>
+              <p className="mt-2 text-xs leading-5 text-slate-300">{extra(selected).desc}</p>
               <div className="mt-3 flex items-end justify-between">
-                <div><div className="text-[11px] text-slate-400">একক দাম {taka(selected.price)}</div><div className="text-3xl font-black text-yellow-300">{taka(selected.price * qty)}</div></div>
+                <div><div className="text-[11px] text-slate-400">{extra(selected).off ? <><s>{taka(extra(selected).old)}</s> <b className="text-rose-400">-{extra(selected).off}%</b> · </> : null}একক দাম {taka(selected.price)}</div><div className="text-3xl font-black text-yellow-300">{taka(selected.price * qty)}</div></div>
                 <div className="flex items-center gap-1 rounded-2xl bg-white/10 p-1">
                   <button className="h-9 w-9 rounded-xl text-lg transition hover:bg-white/10" onClick={() => setQty(Math.max(1, qty - 1))}>−</button>
                   <b className="w-7 text-center">{qty}</b>
@@ -1767,8 +1927,8 @@ export default function Page() {
           <div className="space-y-2.5 text-[12px] leading-6 text-slate-200">
             {[
               ['🕹️', 'চলাফেরা', 'W A S D বা অ্যারো কী দিয়ে হাঁটুন, Shift চেপে দৌড়ান। মাউস ড্র্যাগ বা Q / E দিয়ে ঘুরুন, স্ক্রলে জুম। মোবাইলে বাম পাশের জয়স্টিকে চলুন, স্ক্রিনে আঙুল টেনে ঘুরুন।'],
-              ['🛍️', 'কেনাকাটা', 'পণ্যে ক্লিক/ট্যাপ করলে বিস্তারিত খুলবে। "কার্টে নিন" চাপুন, তারপর কার্ট থেকে Checkout করলে ব্যালেন্স থেকে টাকা কাটবে এবং প্রতিটি পণ্যের জন্য ১০০ পয়েন্ট পাবেন।'],
-              ['🏍️', 'বাইক', 'F চাপলে বাইকে ওঠা-নামা যায় (মোবাইলে নিচের ডানের বাটন)। বাইক দূরে থাকলে প্রথমবার F চাপলে সেটা আপনার পাশে আসবে। দোকানের ভেতরে বাইক চলে না।'],
+              ['🛍️', 'কেনাকাটা', 'পণ্যে ক্লিক/ট্যাপ করলে বিস্তারিত খুলবে (ছবিতে স্ক্রল/ডাবল-ক্লিক/পিঞ্চ করে জুম করা যায়)। "কার্টে নিন" চাপুন, তারপর কার্ট থেকে Checkout করলে ব্যালেন্স থেকে টাকা কাটবে এবং প্রতিটি পণ্যের জন্য ১০০ পয়েন্ট পাবেন।'],
+              ['🏍️', 'বাইক', 'F চাপলে বাইকে ওঠা-নামা যায় (মোবাইলে ⋮ মেনু থেকে "বাইক")। বাইক দূরে থাকলে প্রথমবার F চাপলে সেটা আপনার পাশে আসবে। দোকানের ভেতরে বাইক চলে না।'],
               ['🎯', 'দৈনিক টাস্ক', `দিনে ${TASKS.length}টি টাস্ক: দোকানে ঢোকা, পণ্য দেখা, কার্টে যোগ করা ও বাইকে চড়া। সব শেষ করলে বোনাস +${BONUS}।`],
               ['🌗', 'দিন-রাত', 'সেটিংসে স্লাইডার দিয়ে সময় বদলান, ⏸ দিয়ে থামান, "দেখুন" চাপলে ক্যামেরা সূর্য/চাঁদের দিকে ঘুরবে।'],
             ].map(([i, t, d]) => (
@@ -1776,17 +1936,18 @@ export default function Page() {
             ))}
             <div className="rounded-2xl bg-white/5 p-3">
               <h3 className="font-black text-cyan-300">📦 দোকান ও পণ্যের ডেটা (JSON)</h3>
-              <p className="mt-1">দোকান আসে <b>shops.json</b> থেকে, আর পণ্য আসে <b>products.json</b> থেকে — প্রতিটি পণ্যে <b>shopId</b> দিয়ে দোকানের সাথে জোড়া থাকে। একটি দোকানে সর্বোচ্চ {MAX_PRODUCTS}টি পণ্য, মোট {MAX_SHOPS}টি দোকান।</p>
+              <p className="mt-1">দোকান আসে <b>public/data/shops.json</b> থেকে, আর পণ্য আসে <b>public/data/data.json</b> থেকে (লাইভ — ফাইল সেভ করলে {LIVE_MS / 1000} সেকেন্ডের মধ্যে মলে নিজে আপডেট হয়)। ওই ফাইল না পেলে কোডের পাশের <b>shops.json</b> ও <b>data.json</b> ব্যবহার হয়। প্রতিটি পণ্যে <b>shopId</b> দিয়ে দোকানের সাথে জোড়া থাকে। একটি দোকানে সর্বোচ্চ {MAX_PRODUCTS}টি পণ্য, মোট {MAX_SHOPS}টি দোকান।</p>
               <pre className="mt-2 overflow-x-auto rounded-xl bg-black/40 p-2 text-[10px] leading-4 text-emerald-200">{`// shops.json
 { "id": "fashion", "name": "NOVA FASHION",
   "subtitle": "Premium Fashion",
   "style": "fashion", "accent": "#7c3aed" }
 
-// products.json
+// data.json
 { "id": "fashion-01", "shopId": "fashion",
   "name": "T-Shirt", "price": 1800,
-  "kind": "tshirt", "color": "#2563eb" }`}</pre>
-              <p className="mt-2 text-slate-400">image না দিলে kind অনুযায়ী ডিফল্ট ছবি বসে; নিজের ছবির লিংক দিলে সেটাই দেখাবে। ছবি লোড না হলে নামসহ রঙিন কার্ড দেখাবে।</p>
+  "kind": "tshirt", "color": "#2563eb",
+  "image": "https://...jpg" }`}</pre>
+              <p className="mt-2 text-slate-400">image না দিলে kind অনুযায়ী ডিফল্ট ছবি বসে; নিজের ছবির লিংক দিলে সেটাই দেখাবে। ছবি লোড না হলে নামসহ রঙিন কার্ড দেখাবে। আপনার নিজের যোগ করা দোকান আলাদা থাকে; ফাইলের দোকান ফাইল বদলালেই বদলে যায়।</p>
             </div>
           </div>
         </section>
@@ -1803,6 +1964,13 @@ export default function Page() {
             <div className="mt-3 grid grid-cols-2 gap-2">
               <button className="rounded-xl bg-white/10 py-2.5 text-xs font-bold transition hover:bg-white/20" onClick={() => { dayRef.current.auto = !autoDay; setAutoDay(!autoDay); }}>{autoDay ? '⏸ সময় থামান' : '▶ সময় চালু'}</button>
               <button className="rounded-xl bg-amber-400/90 py-2.5 text-xs font-black text-slate-950 transition hover:bg-amber-300" onClick={() => { sunCmdRef.current = true; setMenuOpen(false); }}>{isNight ? '🌙' : '☀️'} দেখুন</button>
+            </div>
+          </div>
+          <div className="mt-2 rounded-2xl bg-white/5 p-3 text-xs">
+            <div className="mb-2 flex items-center justify-between"><b>{live ? '🟢 লাইভ ডেটা চালু' : '⏸ লাইভ ডেটা বন্ধ'}</b><span className="font-mono text-[10px] text-slate-400">{syncAt || '—'}</span></div>
+            <div className="grid grid-cols-2 gap-2">
+              <button className="rounded-xl bg-white/10 py-2.5 font-bold transition hover:bg-white/20" onClick={() => setLive((v) => !v)}>{live ? '⏸ লাইভ বন্ধ' : '▶ লাইভ চালু'}</button>
+              <button className="rounded-xl bg-white/10 py-2.5 font-bold transition hover:bg-white/20" onClick={() => sync(true)}>🔄 এখনই আনুন</button>
             </div>
           </div>
           <button className="mt-2 w-full rounded-xl bg-white/10 py-2.5 text-xs font-bold transition hover:bg-white/20" onClick={() => { setPaused((v) => !v); setMenuOpen(false); }}>{paused ? '▶️ খেলা চালু করুন' : '⏸️ খেলা পজ করুন'}</button>
@@ -1850,7 +2018,7 @@ export default function Page() {
                     <img src={p.image} alt="" className="h-20 w-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = ph(p.kind, p.color, p.name); }} />
                     <div className="p-2"><div className="truncate text-[11px] font-bold">{p.name}</div><div className="text-xs font-black text-yellow-300">{taka(p.price)}</div></div>
                     <div className="grid grid-cols-3 gap-1 p-1 pt-0 text-xs">
-                      <button className="rounded-lg bg-white/10 py-1 transition hover:bg-white/20" title="নাম ও দাম বদলান" onClick={() => { const n = prompt('পণ্যের নাম', p.name); if (n === null) return; const pr = Number(prompt('দাম (৳)', String(p.price))); patchShop(shop.id, (s) => ({ ...s, products: s.products.map((x) => (x.id === p.id ? { ...x, name: n.trim() || x.name, price: pr > 0 ? pr : x.price } : x)) })); }}>✏️</button>
+                      <button className="rounded-lg bg-white/10 py-1 transition hover:bg-white/20" title="নাম ও দাম বদলান" onClick={() => { const n = prompt('পণ্যের নাম', p.name); if (n === null) return; const pr = toPrice(prompt('দাম (৳)', String(p.price))); patchShop(shop.id, (s) => ({ ...s, products: s.products.map((x) => (x.id === p.id ? { ...x, name: n.trim() || x.name, price: pr > 0 ? pr : x.price } : x)) })); }}>✏️</button>
                       <button className="rounded-lg bg-white/10 py-1 transition hover:bg-white/20" title="ছবির লিংক বদলান" onClick={() => { const l = prompt('ছবির লিংক (https://...)', p.image.startsWith('data:') ? '' : p.image); if (l === null) return; patchShop(shop.id, (s) => ({ ...s, products: s.products.map((x) => (x.id === p.id ? { ...x, image: l.trim() || IMG[x.kind] || ph(x.kind, x.color, x.name) } : x)) })); }}>🖼️</button>
                       <button className="rounded-lg bg-rose-500/20 py-1 text-rose-300 transition hover:bg-rose-500/30" onClick={() => patchShop(shop.id, (s) => ({ ...s, products: s.products.filter((x) => x.id !== p.id) }))}>✕</button>
                     </div>
@@ -1926,6 +2094,7 @@ export default function Page() {
                 <input type="file" accept=".json,application/json" hidden onChange={async (e) => { const f = e.target.files?.[0]; if (f) { setJsonText(await f.text()); setJsonMsg(`📁 ${f.name} লোড হয়েছে — এবার "যোগ করুন" চাপুন`); } e.target.value = ''; }} />
               </label>
               <button className="w-full rounded-xl bg-white/10 py-2.5 text-xs font-bold transition hover:bg-white/20" onClick={addDemo}>🎲 ডেমো: ১০০টি দোকান × ১০০টি পণ্য</button>
+              <button className="w-full rounded-xl bg-white/10 py-2.5 text-xs font-bold transition hover:bg-white/20" onClick={() => { if (confirm('আপনার যোগ করা দোকান মুছে ফাইলের ডেটা থেকে নতুন করে লোড হবে। নিশ্চিত?')) resetLive(); }}>🔄 ফাইলের ডেটা থেকে রিসেট</button>
               {jsonMsg && <p className="rounded-xl bg-black/30 p-2 text-[11px] leading-5 text-slate-200">{jsonMsg}</p>}
             </div>
           )}
@@ -1956,18 +2125,12 @@ export default function Page() {
         </aside>
       )}
 
-      {/* ---------- জয়স্টিক ও বাইক বাটন ---------- */}
+      {/* ---------- জয়স্টিক (শুধু টাচ ডিভাইসে) ---------- */}
       {touch && !selected && !cartOpen && !panel && !menuOpen && (
         <div className="absolute bottom-10 left-5 z-30 h-32 w-32 touch-none rounded-full border border-white/15 bg-slate-950/50 shadow-xl backdrop-blur-md"
           onPointerDown={joyStart} onPointerMove={joyMove} onPointerUp={joyEnd} onPointerCancel={joyEnd}>
           <div className="absolute left-1/2 top-1/2 h-12 w-12 rounded-full bg-gradient-to-br from-cyan-300 to-violet-400 shadow-lg" style={{ transform: `translate(calc(-50% + ${knob.x}px), calc(-50% + ${knob.y}px))` }} />
         </div>
-      )}
-
-      {!selected && !panel && !cartOpen && !menuOpen && (
-        <button onClick={() => { rideCmdRef.current = 1; }} className={`absolute bottom-10 right-4 z-30 rounded-2xl px-4 py-3 text-sm font-black transition active:scale-95 md:bottom-6 ${glass} ${riding ? 'ring-1 ring-rose-400/60' : nearBike ? 'ring-1 ring-cyan-400/70' : ''}`}>
-          {riding ? '🛑 নামুন (F)' : nearBike ? '🏍️ চড়ুন (F)' : '🏍️ বাইক ডাকুন (F)'}
-        </button>
       )}
 
       {paused && (
@@ -1978,44 +2141,3 @@ export default function Page() {
     </main>
   );
 }
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -6,61 +6,35 @@
     "style": "fashion",
     "accent": "#7c3aed"
   },
+
+   {
+    "id": "me",
+    "name": "my-shopings.com",
+    "subtitle": "all is prodict inclued",
+    "style": "me",
+    "accent": "#112345"
+  },
+
+
   {
     "id": "tech",
-    "name": "TECHHUB-9",
+    "name": "TECH ZONE",
     "subtitle": "Smart Devices",
     "style": "tech",
-    "accent": "#0891b2"
+    "accent": "#0ea5e9"
   },
   {
     "id": "home",
-    "name": "URBAN HOME-09",
+    "name": "HOME DECOR",
     "subtitle": "Furniture & Decor",
     "style": "home",
-    "accent": "#d97706"
+    "accent": "#16a34a"
   },
   {
     "id": "market",
     "name": "FRESH MART",
     "subtitle": "Grocery & Food",
     "style": "market",
-    "accent": "#16a34a"
-  },
-  {
-    "id": "books",
-    "name": "BOOK WORLD",
-    "subtitle": "Books & Stationery",
-    "style": "home",
-    "accent": "#0ea5e9"
-  },
-  {
-    "id": "sports",
-    "name": "SPORTS ZONE",
-    "subtitle": "Sports & Outdoor",
-    "style": "fashion",
-    "accent": "#ef4444"
-  },
-  {
-    "id": "gadget",
-    "name": "GADGET ZONE",
-    "subtitle": "Mobile & Gadgets",
-    "style": "tech",
-    "accent": "#14b8a6"
-  },
-  {
-    "id": "gift",
-    "name": "GIFT CORNER",
-    "subtitle": "Gifts & Sweets",
-    "style": "market",
-    "accent": "#ec4899"
-  },
-
-  {
-    "id": "ইব্রাহিম",
-    "name": "ইব্রাহিম এর দোকান",
-    "subtitle": "Gifts & Sweets",
-    "style": "market",
-    "accent": "#ec4"
+    "accent": "#f59e0b"
   }
 ]
