@@ -8,6 +8,7 @@ import { Metadata } from 'next';
 
 
 export const metadata: Metadata = {
+  alternates: { canonical: "https://my-shopings.com/games" },
   title: 'সব ক্যাটাগরি একসাথে | Premium Online Hub',
   description: 'জনপ্রিয় অনলাইন গেমস, প্রিমিয়াম শপিং, আকর্ষণীয় গিফট কার্ড এবং ভাইরাল ট্রেন্ডস কালেকশন পাবেন এক জায়গায়। এখনই এক্সপ্লোর করুন!',
   keywords: 'অনলাইন গেমস, প্রিমিয়াম শপিং, গিফট কার্ড, ট্রেন্ডিং ডিলস, ক্লাসিক স্নেক, এরিনা গেমস',
@@ -17,11 +18,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: 'সব ক্যাটাগরি একসাথে | Premium Online Hub',
     description: 'গেমস, শপিং, এবং গিফট কার্ডের সেরা প্রিমিয়াম কালেকশন এখন লাইভ।',
-    url: 'https://yourwebsite.com/categories',
+    url: 'https://my-shopings.com/categories',
     siteName: 'Premium Portal',
     images: [
       {
-        url: 'https://yourwebsite.com/og-banner.jpg', // আপনার প্রমোশনাল ব্যানারের লিংক
+        url: 'https://my-shopings.com/og-banner.jpg', // আপনার প্রমোশনাল ব্যানারের লিংক
         width: 1200,
         height: 630,
         alt: 'Premium Portal All Categories',
@@ -36,7 +37,7 @@ export const metadata: Metadata = {
     card: 'summary_large_image',
     title: 'সব ক্যাটাগরি একসাথে | Premium Online Hub',
     description: 'সেরা ক্যাটাগরি বেছে নিন এবং প্রিমিয়াম নেভিগেশন এক্সপেরিয়েন্স উপভোগ করুন।',
-    images: ['https://yourwebsite.com/og-banner.jpg'],
+    images: ['https://my-shopings.com/og-banner.jpg'],
   },
 };
 // ২. কম্পোনেন্টের নাম বড় হাতের অক্ষরে (Capitalized 'Page') করা হয়েছে
@@ -49,3 +50,8 @@ export default function Page() {
   );
 }
 
+/* ===== SEO UPDATE BACKUP: নিচের মূল লাইনগুলো SEO আপডেটে বদলানো হয়েছে (ব্যাকআপ হিসেবে রাখা) =====
+    url: 'https://yourwebsite.com/categories',
+        url: 'https://yourwebsite.com/og-banner.jpg', // আপনার প্রমোশনাল ব্যানারের লিংক
+    images: ['https://yourwebsite.com/og-banner.jpg'],
+===== END BACKUP ===== */

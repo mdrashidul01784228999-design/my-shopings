@@ -471,7 +471,7 @@ export default function ProfilePage() {
             <div className="relative flex-shrink-0">
               <div className={`absolute -inset-0.5 bg-gradient-to-b from-cyan-400 to-fuchsia-600 rounded-full transition-all duration-500 blur-[5px] ${isProfileOpen ? 'opacity-100 scale-105' : 'opacity-30 group-hover:opacity-100'}`}></div>
               <img 
-                src={previewImage || (images ? `http://localhost:8000/profile_users/${images}` : `https://api.dicebear.com/7.x/avataaars/svg?seed=Felix`)} 
+                src={previewImage || (images ? `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api").replace(/\/api\/?$/, "")}/profile_users/${images}` : `https://api.dicebear.com/7.x/avataaars/svg?seed=Felix`)} 
                 alt="User Avatar" 
                 className="relative w-8 h-8 rounded-full border border-slate-950 object-cover bg-slate-950 group-hover:scale-102 transition-transform duration-300" 
               />
@@ -505,7 +505,7 @@ export default function ProfilePage() {
                       onChange={handleAvatarChange} 
                     />
                     <img 
-                      src={previewImage || (images ? `http://localhost:8000/profile_users/${images}` : `https://api.dicebear.com/7.x/avataaars/svg?seed=Felix`)} 
+                      src={previewImage || (images ? `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api").replace(/\/api\/?$/, "")}/profile_users/${images}` : `https://api.dicebear.com/7.x/avataaars/svg?seed=Felix`)} 
                       alt="User Avatar" 
                       className="w-full h-full object-cover transition-transform duration-500 group-hover/avatar:scale-110" 
                     />
@@ -1378,7 +1378,7 @@ export default function ProfilePage() {
 //     <div className="relative flex-shrink-0">
 //       <div className={`absolute -inset-0.5 bg-gradient-to-b from-cyan-400 to-fuchsia-600 rounded-full transition-all duration-500 blur-[5px] ${isProfileOpen ? 'opacity-100 scale-105' : 'opacity-30 group-hover:opacity-100'}`}></div>
 //       <img 
-//         src={previewImage || (images ? `http://localhost:8000/profile_users/${images}` : `https://api.dicebear.com/7.x/avataaars/svg?seed=Felix`)} 
+//         src={previewImage || (images ? `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api").replace(/\/api\/?$/, "")}/profile_users/${images}` : `https://api.dicebear.com/7.x/avataaars/svg?seed=Felix`)} 
 //         alt="User Avatar" 
 //         className="relative w-8 h-8 rounded-full border border-slate-950 object-cover bg-slate-950 group-hover:scale-102 transition-transform duration-300" 
 //       />
@@ -1415,7 +1415,7 @@ export default function ProfilePage() {
 //               onChange={handleAvatarChange} 
 //             />
 //             <img 
-//               src={previewImage || (images ? `http://localhost:8000/profile_users/${images}` : `https://api.dicebear.com/7.x/avataaars/svg?seed=Felix`)} 
+//               src={previewImage || (images ? `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api").replace(/\/api\/?$/, "")}/profile_users/${images}` : `https://api.dicebear.com/7.x/avataaars/svg?seed=Felix`)} 
 //               alt="User Avatar" 
 //               className="w-full h-full object-cover transition-transform duration-500 group-hover/avatar:scale-110" 
 //             />
@@ -2180,7 +2180,7 @@ export default function ProfilePage() {
 //                     <div className="relative">
 //                         <div className={`absolute -inset-1 bg-gradient-to-r from-cyan-500 to-blue-600 rounded-full transition blur-sm ${isProfileOpen ? 'opacity-100 scale-110' : 'opacity-20 group-hover:opacity-100'}`}></div>
 //                         <img 
-//                           src={images ? `http://localhost:8000/profile_users/${images}` : `https://api.dicebear.com/7.x/avataaars/svg?seed=Felix`} 
+//                           src={images ? `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api").replace(/\/api\/?$/, "")}/profile_users/${images}` : `https://api.dicebear.com/7.x/avataaars/svg?seed=Felix`} 
 //                           alt="avatar" 
 //                           className="relative w-10 h-10 rounded-full border-2 border-slate-800 object-cover bg-slate-900 group-hover:scale-105 transition" 
 //                         />
@@ -2203,7 +2203,7 @@ export default function ProfilePage() {
                       
 //                       <div className="flex items-center gap-4 mb-6 pb-6 border-b border-white/5">
 //                         <img 
-//                           src={images ? `http://localhost:8000/profile_users/${images}` : `https://api.dicebear.com/7.x/avataaars/svg?seed=Felix`} 
+//                           src={images ? `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api").replace(/\/api\/?$/, "")}/profile_users/${images}` : `https://api.dicebear.com/7.x/avataaars/svg?seed=Felix`} 
 //                           alt="avatar" 
 //                           className="w-12 h-12 rounded-2xl border border-white/10 object-cover" 
 //                         />
@@ -3808,7 +3808,7 @@ export default function ProfilePage() {
 
 //                         <img 
 
-//                           src={images ? `http://localhost:8000/profile_users/${images}` : `https://api.dicebear.com/7.x/avataaars/svg?seed=Felix`} 
+//                           src={images ? `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api").replace(/\/api\/?$/, "")}/profile_users/${images}` : `https://api.dicebear.com/7.x/avataaars/svg?seed=Felix`} 
 
 //                           alt="avatar" 
 
@@ -3854,7 +3854,7 @@ export default function ProfilePage() {
 
 //                         <img 
 
-//                           src={images ? `http://localhost:8000/profile_users/${images}` : `https://api.dicebear.com/7.x/avataaars/svg?seed=Felix`} 
+//                           src={images ? `${(process.env.NEXT_PUBLIC_API_URL || "http://localhost:8000/api").replace(/\/api\/?$/, "")}/profile_users/${images}` : `https://api.dicebear.com/7.x/avataaars/svg?seed=Felix`} 
 
 //                           alt="avatar" 
 
@@ -4588,3 +4588,6 @@ export default function ProfilePage() {
 
 // }
 
+/* ===== SEO UPDATE BACKUP: মূল লাইন (localhost হার্ডকোড — প্রোডাকশনে কাজ করে না, তাই env থেকে নেওয়া হয়েছে) =====
+src={previewImage || (images ? `http://localhost:8000/profile_users/${images}` : `https://api.dicebear.com/7.x/avataaars/svg?seed=Felix`)}
+===== END BACKUP ===== */

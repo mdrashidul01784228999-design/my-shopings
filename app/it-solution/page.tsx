@@ -5,13 +5,14 @@ import Home from './Home'
 
 // Next.js 19+ SEO Metadata Setup
 export const metadata = {
+  alternates: { canonical: "https://my-shopings.com/it-solution" },
   title: 'আইটি সমাধান ও টেকনোলজি সার্ভিস | IT Solution',
   description: 'আপনার ব্যবসার ডিজিটাল রূপান্তরের জন্য বিশ্বস্ত আইটি সমাধান। সফটওয়্যার ডেভেলপমেন্ট, ওয়েব ডিজাইন, সাইবার সিকিউরিটি এবং ক্লাউড কম্পিউটিং সেবা।',
   keywords: ['আইটি সমাধান', 'IT Solution Bangladesh', 'ওয়েব ডেভেলপমেন্ট', 'সফটওয়্যার সার্ভিস', 'Next.js 19 Developer'],
   openGraph: {
     title: 'আইটি সমাধান ও টেকনোলজি সার্ভিস',
     description: 'আধুনিক নিয়ন গ্লো টেকনোলজি ও সফটওয়্যার সলিউশন।',
-    url: 'https://yourdomain.com/it-solution',
+    url: 'https://my-shopings.com/it-solution',
     siteName: 'Rashidul IT',
     images: [
       {
@@ -46,3 +47,7 @@ export default function GTSolutionPage() {
 // </>
 //   )
 // }
+
+/* ===== SEO UPDATE BACKUP: নিচের মূল লাইনগুলো SEO আপডেটে বদলানো হয়েছে (ব্যাকআপ হিসেবে রাখা) =====
+    url: 'https://yourdomain.com/it-solution',
+===== END BACKUP ===== */

@@ -1,3 +1,35 @@
+import type { Metadata } from "next";
+import FullyLoadedTerminal from "./Homes";
+import { SITE_NAME, SITE_DESCRIPTION, abs } from "./seo/site";
+
+const title = `${SITE_NAME} – অনলাইন শপ, গেমস ও গিফট | বাংলাদেশ`;
+
+export const metadata: Metadata = {
+  title,
+  description: SITE_DESCRIPTION,
+  alternates: { canonical: abs("/") }, // আগে ভুলে /dashboard ছিল
+  openGraph: { title, description: SITE_DESCRIPTION, url: abs("/"), type: "website", locale: "bn_BD", siteName: SITE_NAME },
+  twitter: { card: "summary_large_image", title, description: SITE_DESCRIPTION },
+};
+
+export default function Page() {
+  return (
+    <>
+      {/* হোমপেজে h1 ছিল না — Google-এর জন্য একটি h1 + ক্রলযোগ্য লিংক (ভিজ্যুয়ালি লুকানো, UI অপরিবর্তিত) */}
+      <div className="sr-only">
+        <h1>{SITE_NAME} – বাংলাদেশের অনলাইন শপ, গেমস ও গিফট</h1>
+        <p>{SITE_DESCRIPTION}</p>
+        <nav aria-label="প্রধান লিংক">
+          <a href="/products-view">সব পণ্য</a> <a href="/games">গেমস</a> <a href="/services">সার্ভিস</a>{" "}
+          <a href="/about-us">আমাদের সম্পর্কে</a> <a href="/contact-us">যোগাযোগ</a>
+        </nav>
+      </div>
+      <FullyLoadedTerminal />
+    </>
+  );
+}
+
+/* ===== SEO UPDATE BACKUP: মূল ফাইলের সম্পূর্ণ কোড (কিছুই মুছিনি, এখানে রাখা আছে — দরকারে ফিরিয়ে নিন) =====
 import { Metadata } from "next";
 import FullyLoadedTerminal from "./Homes"; // আপনার আসল ড্যাশবোর্ড ফাইলটির পাথ
 
@@ -7,7 +39,7 @@ const SHARE_IMAGE_URL = `${SITE_URL}/og-image.png`;
 
 /**
  * 🎯 টপ ৫ সার্চ ইঞ্জিন (Google, Bing, Yahoo, Yandex, Baidu) এবং সোশাল মিডিয়া অপ্টিমাইজড মেটাডাটা
- */
+ * /
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
   title: "Maturity Terminal v4 | মেয়াদী ডিপোজিট ও রিয়াল-টাইম সেটেলমেন্ট লেজার",
@@ -124,15 +156,15 @@ export default function Page() {
 
   return (
     <>
-      {/* Bing, Yahoo এবং Baidu ওয়েবমাস্টার ভেরিফিকেশন মেটা ট্যাগ */}
+      {/* Bing, Yahoo এবং Baidu ওয়েবমাস্টার ভেরিফিকেশন মেটা ট্যাগ * /}
       <head>
-        {/* Bing & Yahoo Search Webmaster Verification */}
+        {/* Bing & Yahoo Search Webmaster Verification * /}
         <meta name="msvalidate.01" content="YOUR_BING_VERIFICATION_CODE" />
-        {/* Baidu (চীনের বৃহত্তম সার্চ ইঞ্জিন) Verification */}
+        {/* Baidu (চীনের বৃহত্তম সার্চ ইঞ্জিন) Verification * /}
         <meta name="baidu-site-verification" content="YOUR_BAIDU_VERIFICATION_CODE" />
       </head>
 
-      {/* সার্চ ইঞ্জিনগুলোর জন্য রিচ রেজাল্টস স্কিমা ইনজেকশন */}
+      {/* সার্চ ইঞ্জিনগুলোর জন্য রিচ রেজাল্টস স্কিমা ইনজেকশন * /}
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(softwareApplicationSchema) }}
@@ -142,9 +174,11 @@ export default function Page() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbSchema) }}
       />
 
-      {/* আপনার মূল ড্যাশবোর্ড কম্পোনেন্ট */}
+      {/* আপনার মূল ড্যাশবোর্ড কম্পোনেন্ট * /}
       <FullyLoadedTerminal />
     </>
   );
 }
 
+
+===== END BACKUP ===== */

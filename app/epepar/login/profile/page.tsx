@@ -1,7 +1,7 @@
 import ProfileTabs from "../../profiletab";
 import { profile } from "../../data";
 
-export const metadata = { title: "আমার প্রোফাইল — বাংলা পেপার" };
+export const metadata = { title: "আমার প্রোফাইল — বাংলা পেপার", robots: { index: false, follow: false } };
 
 export default function ProfilePage() {
   return (

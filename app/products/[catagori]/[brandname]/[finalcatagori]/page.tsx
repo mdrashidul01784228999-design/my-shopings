@@ -277,12 +277,12 @@ export default function DigitalShopUnified() {
             <div className="sticky top-32 space-y-3.5">
               <h2 className="hidden lg:block text-xs font-bold text-cyan-600 uppercase tracking-[0.3em] pl-4 mb-5">Filter by Brand</h2>
               {productscata.map((cat, idx) => (
-                <button key={idx} onClick={() => router.push(`/products/${currentCategory}/${cat.catagori}/${cat.brand}`)}
+                <Link key={idx} href={`/products/${currentCategory}/${cat.catagori}/${cat.brand}`}
                   className="w-full flex items-center justify-between px-6 py-5 rounded-2xl bg-[#050813] border border-transparent hover:border-cyan-800/50 hover:bg-[#070b18] transition-all group overflow-hidden relative shadow-sm">
                   <span className="text-sm font-bold uppercase text-slate-300 group-hover:text-white z-10">{cat.brand}</span>
                   <div className="absolute inset-0 bg-gradient-to-r from-cyan-950/30 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
                   <ChevronRight size={18} className="text-slate-600 group-hover:text-cyan-400 group-hover:translate-x-1.5 transition-all z-10" />
-                </button>
+                </Link>
               ))}
             </div>
           </aside>
@@ -1420,6 +1420,7 @@ export default function DigitalShopUnified() {
 //   );
 // }
 
-
-
-
+/* ===== SEO UPDATE BACKUP: নিচের মূল লাইনগুলো SEO আপডেটে বদলানো হয়েছে (ব্যাকআপ হিসেবে রাখা) =====
+                <button key={idx} onClick={() => router.push(`/products/${currentCategory}/${cat.catagori}/${cat.brand}`)}
+                </button>
+===== END BACKUP ===== */

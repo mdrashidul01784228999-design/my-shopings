@@ -36,7 +36,7 @@ const bangla = Hind_Siliguri({
   display: "swap",
 });
 
-const SITE_URL = "https://yourwebsite.com"; // <-- আপনার আসল ডোমেইন দিন
+const SITE_URL = "https://my-shopings.com"; // <-- আপনার আসল ডোমেইন দিন
 const img = (id: string) =>
   `https://images.unsplash.com/${id}?auto=format&fit=crop&w=900&q=70`;
 
@@ -603,8 +603,8 @@ export const metadata: Metadata = {
   title: "সব ক্যাটাগরি – গেমস, শপিং ও গিফট কার্ড | Premium Portal",
   description: "ফ্রি অনলাইন গেমস, প্রিমিয়াম শপিং, ট্রেন্ডিং আইটেম ও গিফট কার্ড রিডিম – সবকিছু এক জায়গায়।",
   keywords: ["অনলাইন গেমস", "প্রিমিয়াম শপিং", "গিফট কার্ড", "ট্রেন্ডিং"],
-  alternates: { canonical: "https://yourwebsite.com" },
-  openGraph: { title: "Premium Portal", description: "গেমস, শপিং ও গিফট কার্ড", url: "https://yourwebsite.com", siteName: "Premium Portal", locale: "bn_BD", type: "website" },
+  alternates: { canonical: "https://my-shopings.com" },
+  openGraph: { title: "Premium Portal", description: "গেমস, শপিং ও গিফট কার্ড", url: "https://my-shopings.com", siteName: "Premium Portal", locale: "bn_BD", type: "website" },
   twitter: { card: "summary_large_image" },
   robots: { index: true, follow: true },
 };
@@ -798,7 +798,7 @@ images: { remotePatterns: [{ protocol: "https", hostname: "images.unsplash.com" 
 //       "@type": "ListItem",
 //       "position": index + 1,
 //       "name": cat.title,
-//       "url": `https://yourwebsite.com${cat.link}`,
+//       "url": `https://my-shopings.com${cat.link}`,
 //     })),
 //   };
 
@@ -1581,4 +1581,9 @@ images: { remotePatterns: [{ protocol: "https", hostname: "images.unsplash.com" 
 //   );
 // }
 
-
+/* ===== SEO UPDATE BACKUP: নিচের মূল লাইনগুলো SEO আপডেটে বদলানো হয়েছে (ব্যাকআপ হিসেবে রাখা) =====
+const SITE_URL = "https://yourwebsite.com"; // <-- আপনার আসল ডোমেইন দিন
+  alternates: { canonical: "https://yourwebsite.com" },
+  openGraph: { title: "Premium Portal", description: "গেমস, শপিং ও গিফট কার্ড", url: "https://yourwebsite.com", siteName: "Premium Portal", locale: "bn_BD", type: "website" },
+//       "url": `https://yourwebsite.com${cat.link}`,
+===== END BACKUP ===== */

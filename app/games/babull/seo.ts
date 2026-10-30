@@ -1,7 +1,7 @@
 import type { Metadata, MetadataRoute } from 'next';
 
 // .env.local এ NEXT_PUBLIC_SITE_URL=https://আপনার-ডোমেইন.com দিন
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://yourwebsite.com').replace(/\/$/, '');
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://my-shopings.com').replace(/\/$/, '');
 export const SITE_NAME = 'Premium Portal';
 export const OG_IMAGE = '/og-image.png'; // public/ ফোল্ডারে ১২০০×৬৩০ ছবি রাখুন
 
@@ -40,3 +40,7 @@ export const ROUTES: Route[] = [
   { path: '/games/Snack', priority: 0.7, changeFrequency: 'weekly' },
   { path: '/games/Jamgam', priority: 0.7, changeFrequency: 'weekly' },
 ];
+
+/* ===== SEO UPDATE BACKUP: নিচের মূল লাইনগুলো SEO আপডেটে বদলানো হয়েছে (ব্যাকআপ হিসেবে রাখা) =====
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://yourwebsite.com').replace(/\/$/, '');
+===== END BACKUP ===== */

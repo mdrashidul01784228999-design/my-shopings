@@ -1,4 +1,5 @@
 import { Metadata } from "next";
+import { notFound } from "next/navigation";
 import ProductViews from "../../ProductViews";
 import Api from "../../../api/Api";
 
@@ -34,7 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const title = `${product?.model || "Product"} | Buy Online Bangladesh | My Shopings`;
   const description = product?.discript?.slice(0, 155) || `Buy ${id} at the best price in Bangladesh with fast home delivery.`;
   const productImg = product?.img || `${baseUrl}/logo.png`;
-  const url = `${baseUrl}/product/${id}`;
+  const url = `${baseUrl}/products-view/${id}`;
 
   return {
     metadataBase: new URL(baseUrl), // Required for social share images
@@ -92,13 +93,14 @@ export default async function Page({ params }: Props) {
   if (!id) return <div className="p-10 text-center text-red-500">Product Not Found</div>;
 
   const productData = await getProduct(id);
+  if (!productData) notFound();
 
   // Schema.org Structured Data for Google Stars & Price
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: productData?.name || "Product Name",
-    image: [productData?.img || `${baseUrl}/logo.png`],
+    image: [/^https?:\/\//i.test(productData?.img || "") ? productData.img : `${baseUrl}${productData?.img ? "/" + String(productData.img).replace(/^\//,"") : "/opengraph-image"}`],
     description: productData?.discript || "Quality product available at My Shopings.",
     sku: id,
     brand: {
@@ -107,18 +109,23 @@ export default async function Page({ params }: Props) {
     },
     offers: {
       "@type": "Offer",
-      url: `${baseUrl}/product/${id}`,
+      url: `${baseUrl}/products-view/${id}`,
       priceCurrency: "BDT",
       price: productData?.pricee || "0",
       availability: "https://schema.org/InStock",
       itemCondition: "https://schema.org/NewCondition",
       priceValidUntil: "2027-12-31", // Added for Google Merchant safety
     },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: "4.8",
-      reviewCount: "125",
-    },
+  };
+
+  const breadcrumbLd = {
+    "@context": "https://schema.org",
+    "@type": "BreadcrumbList",
+    itemListElement: [
+      { "@type": "ListItem", position: 1, name: "হোম", item: baseUrl },
+      { "@type": "ListItem", position: 2, name: "সব পণ্য", item: `${baseUrl}/products-view` },
+      { "@type": "ListItem", position: 3, name: productData?.name || "পণ্য", item: `${baseUrl}/products-view/${id}` },
+    ],
   };
 
   return (
@@ -127,6 +134,10 @@ export default async function Page({ params }: Props) {
       <script
         type="application/ld+json"
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
+      />
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbLd) }}
       />
 
       {/* 2. SEO VISIBLE HEADER */}
@@ -185,13 +196,13 @@ export default async function Page({ params }: Props) {
 //       title: title,
 //       description: description,
 //       alternates: {
-//         canonical: `${baseUrl}/product/${id}`, // Tells Google THIS is the main link
+//         canonical: `${baseUrl}/products-view/${id}`, // Tells Google THIS is the main link
 //       },
 //       // Facebook, Telegram, WhatsApp
 //       openGraph: {
 //         title: title,
 //         description: description,
-//         url: `${baseUrl}/product/${id}`,
+//         url: `${baseUrl}/products-view/${id}`,
 //         siteName: "My Shopings",
 //         images: [{ url: productImg, width: 1200, height: 630 }],
 //         type: "website",
@@ -251,7 +262,7 @@ export default async function Page({ params }: Props) {
 //     },
 //     offers: {
 //       '@type': 'Offer',
-//       url: `https://my-shopings.com/product/${id}`,
+//       url: `https://my-shopings.com/products-view/${id}`,
 //       priceCurrency: 'BDT', 
 //       price: productData?.pricee || '0',
 //       availability: 'https://schema.org/InStock',
@@ -659,17 +670,17 @@ export default async function Page({ params }: Props) {
 //     ],
 
 //     alternates: {
-//       canonical: `https://www.my-shopings.com/product/${productId}`,
+//       canonical: `https://my-shopings.com/products-view/${productId}`,
 //     },
 
 //     openGraph: {
 //       type: 'product',
 //       title: `Product ${productId}`,
 //       description: 'Best product in Bangladesh',
-//       url: `https://www.my-shopings.com/product/${productId}`,
+//       url: `https://my-shopings.com/products-view/${productId}`,
 //       images: [
 //         {
-//           url: 'https://www.myshop.com/og-image.jpg',
+//           url: 'https://my-shopings.com/og-image.jpg',
 //           width: 1200,
 //           height: 630,
 //           alt: 'Product Image',
@@ -719,11 +730,11 @@ export default async function Page({ params }: Props) {
 //   openGraph: {
 //     title: "My Shop – Best Online Store in Bangladesh",
 //     description: "আমাদের ইকমার্সে পাবেন সেরা মানের পণ্য সাশ্রয়ী দামে।",
-//     url: "https://www.my-shopings.com",
+//     url: "https://my-shopings.com",
 //     siteName: "my-shopings.com/home page",
 //     images: [
 //       {
-//         url: "https://www.myshop.com/og-image.jpg",
+//         url: "https://my-shopings.com/og-image.jpg",
 //         width: 1200,
 //         height: 630,
 //         alt: "My Shop Banner",
@@ -733,7 +744,7 @@ export default async function Page({ params }: Props) {
 //     type: "website",
 //   },
 //   alternates: {
-//     canonical: "https://www.my-shopings.com",
+//     canonical: "https://my-shopings.com",
 //   },
 // };
 
@@ -754,3 +765,23 @@ export default async function Page({ params }: Props) {
 //     </>
 //   )
 // }
+
+/* ===== SEO UPDATE BACKUP: নিচের মূল লাইনগুলো SEO আপডেটে বদলানো হয়েছে (ব্যাকআপ হিসেবে রাখা) =====
+  const url = `${baseUrl}/product/${id}`;
+    image: [productData?.img || `${baseUrl}/logo.png`],
+      url: `${baseUrl}/product/${id}`,
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: "4.8",
+      reviewCount: "125",
+    },
+//         canonical: `${baseUrl}/product/${id}`, // Tells Google THIS is the main link
+//         url: `${baseUrl}/product/${id}`,
+//       url: `https://my-shopings.com/product/${id}`,
+//       canonical: `https://www.my-shopings.com/product/${productId}`,
+//       url: `https://www.my-shopings.com/product/${productId}`,
+//           url: 'https://www.myshop.com/og-image.jpg',
+//     url: "https://www.my-shopings.com",
+//         url: "https://www.myshop.com/og-image.jpg",
+//     canonical: "https://www.my-shopings.com",
+===== END BACKUP ===== */

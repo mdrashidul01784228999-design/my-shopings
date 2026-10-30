@@ -3,6 +3,7 @@ import PrivacyClientUI from "./Privacyclie"; // আমরা পাশের ফ
 
 // ✅ Next.js 15/16+ এবং React 19 এর জন্য অফিশিয়াল ও পাওয়ারফুল SEO মেটাডেটা
 export const metadata: Metadata = {
+  alternates: { canonical: "https://my-shopings.com/privacy-policy" },
   title: "গোপনীয়তা নীতি | Privacy Policy",
   description: "আপনার গোপনীয়তা আমাদের কাছে গুরুত্বপূর্ণ। এখানে ব্যাখ্যা করা হয়েছে আপনি আমাদের সেবা ব্যবহার করলে আমরা কিভাবে তথ্য সংগ্রহ, ব্যবহার ও সংরক্ষণ করি।",
   keywords: ["Privacy Policy", "গোপনীয়তা নীতি", "তথ্য সুরক্ষা", "নিরাপত্তা নীতি", "Privacy"],

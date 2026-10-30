@@ -8,16 +8,16 @@ export const metadata = {
   description: 'সবচেয়ে নিখুঁত অনলাইন বয়স ক্যালকুলেটর। সরকারি চাকরি, ফর্ম পূরণ বা যেকোনো প্রয়োজনে আপনার জন্মতারিখ দিয়ে আজই বয়স বের করুন বছর, মাস ও দিনে।',
   keywords: ['বয়স ক্যালকুলেটর', 'age calculator bangla', 'জন্ম তারিখ দিয়ে বয়স বের করা', 'সঠিক বয়স হিসাব', 'online age calculator'],
   alternates: {
-    canonical: 'https://yourwebsite.com', 
+    canonical: 'https://my-shopings.com', 
   },
   openGraph: {
     title: 'অনলাইন বয়স ক্যালকুলেটর - নিখুঁত বয়স হিসাব করুন',
     description: 'জন্মতারিখ দিয়ে এক ক্লিকে বের করুন আপনার বর্তমান বয়স কত বছর, মাস এবং দিন।',
-    url: 'https://yourwebsite.com',
+    url: 'https://my-shopings.com',
     siteName: 'Age Calculator Bangla',
     images: [
       {
-        url: 'https://yourwebsite.com/og-image.jpg', 
+        url: 'https://my-shopings.com/og-image.jpg', 
         width: 1200,
         height: 630,
         alt: 'বয়স ক্যালকুলেটর বাংলাদেশ',
@@ -34,7 +34,7 @@ export default function HomePage() {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
     'name': 'অনলাইন বয়স ক্যালকুলেটর',
-    'url': 'https://yourwebsite.com',
+    'url': 'https://my-shopings.com',
     'applicationCategory': 'BusinessApplication',
     'operatingSystem': 'All',
     'browserRequirements': 'Requires HTML5 support',
@@ -110,3 +110,10 @@ export default function HomePage() {
     </main>
   );
 }
+
+/* ===== SEO UPDATE BACKUP: নিচের মূল লাইনগুলো SEO আপডেটে বদলানো হয়েছে (ব্যাকআপ হিসেবে রাখা) =====
+    canonical: 'https://yourwebsite.com', 
+    url: 'https://yourwebsite.com',
+        url: 'https://yourwebsite.com/og-image.jpg', 
+    'url': 'https://yourwebsite.com',
+===== END BACKUP ===== */

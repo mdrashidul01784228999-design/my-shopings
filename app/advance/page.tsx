@@ -15,16 +15,16 @@ export const metadata = {
     'photo background remover free'
   ],
   alternates: {
-    canonical: 'https://yourwebsite.com/bg-remover', 
+    canonical: 'https://my-shopings.com/bg-remover', 
   },
   openGraph: {
     title: 'অনলাইন এআই ব্যাকগ্রাউন্ড রিমুভার - ১ ক্লিকে ছবির বিজি মুছুন',
     description: 'কৃত্রিম বুদ্ধিমত্তার সাহায্যে ছবির চুল ও সূক্ষ্ম বর্ডার অক্ষুণ্ণ রেখে ব্যাকগ্রাউন্ড রিমুভ করুন সম্পূর্ণ ফ্রিতে।',
-    url: 'https://yourwebsite.com/bg-remover',
+    url: 'https://my-shopings.com/bg-remover',
     siteName: 'AI BG Remover Bangla',
     images: [
       {
-        url: 'https://yourwebsite.com/og-image-bg.jpg', 
+        url: 'https://my-shopings.com/og-image-bg.jpg', 
         width: 1200,
         height: 630,
         alt: 'ফ্রি এআই ব্যাকগ্রাউন্ড রিমুভার টুল',
@@ -41,7 +41,7 @@ export default function BgRemoverPage() {
     '@context': 'https://schema.org',
     '@type': 'WebApplication',
     'name': 'এআই ব্যাকগ্রাউন্ড রিমুভার',
-    'url': 'https://yourwebsite.com/bg-remover',
+    'url': 'https://my-shopings.com/bg-remover',
     'applicationCategory': 'MultimediaApplication',
     'operatingSystem': 'All',
     'browserRequirements': 'Requires HTML5 and WebGL support',
@@ -126,3 +126,10 @@ export default function BgRemoverPage() {
     </main>
   );
 }
+
+/* ===== SEO UPDATE BACKUP: নিচের মূল লাইনগুলো SEO আপডেটে বদলানো হয়েছে (ব্যাকআপ হিসেবে রাখা) =====
+    canonical: 'https://yourwebsite.com/bg-remover', 
+    url: 'https://yourwebsite.com/bg-remover',
+        url: 'https://yourwebsite.com/og-image-bg.jpg', 
+    'url': 'https://yourwebsite.com/bg-remover',
+===== END BACKUP ===== */

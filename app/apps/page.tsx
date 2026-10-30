@@ -22,7 +22,7 @@ export const metadata: Metadata = {
     "স্বল্পমূল্যে ল্যান্ডিং পেজ",
     "Premium Neon Landing Page"
   ],
-  authors: [{ name: "Md Rashidul", url: "https://yourdomain.com" }],
+  authors: [{ name: "Md Rashidul", url: "https://my-shopings.com" }],
   creator: "Md Rashidul Official",
   publisher: "Maturity Terminal Network",
   
@@ -43,11 +43,11 @@ export const metadata: Metadata = {
   openGraph: {
     title: "Maturity Terminal v4 | ১, ২ ও ৬ মাসের সুরক্ষিত ডিপোজিট লেজার",
     description: "আপনার ফান্ড নির্দিষ্ট মেয়াদে লক করুন। দৈনিক বাজারের প্যানিক বা ভলাটিলিটি মুক্ত ট্রেডিং; লাভ বা ক্ষতি নির্ধারিত হবে শুধুমাত্র চুক্তির শেষ দিনের লাইভ রেটের ওপর।",
-    url: "https://yourdomain.com/dashboard",
+    url: "https://my-shopings.com/dashboard",
     siteName: "Maturity Terminal",
     images: [
       {
-        url: "https://yourdomain.com/og-image.png", // ড্যাশবোর্ডের নিয়ন স্ক্রিনশট ইউআরএল
+        url: "https://my-shopings.com/og-image.png", // ড্যাশবোর্ডের নিয়ন স্ক্রিনশট ইউআরএল
         width: 1200,
         height: 630,
         alt: "Maturity Terminal v4 Deposit Interface Preview",
@@ -62,12 +62,12 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Maturity Terminal v4 | Secure Settlement Protocol",
     description: "দৈনিক বাজারের ওঠানামা মুক্ত সুরক্ষিত ডিপোজিট লেজার সিস্টেম।",
-    images: ["https://yourdomain.com/og-image.png"],
+    images: ["https://my-shopings.com/og-image.png"],
   },
 
   // ডুপ্লিকেট কন্টেন্ট ইস্যু এড়াতে ক্যানোনিকাল ইউআরএল
   alternates: {
-    canonical: "https://yourdomain.com/dashboard",
+    canonical: "https://my-shopings.com/dashboard",
   },
 };
 
@@ -77,3 +77,11 @@ export const metadata: Metadata = {
 export default function Page() {
   return <FullyLoadedTerminal />;
 }
+
+/* ===== SEO UPDATE BACKUP: নিচের মূল লাইনগুলো SEO আপডেটে বদলানো হয়েছে (ব্যাকআপ হিসেবে রাখা) =====
+  authors: [{ name: "Md Rashidul", url: "https://yourdomain.com" }],
+    url: "https://yourdomain.com/dashboard",
+        url: "https://yourdomain.com/og-image.png", // ড্যাশবোর্ডের নিয়ন স্ক্রিনশট ইউআরএল
+    images: ["https://yourdomain.com/og-image.png"],
+    canonical: "https://yourdomain.com/dashboard",
+===== END BACKUP ===== */

@@ -6,11 +6,12 @@ export const metadata: Metadata = {
   description:
     'ফ্রি অনলাইন গেমস, প্রিমিয়াম শপিং, ট্রেন্ডিং আইটেম ও গিফট কার্ড রিডিম – সবকিছু এক জায়গায়। কয়েন জমান, গেম খেলুন, পুরস্কার জিতুন।',
   keywords: ['অনলাইন গেমস', 'ফ্রি গেম', 'প্রিমিয়াম শপিং', 'গিফট কার্ড', 'ট্রেন্ডিং', 'বাবল শুটার'],
-  alternates: { canonical: '/' },
+  alternates: { canonical: '/games' },
+  robots: { index: false, follow: true }, // /games এর ডুপ্লিকেট কনটেন্ট
   openGraph: {
     title: 'Premium Portal – গেমস, শপিং ও গিফট কার্ড',
     description: 'ফ্রি অনলাইন গেমস, প্রিমিয়াম শপিং ও গিফট কার্ড এক জায়গায়।',
-    url: '/',
+    url: '/games',
     type: 'website',
     locale: 'bn_BD',
   },

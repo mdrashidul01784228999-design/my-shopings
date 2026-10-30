@@ -5,7 +5,6 @@ import React from 'react';
 import { motion } from 'framer-motion';
 import { TypeAnimation } from 'react-type-animation';
 import { MdEmail, MdPhone, MdLocationOn } from 'react-icons/md';
-import Head from 'next/head';
 
 const contactDetails = [
   {
@@ -28,19 +27,6 @@ const contactDetails = [
 const ContactUs = () => {
   return (
     <>
-      {/* ✅ SEO Setup */}
-      <Head>
-        <title>যোগাযোগ করুন | আপনার প্রতিষ্ঠান</title>
-        <meta name="description" content="আপনার যেকোনো প্রশ্ন বা মতামতের জন্য আমাদের সাথে যোগাযোগ করুন। আমাদের টিম দ্রুত সহায়তা প্রদান করে।" />
-        <meta name="keywords" content="যোগাযোগ, যোগাযোগ করুন, Contact, Contact Us, Support, Help, Assistance" />
-        <meta name="author" content="আপনার প্রতিষ্ঠান" />
-        <meta property="og:title" content="যোগাযোগ করুন | আপনার প্রতিষ্ঠান" />
-        <meta property="og:description" content="আমাদের সাথে সরাসরি যোগাযোগ করুন যেকোনো সমস্যা বা মতামতের জন্য।" />
-        <meta property="og:type" content="website" />
-        <meta property="og:image" content="/logo.png" />
-        <meta property="og:url" content="https://yourdomain.com/contact-us" />
-        <link rel="canonical" href="https://yourdomain.com/contact-us" />
-      </Head>
 
       {/* ✅ Page Content */}
       <main className="max-w-6xl mx-auto px-4 sm:px-6 py-20 text-gray-800 dark:text-gray-100">
@@ -137,3 +123,20 @@ const ContactUs = () => {
 };
 
 export default ContactUs;
+
+/* ===== SEO UPDATE BACKUP: নিচের মূল লাইনগুলো SEO আপডেটে বদলানো হয়েছে (ব্যাকআপ হিসেবে রাখা) =====
+import Head from 'next/head';
+      {/* ✅ SEO Setup * /}
+      <Head>
+        <title>যোগাযোগ করুন | আপনার প্রতিষ্ঠান</title>
+        <meta name="description" content="আপনার যেকোনো প্রশ্ন বা মতামতের জন্য আমাদের সাথে যোগাযোগ করুন। আমাদের টিম দ্রুত সহায়তা প্রদান করে।" />
+        <meta name="keywords" content="যোগাযোগ, যোগাযোগ করুন, Contact, Contact Us, Support, Help, Assistance" />
+        <meta name="author" content="আপনার প্রতিষ্ঠান" />
+        <meta property="og:title" content="যোগাযোগ করুন | আপনার প্রতিষ্ঠান" />
+        <meta property="og:description" content="আমাদের সাথে সরাসরি যোগাযোগ করুন যেকোনো সমস্যা বা মতামতের জন্য।" />
+        <meta property="og:type" content="website" />
+        <meta property="og:image" content="/logo.png" />
+        <meta property="og:url" content="https://yourdomain.com/contact-us" />
+        <link rel="canonical" href="https://yourdomain.com/contact-us" />
+      </Head>
+===== END BACKUP ===== */

@@ -16,19 +16,19 @@ export const metadata: Metadata = {
     "affiliate income",
   ],
 
-  metadataBase: new URL("https://yourdomain.com"),
+  metadataBase: new URL("https://my-shopings.com"),
 
   openGraph: {
     title: "🔥 রেফার করলেই আয় শুরু করুন | MyApp",
     description:
       "লগইন করুন, রেফার লিংক শেয়ার করুন এবং প্রতিটি সফল রেফারে আয় করুন ৫/১০/২০ টাকা।",
-    url: "https://yourdomain.com/login",
+    url: "https://my-shopings.com/login",
     siteName: "MyApp",
     type: "website",
     locale: "bn_BD",
     images: [
       {
-        url: "https://yourdomain.com/og-image.png",
+        url: "https://my-shopings.com/og-image.png",
         width: 1200,
         height: 630,
         alt: "Refer & Earn Banner",
@@ -41,8 +41,7 @@ export const metadata: Metadata = {
     title: "রেফার করলেই আয় | MyApp",
     description:
       "লগইন করুন এবং রেফার করে আয় করুন সহজেই। এখনই শুরু করুন!",
-    images: ["https://yourdomain.com/og-image.png"],
-    creator: "@yourhandle",
+    images: ["https://my-shopings.com/og-image.png"],
   },
 
   robots: {
@@ -58,7 +57,7 @@ export const metadata: Metadata = {
   },
 
   alternates: {
-    canonical: "https://yourdomain.com/login",
+    canonical: "https://my-shopings.com/login",
   },
 
   category: "finance",
@@ -67,3 +66,12 @@ export const metadata: Metadata = {
 export default function Page() {
   return <Homeps />;
 }
+
+/* ===== SEO UPDATE BACKUP: নিচের মূল লাইনগুলো SEO আপডেটে বদলানো হয়েছে (ব্যাকআপ হিসেবে রাখা) =====
+  metadataBase: new URL("https://yourdomain.com"),
+    url: "https://yourdomain.com/login",
+        url: "https://yourdomain.com/og-image.png",
+    images: ["https://yourdomain.com/og-image.png"],
+    creator: "@yourhandle",
+    canonical: "https://yourdomain.com/login",
+===== END BACKUP ===== */

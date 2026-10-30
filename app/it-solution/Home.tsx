@@ -692,7 +692,7 @@ export default function GTSolutionPage() {
 //   openGraph: {
 //     title: 'আইটি সমাধান ও টেকনোলজি সার্ভিস',
 //     description: 'আধুনিক নিয়ন গ্লো টেকনোলজি ও সফটওয়্যার সリューション।',
-//     url: 'https://yourdomain.com/it-solution',
+//     url: 'https://my-shopings.com/it-solution',
 //     siteName: 'Rashidul IT',
 //     images: [
 //       {
@@ -900,3 +900,7 @@ export default function GTSolutionPage() {
 //     </div>
 //   );
 // }
+
+/* ===== SEO UPDATE BACKUP: নিচের মূল লাইনগুলো SEO আপডেটে বদলানো হয়েছে (ব্যাকআপ হিসেবে রাখা) =====
+//     url: 'https://yourdomain.com/it-solution',
+===== END BACKUP ===== */

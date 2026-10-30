@@ -1,7 +1,7 @@
 import type { Metadata, Viewport } from "next";
 import MaturityTerminal from "./MaturityTerminal";
 
-const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://example.com"; // <-- আপনার ডোমেইন দিন
+const SITE = process.env.NEXT_PUBLIC_SITE_URL ?? "https://my-shopings.com"; // <-- আপনার ডোমেইন দিন
 const TITLE = "MATURITY.X6 | কয়েন ও পণ্যে ১ মাস থেকে ১ বছরের ডিপোজিট মার্কেট";
 const DESC =
   "বিটকয়েন, ইথেরিয়াম, গোল্ড ও অয়েলে আপনার কয়েন ১ মাস, ৩ মাস, ৬ মাস বা ১ বছরের জন্য লক করুন। মেয়াদপূর্তির দিনের দামে সেটেলমেন্ট। লাইভ চার্ট, থ্রিডি টার্মিনাল।";
@@ -14,11 +14,11 @@ export const metadata: Metadata = {
     "বিটকয়েন", "শেয়ার বাজার", "কয়েন ডিপোজিট", "গোল্ড ট্রেডিং", "ক্রিপ্টো মার্কেট",
     "bitcoin deposit", "crypto maturity", "gold oil bitcoin market", "MATURITY.X6",
   ],
-  alternates: { canonical: "/" },
+  alternates: { canonical: "/share-market" },
   openGraph: {
     title: TITLE,
     description: DESC,
-    url: "/",
+    url: "/share-market",
     siteName: "MATURITY.X6",
     type: "website",
     locale: "bn_BD",

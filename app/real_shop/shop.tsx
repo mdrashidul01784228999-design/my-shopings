@@ -1,7 +1,7 @@
 import axios from 'axios';
 
 // কোনো টাইপ ইন্টারফেস ছাড়া যেকোনো ধরনের Raw Data রিসিভ করার জন্য 'any' বা 'unknown' ব্যবহার করা হয়
-const API_URL = 'http://localhost:8000/api/versual_shop'; // উদাহরণস্বরূপ একটি API
+const API_URL = `${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000/api'}/versual_shop`; // উদাহরণস্বরূপ একটি API
 
 async function getRawJsonData() {
   try {
@@ -31,3 +31,7 @@ async function getRawJsonData() {
 
 // ফাংশনটি রান করা
 getRawJsonData();
+
+/* ===== SEO UPDATE BACKUP: মূল লাইন (localhost হার্ডকোড — প্রোডাকশনে কাজ করে না, তাই env থেকে নেওয়া হয়েছে) =====
+const API_URL = 'http://localhost:8000/api/versual_shop'; // উদাহরণস্বরূপ একটি API
+===== END BACKUP ===== */

@@ -1,5 +1,5 @@
 export default function ProductSchema({ product }: any) {
-  const siteUrl = "https://yourdomain.com";
+  const siteUrl = "https://my-shopings.com";
 
   return (
     <script
@@ -25,3 +25,7 @@ export default function ProductSchema({ product }: any) {
     />
   );
 }
+
+/* ===== SEO UPDATE BACKUP: নিচের মূল লাইনগুলো SEO আপডেটে বদলানো হয়েছে (ব্যাকআপ হিসেবে রাখা) =====
+  const siteUrl = "https://yourdomain.com";
+===== END BACKUP ===== */

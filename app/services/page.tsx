@@ -11,6 +11,7 @@ import Stiesdata from './Slicesivdpage'
 
 // ✅ ১. All SEO Setup (Google, Facebook, WhatsApp)
 export const metadata = {
+  alternates: { canonical: "https://my-shopings.com/services" },
   // Google & Browser
   title: "Md Rashidul Official | বাংলাদেশের সেরা ডিজিটাল সার্ভিস প্ল্যাটফর্ম",
   description: "Rashidul Official-এ পাবেন ই-পেপার, প্রিমিয়াম পণ্য ডেলিভারি এবং এক্সপার্ট আইটি সাপোর্ট। আপনার সব ডিজিটাল সমাধান এখন এক ঠিকানায়।",
@@ -266,7 +267,7 @@ export default function Page() {
 //     "provider": {
 //       "@type": "LocalBusiness",
 //       "name": "Md Rashidul Official",
-//       "image": "https://yourwebsite.com/logo.png",
+//       "image": "https://my-shopings.com/logo.png",
 //       "address": {
 //         "@type": "PostalAddress",
 //         "addressLocality": "Dhaka",
@@ -493,3 +494,7 @@ export default function Page() {
 // );
 
 // export default HomePage;
+
+/* ===== SEO UPDATE BACKUP: নিচের মূল লাইনগুলো SEO আপডেটে বদলানো হয়েছে (ব্যাকআপ হিসেবে রাখা) =====
+//       "image": "https://yourwebsite.com/logo.png",
+===== END BACKUP ===== */

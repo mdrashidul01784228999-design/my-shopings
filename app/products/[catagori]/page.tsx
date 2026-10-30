@@ -1,5 +1,6 @@
 'use client';
 
+import Link from "next/link";
 import { useEffect, useState } from 'react';
 import {
   motion,
@@ -321,10 +322,11 @@ export default function Home() {
                   exit={{ opacity: 0, scale: 0.5 }}
                   transition={{ delay: index * 0.08, type: "spring", stiffness: 100 }}
                   whileHover={{ y: -12 }}
-                  onClick={() => router.push(`/products/${currentCategory}/${product.catagori}`)}
                   className="group relative cursor-pointer"
                 >
-                  <FloatingCard product={product} index={index} />
+                  <Link href={`/products/${currentCategory}/${product.catagori}`} className="block" aria-label={String(product?.catagori || product?.brand || "")}>
+                    <FloatingCard product={product} index={index} />
+                  </Link>
                 </motion.div>
               ))}
             </AnimatePresence>
@@ -529,8 +531,7 @@ export default function Home() {
 //   );
 // }
 
-
-
-
-
-
+/* ===== SEO UPDATE BACKUP: নিচের মূল লাইনগুলো SEO আপডেটে বদলানো হয়েছে (ব্যাকআপ হিসেবে রাখা) =====
+                  onClick={() => router.push(`/products/${currentCategory}/${product.catagori}`)}
+                  <FloatingCard product={product} index={index} />
+===== END BACKUP ===== */

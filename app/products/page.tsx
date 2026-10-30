@@ -73,7 +73,7 @@ export default function page() {
 //     brand: { "@type": "Brand", name: "YourBrandName" },
 //     offers: {
 //       "@type": "Offer",
-//       url: `https://yourdomain.com/product/${product.slug}`,
+//       url: `https://my-shopings.com/products-view/${product.slug}`,
 //       priceCurrency: "USD",
 //       price: product.price,
 //       availability: "https://schema.org/InStock",
@@ -85,13 +85,13 @@ export default function page() {
 //       <Head>
 //         <title>{product.name} | Your Shop Name</title>
 //         <meta name="description" content={product.description} />
-//         <link rel="canonical" href={`https://yourdomain.com/product/${product.slug}`} />
+//         <link rel="canonical" href={`https://my-shopings.com/products-view/${product.slug}`} />
 //         {/* Open Graph */}
 //         <meta property="og:title" content={product.name} />
 //         <meta property="og:description" content={product.description} />
 //         <meta property="og:image" content={product.image} />
 //         <meta property="og:type" content="product" />
-//         <meta property="og:url" content={`https://yourdomain.com/product/${product.slug}`} />
+//         <meta property="og:url" content={`https://my-shopings.com/products-view/${product.slug}`} />
 //         {/* Twitter Card */}
 //         <meta name="twitter:card" content="summary_large_image" />
 //         <meta name="twitter:title" content={product.name} />
@@ -144,7 +144,7 @@ export default function page() {
 //           name="description"
 //           content={`Explore the best ${category.name} products in our store.`}
 //         />
-//         <link rel="canonical" href={`https://yourdomain.com/category/${category.slug}`} />
+//         <link rel="canonical" href={`https://my-shopings.com/products/${category.slug}`} />
 //         {/* Open Graph */}
 //         <meta property="og:title" content={`${category.name} Products`} />
 //         <meta
@@ -152,7 +152,7 @@ export default function page() {
 //           content={`Explore the best ${category.name} products in our store.`}
 //         />
 //         <meta property="og:type" content="website" />
-//         <meta property="og:url" content={`https://yourdomain.com/category/${category.slug}`} />
+//         <meta property="og:url" content={`https://my-shopings.com/products/${category.slug}`} />
 //       </Head>
 
 //       <main className="max-w-5xl mx-auto p-6">
@@ -212,7 +212,7 @@ export default function page() {
 // Disallow: /login/
 // Allow: /
 
-// Sitemap: https://yourdomain.com/sitemap.xml
+// Sitemap: https://my-shopings.com/sitemap.xml
 
 
 // ✅ ব্যাখ্যা:
@@ -231,7 +231,7 @@ export default function page() {
 
 // Verification → HTML tag, DNS, বা Google Analytics দিয়ে verify করো।
 
-// Sitemap Submit → https://yourdomain.com/sitemap.xml submit করো।
+// Sitemap Submit → https://my-shopings.com/sitemap.xml submit করো।
 
 // Google auto crawl & index শুরু করবে।
 
@@ -341,7 +341,7 @@ export default function page() {
 //       title: `${product.name} - Buy Online | MyStore`,
 //       description: product.description,
 //       type: "product",
-//       url: `https://yourdomain.com/product/${params.slug}`,
+//       url: `https://my-shopings.com/products-view/${params.slug}`,
 //       images: [product.image],
 //     },
 //     twitter: {
@@ -375,7 +375,7 @@ export default function page() {
 //     sku: params.slug,
 //     offers: {
 //       "@type": "Offer",
-//       url: `https://yourdomain.com/product/${params.slug}`,
+//       url: `https://my-shopings.com/products-view/${params.slug}`,
 //       priceCurrency: "USD",
 //       price: product.price,
 //       availability: "https://schema.org/InStock",
@@ -453,7 +453,7 @@ export default function page() {
 //       title: `${category.name} - Shop | MyStore`,
 //       description: category.description,
 //       type: "website",
-//       url: `https://yourdomain.com/category/${params.slug}`,
+//       url: `https://my-shopings.com/products/${params.slug}`,
 //     },
 //     twitter: {
 //       card: "summary_large_image",
@@ -595,7 +595,7 @@ export default function page() {
 //       title: `${product.name} - Buy Online | MyStore`,
 //       description: product.description,
 //       type: "product",
-//       url: `https://yourdomain.com/product/${params.slug}`,
+//       url: `https://my-shopings.com/products-view/${params.slug}`,
 //       images: [product.image],
 //     },
 //     twitter: {
@@ -629,7 +629,7 @@ export default function page() {
 //     sku: params.slug,
 //     offers: {
 //       "@type": "Offer",
-//       url: `https://yourdomain.com/product/${params.slug}`,
+//       url: `https://my-shopings.com/products-view/${params.slug}`,
 //       priceCurrency: "USD",
 //       price: product.price,
 //       availability: "https://schema.org/InStock",
@@ -748,7 +748,7 @@ export default function page() {
 //       title: `${category.name} - Products | MyStore`,
 //       description: category.description,
 //       type: "website",
-//       url: `https://yourdomain.com/category/${params.slug}`,
+//       url: `https://my-shopings.com/products/${params.slug}`,
 //     },
 //     twitter: {
 //       card: "summary_large_image",
@@ -817,7 +817,7 @@ export default function page() {
 // Disallow: /login/
 // Allow: /
 
-// Sitemap: https://yourdomain.com/sitemap.xml
+// Sitemap: https://my-shopings.com/sitemap.xml
 
 
 // ✅ ব্যাখ্যা:
@@ -836,7 +836,7 @@ export default function page() {
 
 // Verification → HTML tag, DNS, বা Google Analytics দিয়ে verify করো।
 
-// Sitemap Submit → https://yourdomain.com/sitemap.xml submit করো।
+// Sitemap Submit → https://my-shopings.com/sitemap.xml submit করো।
 
 // Google auto crawl & index শুরু করবে।
 
@@ -897,7 +897,7 @@ export default function page() {
 //     brand: { "@type": "Brand", name: "YourBrandName" },
 //     offers: {
 //       "@type": "Offer",
-//       url: `https://yourdomain.com/product/${product.slug}`,
+//       url: `https://my-shopings.com/products-view/${product.slug}`,
 //       priceCurrency: "USD",
 //       price: product.price,
 //       availability: "https://schema.org/InStock",
@@ -909,13 +909,13 @@ export default function page() {
 //       <Head>
 //         <title>{product.name} | Your Shop Name</title>
 //         <meta name="description" content={product.description} />
-//         <link rel="canonical" href={`https://yourdomain.com/product/${product.slug}`} />
+//         <link rel="canonical" href={`https://my-shopings.com/products-view/${product.slug}`} />
 //         {/* Open Graph */}
 //         <meta property="og:title" content={product.name} />
 //         <meta property="og:description" content={product.description} />
 //         <meta property="og:image" content={product.image} />
 //         <meta property="og:type" content="product" />
-//         <meta property="og:url" content={`https://yourdomain.com/product/${product.slug}`} />
+//         <meta property="og:url" content={`https://my-shopings.com/products-view/${product.slug}`} />
 //         {/* Twitter Card */}
 //         <meta name="twitter:card" content="summary_large_image" />
 //         <meta name="twitter:title" content={product.name} />
@@ -968,7 +968,7 @@ export default function page() {
 //           name="description"
 //           content={`Explore the best ${category.name} products in our store.`}
 //         />
-//         <link rel="canonical" href={`https://yourdomain.com/category/${category.slug}`} />
+//         <link rel="canonical" href={`https://my-shopings.com/products/${category.slug}`} />
 //         {/* Open Graph */}
 //         <meta property="og:title" content={`${category.name} Products`} />
 //         <meta
@@ -976,7 +976,7 @@ export default function page() {
 //           content={`Explore the best ${category.name} products in our store.`}
 //         />
 //         <meta property="og:type" content="website" />
-//         <meta property="og:url" content={`https://yourdomain.com/category/${category.slug}`} />
+//         <meta property="og:url" content={`https://my-shopings.com/products/${category.slug}`} />
 //       </Head>
 
 //       <main className="max-w-5xl mx-auto p-6">
@@ -1029,7 +1029,7 @@ export default function page() {
 
 // /** @type {import('next-sitemap').IConfig} */
 // module.exports = {
-//   siteUrl: 'https://yourdomain.com',
+//   siteUrl: 'https://my-shopings.com',
 //   generateRobotsTxt: true,
 //   sitemapSize: 7000,
 //   changefreq: 'daily',
@@ -1072,7 +1072,7 @@ export default function page() {
 
 // User-agent: *
 // Allow: /
-// Sitemap: https://yourdomain.com/sitemap.xml
+// Sitemap: https://my-shopings.com/sitemap.xml
 
 // 4️⃣ Deployment Notes
 
@@ -1180,7 +1180,7 @@ export default function page() {
 //       <SEO
 //         title={product.name + " | My Store"}
 //         description={product.description}
-//         url={`https://yourdomain.com/product/${product.slug}`}
+//         url={`https://my-shopings.com/products-view/${product.slug}`}
 //         image={product.image}
 //       />
 //       <main className="p-6">
@@ -1198,7 +1198,7 @@ export default function page() {
 //               name: product.name,
 //               image: product.image,
 //               description: product.description,
-//               url: `https://yourdomain.com/product/${product.slug}`,
+//               url: `https://my-shopings.com/products-view/${product.slug}`,
 //             }),
 //           }}
 //         />
@@ -1227,7 +1227,7 @@ export default function page() {
 //       <SEO
 //         title={category.name + " | My Store"}
 //         description={category.description}
-//         url={`https://yourdomain.com/category/${category.slug}`}
+//         url={`https://my-shopings.com/products/${category.slug}`}
 //       />
 //       <main className="p-6">
 //         <h1 className="text-3xl font-bold mb-2">{category.name}</h1>
@@ -1241,7 +1241,7 @@ export default function page() {
 // 5️⃣ next-sitemap.config.js
 // /** @type {import('next-sitemap').IConfig} */
 // module.exports = {
-//   siteUrl: 'https://yourdomain.com',
+//   siteUrl: 'https://my-shopings.com',
 //   generateRobotsTxt: true,
 //   sitemapSize: 5000,
 //   changefreq: 'daily',
@@ -1272,3 +1272,32 @@ export default function page() {
 // চাও কি আমি সেটা বানাই?
 
 // ChatGPT can
+
+/* ===== SEO UPDATE BACKUP: নিচের মূল লাইনগুলো SEO আপডেটে বদলানো হয়েছে (ব্যাকআপ হিসেবে রাখা) =====
+//       url: `https://yourdomain.com/product/${product.slug}`,
+//         <link rel="canonical" href={`https://yourdomain.com/product/${product.slug}`} />
+//         <meta property="og:url" content={`https://yourdomain.com/product/${product.slug}`} />
+//         <link rel="canonical" href={`https://yourdomain.com/category/${category.slug}`} />
+//         <meta property="og:url" content={`https://yourdomain.com/category/${category.slug}`} />
+// Sitemap: https://yourdomain.com/sitemap.xml
+// Sitemap Submit → https://yourdomain.com/sitemap.xml submit করো।
+//       url: `https://yourdomain.com/product/${params.slug}`,
+//       url: `https://yourdomain.com/product/${params.slug}`,
+//       url: `https://yourdomain.com/category/${params.slug}`,
+//       url: `https://yourdomain.com/product/${params.slug}`,
+//       url: `https://yourdomain.com/product/${params.slug}`,
+//       url: `https://yourdomain.com/category/${params.slug}`,
+// Sitemap: https://yourdomain.com/sitemap.xml
+// Sitemap Submit → https://yourdomain.com/sitemap.xml submit করো।
+//       url: `https://yourdomain.com/product/${product.slug}`,
+//         <link rel="canonical" href={`https://yourdomain.com/product/${product.slug}`} />
+//         <meta property="og:url" content={`https://yourdomain.com/product/${product.slug}`} />
+//         <link rel="canonical" href={`https://yourdomain.com/category/${category.slug}`} />
+//         <meta property="og:url" content={`https://yourdomain.com/category/${category.slug}`} />
+//   siteUrl: 'https://yourdomain.com',
+// Sitemap: https://yourdomain.com/sitemap.xml
+//         url={`https://yourdomain.com/product/${product.slug}`}
+//               url: `https://yourdomain.com/product/${product.slug}`,
+//         url={`https://yourdomain.com/category/${category.slug}`}
+//   siteUrl: 'https://yourdomain.com',
+===== END BACKUP ===== */
