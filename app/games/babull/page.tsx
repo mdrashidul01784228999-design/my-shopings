@@ -9,7 +9,7 @@ export const metadata: Metadata = {
   alternates: { canonical: '/games' },
   robots: { index: false, follow: true }, // /games এর ডুপ্লিকেট কনটেন্ট
   openGraph: {
-    title: 'Premium Portal – গেমস, শপিং ও গিফট কার্ড',
+    title: 'My Shopings – গেমস, শপিং ও গিফট কার্ড',
     description: 'ফ্রি অনলাইন গেমস, প্রিমিয়াম শপিং ও গিফট কার্ড এক জায়গায়।',
     url: '/games',
     type: 'website',

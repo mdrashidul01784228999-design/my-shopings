@@ -16,7 +16,7 @@ export const metadata = {
     siteName: 'Rashidul IT',
     images: [
       {
-        url: 'https://images.unsplash.com/photo-1603297631957-4b2c6313f93e',
+        url: 'https://my-shopings.com/opengraph-image',
         width: 1200,
         height: 630,
         alt: 'IT Solution Banner',
@@ -31,6 +31,7 @@ export const metadata = {
 export default function GTSolutionPage() {
   return (
    <>
+   <h1 className="sr-only">আইটি সমাধান ও টেকনোলজি সার্ভিস</h1>
    <Home />
    
    </>

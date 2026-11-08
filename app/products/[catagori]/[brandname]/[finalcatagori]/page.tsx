@@ -452,7 +452,7 @@ export default function DigitalShopUnified() {
                   cart.map((item: any) => (
                     <div key={item.id} className="flex gap-4 bg-[#050813] p-4 rounded-2xl border border-white/5 group hover:border-cyan-900/30 transition-colors shadow-lg">
                       <div className="w-20 h-20 bg-black rounded-xl overflow-hidden p-1.5 border border-white/5">
-                        <img src={item.img ? `${process.env.NEXT_PUBLIC_IMAGE_URL}/uploads_product/${item.img}` : item.imglink} className="w-full h-full object-cover rounded-lg" alt="" />
+                        <img src={item.img ? `${process.env.NEXT_PUBLIC_IMAGE_URL}/uploads_product/${item.img}` : item.imglink} className="w-full h-full object-cover rounded-lg" alt={item.name || "পণ্য"} loading="lazy" decoding="async" />
                       </div>
                       <div className="flex-1 flex flex-col justify-between py-1">
                         <div>

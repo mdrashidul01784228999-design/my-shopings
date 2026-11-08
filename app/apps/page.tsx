@@ -6,7 +6,7 @@ import FullyLoadedTerminal from "./Home"; // আপনার আসল ড্য
 // =========================================================================
 export const metadata: Metadata = {
   title: "Maturity Terminal v4 | মেয়াদী ডিপোজিট ও রিয়াল-টাইম সেটেলমেন্ট লেজার",
-  description: "মো: রশিদুল অফিশিয়াল এর সুরক্ষিত লিকুইডিটি টার্মিনাল। ১ মাস, ২ মাস ও ৬ মাসের মেয়াদে ফান্ড জমা রাখুন। মধ্যবর্তী দামের ওঠানামা অগ্রাহ্য করে ঠিক মেয়াদের শেষ দিনের লাইভ বাজার মূল্যের ওপর সম্পূর্ণ প্রফিট বুঝে নিন।",
+  description: "১ মাস, ২ মাস ও ৬ মাসের মেয়াদে ফান্ড জমা রাখুন। মধ্যবর্তী ওঠানামা বাদ দিয়ে মেয়াদের শেষ দিনের লাইভ বাজার মূল্যে হিসাব বুঝে নিন।",
   keywords: [
     "ম্যাচুরিটি টার্মিনাল v4",
     "মো: রশিদুল অফিশিয়াল",
@@ -47,7 +47,7 @@ export const metadata: Metadata = {
     siteName: "Maturity Terminal",
     images: [
       {
-        url: "https://my-shopings.com/og-image.png", // ড্যাশবোর্ডের নিয়ন স্ক্রিনশট ইউআরএল
+        url: "https://my-shopings.com/opengraph-image", // ড্যাশবোর্ডের নিয়ন স্ক্রিনশট ইউআরএল
         width: 1200,
         height: 630,
         alt: "Maturity Terminal v4 Deposit Interface Preview",
@@ -62,7 +62,7 @@ export const metadata: Metadata = {
     card: "summary_large_image",
     title: "Maturity Terminal v4 | Secure Settlement Protocol",
     description: "দৈনিক বাজারের ওঠানামা মুক্ত সুরক্ষিত ডিপোজিট লেজার সিস্টেম।",
-    images: ["https://my-shopings.com/og-image.png"],
+    images: ["https://my-shopings.com/opengraph-image"],
   },
 
   // ডুপ্লিকেট কন্টেন্ট ইস্যু এড়াতে ক্যানোনিকাল ইউআরএল

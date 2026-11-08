@@ -7,6 +7,8 @@ export const revalidate = 3600;
 const STATIC: { path: string; priority: number; changeFrequency: "daily" | "weekly" | "monthly" }[] = [
   { path: "/", priority: 1.0, changeFrequency: "daily" },
   { path: "/products-view", priority: 0.9, changeFrequency: "daily" },
+  { path: "/products/new", priority: 0.8, changeFrequency: "daily" },
+  { path: "/products/old", priority: 0.7, changeFrequency: "daily" },
   { path: "/games", priority: 0.7, changeFrequency: "weekly" },
   { path: "/services", priority: 0.7, changeFrequency: "weekly" },
   { path: "/it-solution", priority: 0.6, changeFrequency: "monthly" },
@@ -29,6 +31,9 @@ const STATIC: { path: string; priority: number; changeFrequency: "daily" | "week
   { path: "/games/qs", priority: 0.5, changeFrequency: "monthly" },
   { path: "/games/number", priority: 0.5, changeFrequency: "monthly" },
   { path: "/services/e-paper", priority: 0.5, changeFrequency: "daily" },
+  { path: "/share-market", priority: 0.5, changeFrequency: "monthly" },
+  { path: "/games/terget", priority: 0.5, changeFrequency: "monthly" },
+  { path: "/services/ebook", priority: 0.4, changeFrequency: "monthly" },
   { path: "/about-us", priority: 0.5, changeFrequency: "monthly" },
   { path: "/contact-us", priority: 0.5, changeFrequency: "monthly" },
   { path: "/privacy-policy", priority: 0.3, changeFrequency: "monthly" },

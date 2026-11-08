@@ -1,0 +1,650 @@
+[
+
+  {
+    "id": "fashion-01",
+    "shopId": "fashion",
+    "name": "টি-শার্ট",
+    "price": 1200,
+    "kind": "tshirt",
+    "color": "#2563eb",
+    "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=600&q=80"
+  },
+
+   {
+    "id": "fashion-0122",
+    "shopId": "fashion",
+    "name": "টি-",
+    "price": 100,
+    "kind": "tshirt",
+    "color": "#2563b",
+    "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=600&q=80"
+  },
+
+    {
+    "id": "fashion-01",
+    "shopId": "fashion",
+    "name": "টি-শার্ট",
+    "price": 1200,
+    "kind": "tshirt",
+    "color": "#2563eb",
+    "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=600&q=80"
+  },
+
+   {
+    "id": "fashion-0122",
+    "shopId": "fashion",
+    "name": "টি-",
+    "price": 100,
+    "kind": "tshirt",
+    "color": "#2563b",
+    "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=600&q=80"
+  },
+  
+  {
+    "id": "fashion-02",
+    "shopId": "fashion",
+    "name": "ডেনিম জ্যাকেট",
+    "price": 4500,
+    "kind": "jacket",
+    "color": "#1e293b",
+    "image": "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "fashion-03",
+    "shopId": "fashion",
+    "name": "স্নিকার জুতা",
+    "price": 3800,
+    "kind": "sneaker",
+    "color": "#ef4444",
+    "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "fashion-04",
+    "shopId": "fashion",
+    "name": "সানগ্লাস",
+    "price": 2200,
+    "kind": "glasses",
+    "color": "#111827",
+    "image": "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "fashion-05",
+    "shopId": "fashion",
+    "name": "হ্যান্ডব্যাগ",
+    "price": 3500,
+    "kind": "bag",
+    "color": "#ec4899",
+    "image": "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "fashion-06",
+    "shopId": "fashion",
+    "name": "স্টাইলিশ ঘড়ি",
+    "price": 4200,
+    "kind": "watch",
+    "color": "#64748b",
+    "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "fashion-07",
+    "shopId": "fashion",
+    "name": "পোলো শার্ট",
+    "price": 1500,
+    "kind": "tshirt",
+    "color": "#16a34a",
+    "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "fashion-08",
+    "shopId": "fashion",
+    "name": "লেদার জ্যাকেট",
+    "price": 6800,
+    "kind": "jacket",
+    "color": "#0f172a",
+    "image": "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "tech-01",
+    "shopId": "tech",
+    "name": "স্মার্টফোন",
+    "price": 38000,
+    "kind": "phone",
+    "color": "#0ea5e9",
+    "image": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "tech-02",
+    "shopId": "tech",
+    "name": "স্মার্ট ওয়াচ",
+    "price": 4200,
+    "kind": "watch",
+    "color": "#7c3aed",
+    "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "tech-03",
+    "shopId": "tech",
+    "name": "ডিজিটাল ক্যামেরা",
+    "price": 52000,
+    "kind": "camera",
+    "color": "#111827",
+    "image": "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "tech-04",
+    "shopId": "tech",
+    "name": "ওয়্যারলেস হেডফোন",
+    "price": 5200,
+    "kind": "headphone",
+    "color": "#ef4444",
+    "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "tech-05",
+    "shopId": "tech",
+    "name": "বাজেট স্মার্টফোন",
+    "price": 18500,
+    "kind": "phone",
+    "color": "#14b8a6",
+    "image": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "tech-06",
+    "shopId": "tech",
+    "name": "ফিটনেস ব্যান্ড",
+    "price": 2500,
+    "kind": "watch",
+    "color": "#f97316",
+    "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "tech-07",
+    "shopId": "tech",
+    "name": "প্রো হেডফোন",
+    "price": 8900,
+    "kind": "headphone",
+    "color": "#2563eb",
+    "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "tech-08",
+    "shopId": "tech",
+    "name": "অ্যাকশন ক্যামেরা",
+    "price": 24000,
+    "kind": "camera",
+    "color": "#64748b",
+    "image": "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "home-01",
+    "shopId": "home",
+    "name": "আরাম চেয়ার",
+    "price": 7500,
+    "kind": "chair",
+    "color": "#6b4a2e",
+    "image": "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "home-02",
+    "shopId": "home",
+    "name": "টেবিল ল্যাম্প",
+    "price": 2800,
+    "kind": "lamp",
+    "color": "#f59e0b",
+    "image": "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "home-03",
+    "shopId": "home",
+    "name": "ইনডোর গাছ",
+    "price": 900,
+    "kind": "plant",
+    "color": "#16a34a",
+    "image": "https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "home-04",
+    "shopId": "home",
+    "name": "নোটবুক",
+    "price": 450,
+    "kind": "book",
+    "color": "#2563eb",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "home-05",
+    "shopId": "home",
+    "name": "মধুর জার",
+    "price": 900,
+    "kind": "jar",
+    "color": "#d97706",
+    "image": "https://images.unsplash.com/photo-1471943311424-646960669fbc?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "home-06",
+    "shopId": "home",
+    "name": "ছবির ফ্রেম",
+    "price": 1500,
+    "kind": "frame",
+    "color": "#64748b",
+    "image": "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "home-07",
+    "shopId": "home",
+    "name": "অফিস চেয়ার",
+    "price": 9800,
+    "kind": "chair",
+    "color": "#1e293b",
+    "image": "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "home-08",
+    "shopId": "home",
+    "name": "রিডিং ল্যাম্প",
+    "price": 1900,
+    "kind": "lamp",
+    "color": "#ec4899",
+    "image": "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "market-01",
+    "shopId": "market",
+    "name": "খাঁটি মধু",
+    "price": 900,
+    "kind": "jar",
+    "color": "#d97706",
+    "image": "https://images.unsplash.com/photo-1471943311424-646960669fbc?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "market-02",
+    "shopId": "market",
+    "name": "চকলেট",
+    "price": 600,
+    "kind": "chocolate",
+    "color": "#7c2d12",
+    "image": "https://images.unsplash.com/photo-1548907040-4d42c6d3a0b0?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "market-03",
+    "shopId": "market",
+    "name": "চাল ৫ কেজি",
+    "price": 1700,
+    "kind": "sack",
+    "color": "#f1f5f9",
+    "image": "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "market-04",
+    "shopId": "market",
+    "name": "কফি",
+    "price": 1250,
+    "kind": "coffee",
+    "color": "#6b4a2e",
+    "image": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "market-05",
+    "shopId": "market",
+    "name": "ফলের জুস",
+    "price": 350,
+    "kind": "bottle",
+    "color": "#f97316",
+    "image": "https://images.unsplash.com/photo-1600271886742-f049cd451bba?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "market-06",
+    "shopId": "market",
+    "name": "গিফট বক্স",
+    "price": 800,
+    "kind": "box",
+    "color": "#ec4899",
+    "image": "https://images.unsplash.com/photo-1513885535751-8b9238bd345a?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "market-07",
+    "shopId": "market",
+    "name": "ডার্ক চকলেট",
+    "price": 750,
+    "kind": "chocolate",
+    "color": "#3b2314",
+    "image": "https://images.unsplash.com/photo-1548907040-4d42c6d3a0b0?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "market-08",
+    "shopId": "market",
+    "name": "ইনস্ট্যান্ট কফি",
+    "price": 980,
+    "kind": "coffee",
+    "color": "#78350f",
+    "image": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "fashion-01",
+    "shopId": "fashion",
+    "name": "টি-শার্ট",
+    "price": 1200,
+    "kind": "tshirt",
+    "color": "#2563eb",
+    "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=600&q=80"
+  },
+
+   {
+    "id": "fashion-0122",
+    "shopId": "fashion",
+    "name": "টি-",
+    "price": 100,
+    "kind": "tshirt",
+    "color": "#2563b",
+    "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=600&q=80"
+  },
+
+    {
+    "id": "fashion-01",
+    "shopId": "fashion",
+    "name": "টি-শার্ট",
+    "price": 1200,
+    "kind": "tshirt",
+    "color": "#2563eb",
+    "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=600&q=80"
+  },
+
+   {
+    "id": "fashion-0122",
+    "shopId": "fashion",
+    "name": "টি-",
+    "price": 100,
+    "kind": "tshirt",
+    "color": "#2563b",
+    "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=600&q=80"
+  },
+
+  {
+    "id": "fashion-02",
+    "shopId": "fashion",
+    "name": "ডেনিম জ্যাকেট",
+    "price": 4500,
+    "kind": "jacket",
+    "color": "#1e293b",
+    "image": "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "fashion-03",
+    "shopId": "fashion",
+    "name": "স্নিকার জুতা",
+    "price": 3800,
+    "kind": "sneaker",
+    "color": "#ef4444",
+    "image": "https://images.unsplash.com/photo-1542291026-7eec264c27ff?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "fashion-04",
+    "shopId": "fashion",
+    "name": "সানগ্লাস",
+    "price": 2200,
+    "kind": "glasses",
+    "color": "#111827",
+    "image": "https://images.unsplash.com/photo-1511499767150-a48a237f0083?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "fashion-05",
+    "shopId": "fashion",
+    "name": "হ্যান্ডব্যাগ",
+    "price": 3500,
+    "kind": "bag",
+    "color": "#ec4899",
+    "image": "https://images.unsplash.com/photo-1584917865442-de89df76afd3?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "fashion-06",
+    "shopId": "fashion",
+    "name": "স্টাইলিশ ঘড়ি",
+    "price": 4200,
+    "kind": "watch",
+    "color": "#64748b",
+    "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "fashion-07",
+    "shopId": "fashion",
+    "name": "পোলো শার্ট",
+    "price": 1500,
+    "kind": "tshirt",
+    "color": "#16a34a",
+    "image": "https://images.unsplash.com/photo-1521572163474-6864f9cf17ab?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "fashion-08",
+    "shopId": "fashion",
+    "name": "লেদার জ্যাকেট",
+    "price": 6800,
+    "kind": "jacket",
+    "color": "#0f172a",
+    "image": "https://images.unsplash.com/photo-1551488831-00ddcb6c6bd3?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "tech-01",
+    "shopId": "tech",
+    "name": "স্মার্টফোন",
+    "price": 38000,
+    "kind": "phone",
+    "color": "#0ea5e9",
+    "image": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "tech-02",
+    "shopId": "tech",
+    "name": "স্মার্ট ওয়াচ",
+    "price": 4200,
+    "kind": "watch",
+    "color": "#7c3aed",
+    "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "tech-03",
+    "shopId": "tech",
+    "name": "ডিজিটাল ক্যামেরা",
+    "price": 52000,
+    "kind": "camera",
+    "color": "#111827",
+    "image": "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "tech-04",
+    "shopId": "tech",
+    "name": "ওয়্যারলেস হেডফোন",
+    "price": 5200,
+    "kind": "headphone",
+    "color": "#ef4444",
+    "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "tech-05",
+    "shopId": "tech",
+    "name": "বাজেট স্মার্টফোন",
+    "price": 18500,
+    "kind": "phone",
+    "color": "#14b8a6",
+    "image": "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "tech-06",
+    "shopId": "tech",
+    "name": "ফিটনেস ব্যান্ড",
+    "price": 2500,
+    "kind": "watch",
+    "color": "#f97316",
+    "image": "https://images.unsplash.com/photo-1523275335684-37898b6baf30?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "tech-07",
+    "shopId": "tech",
+    "name": "প্রো হেডফোন",
+    "price": 8900,
+    "kind": "headphone",
+    "color": "#2563eb",
+    "image": "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "tech-08",
+    "shopId": "tech",
+    "name": "অ্যাকশন ক্যামেরা",
+    "price": 24000,
+    "kind": "camera",
+    "color": "#64748b",
+    "image": "https://images.unsplash.com/photo-1516035069371-29a1b244cc32?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "home-01",
+    "shopId": "home",
+    "name": "আরাম চেয়ার",
+    "price": 7500,
+    "kind": "chair",
+    "color": "#6b4a2e",
+    "image": "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "home-02",
+    "shopId": "home",
+    "name": "টেবিল ল্যাম্প",
+    "price": 2800,
+    "kind": "lamp",
+    "color": "#f59e0b",
+    "image": "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "home-03",
+    "shopId": "home",
+    "name": "ইনডোর গাছ",
+    "price": 900,
+    "kind": "plant",
+    "color": "#16a34a",
+    "image": "https://images.unsplash.com/photo-1485955900006-10f4d324d411?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "home-04",
+    "shopId": "home",
+    "name": "নোটবুক",
+    "price": 450,
+    "kind": "book",
+    "color": "#2563eb",
+    "image": "https://images.unsplash.com/photo-1544716278-ca5e3f4abd8c?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "home-05",
+    "shopId": "home",
+    "name": "মধুর জার",
+    "price": 900,
+    "kind": "jar",
+    "color": "#d97706",
+    "image": "https://images.unsplash.com/photo-1471943311424-646960669fbc?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "home-06",
+    "shopId": "home",
+    "name": "ছবির ফ্রেম",
+    "price": 1500,
+    "kind": "frame",
+    "color": "#64748b",
+    "image": "https://images.unsplash.com/photo-1513519245088-0e12902e5a38?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "home-07",
+    "shopId": "home",
+    "name": "অফিস চেয়ার",
+    "price": 9800,
+    "kind": "chair",
+    "color": "#1e293b",
+    "image": "https://images.unsplash.com/photo-1598300042247-d088f8ab3a91?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "home-08",
+    "shopId": "home",
+    "name": "রিডিং ল্যাম্প",
+    "price": 1900,
+    "kind": "lamp",
+    "color": "#ec4899",
+    "image": "https://images.unsplash.com/photo-1507473885765-e6ed057f782c?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "market-01",
+    "shopId": "market",
+    "name": "খাঁটি মধু",
+    "price": 900,
+    "kind": "jar",
+    "color": "#d97706",
+    "image": "https://images.unsplash.com/photo-1471943311424-646960669fbc?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "market-02",
+    "shopId": "market",
+    "name": "চকলেট",
+    "price": 600,
+    "kind": "chocolate",
+    "color": "#7c2d12",
+    "image": "https://images.unsplash.com/photo-1548907040-4d42c6d3a0b0?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "market-03",
+    "shopId": "market",
+    "name": "চাল ৫ কেজি",
+    "price": 1700,
+    "kind": "sack",
+    "color": "#f1f5f9",
+    "image": "https://images.unsplash.com/photo-1586201375761-83865001e31c?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "market-04",
+    "shopId": "market",
+    "name": "কফি",
+    "price": 1250,
+    "kind": "coffee",
+    "color": "#6b4a2e",
+    "image": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "market-05",
+    "shopId": "market",
+    "name": "ফলের জুস",
+    "price": 350,
+    "kind": "bottle",
+    "color": "#f97316",
+    "image": "https://images.unsplash.com/photo-1600271886742-f049cd451bba?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "market-06",
+    "shopId": "market",
+    "name": "গিফট বক্স",
+    "price": 800,
+    "kind": "box",
+    "color": "#ec4899",
+    "image": "https://images.unsplash.com/photo-1513885535751-8b9238bd345a?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "market-07",
+    "shopId": "market",
+    "name": "ডার্ক চকলেট",
+    "price": 750,
+    "kind": "chocolate",
+    "color": "#3b2314",
+    "image": "https://images.unsplash.com/photo-1548907040-4d42c6d3a0b0?auto=format&fit=crop&w=600&q=80"
+  },
+  {
+    "id": "market-08",
+    "shopId": "market",
+    "name": "ইনস্ট্যান্ট কফি",
+    "price": 980,
+    "kind": "coffee",
+    "color": "#78350f",
+    "image": "https://images.unsplash.com/photo-1495474472287-4d71bcdd2085?auto=format&fit=crop&w=600&q=80"
+  },
+   {
+    "id": "me-08",
+    "shopId": "me",
+    "name": "ইনস্ট্যান্ট কফি",
+    "price": 980,
+    "kind": "coffee",
+    "color": "#78350f",
+    "image": "app/real_shop/img/imgs.jpg"
+  }
+]

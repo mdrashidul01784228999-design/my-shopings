@@ -8,7 +8,7 @@ export const metadata: Metadata = {
   title,
   description: SITE_DESCRIPTION,
   alternates: { canonical: abs("/") }, // আগে ভুলে /dashboard ছিল
-  openGraph: { title, description: SITE_DESCRIPTION, url: abs("/"), type: "website", locale: "bn_BD", siteName: SITE_NAME },
+  openGraph: { title, description: SITE_DESCRIPTION, url: abs("/"), type: "website", locale: "bn_BD", siteName: SITE_NAME, images: [{ url: abs("/opengraph-image"), width: 1200, height: 630, alt: title }] },
   twitter: { card: "summary_large_image", title, description: SITE_DESCRIPTION },
 };
 

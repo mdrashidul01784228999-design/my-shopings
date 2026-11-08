@@ -2019,7 +2019,7 @@ export default function Page() {
               <div className="grid grid-cols-2 gap-2">
                 {shop.products.map((p) => (
                   <div key={p.id} className="overflow-hidden rounded-2xl border border-white/10 bg-white/5">
-                    <img src={p.image} alt="" className="h-20 w-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = ph(p.kind, p.color, p.name); }} />
+                    <img src={p.image} alt={p.name || "পণ্য"} loading="lazy" decoding="async" className="h-20 w-full object-cover" onError={(e) => { (e.target as HTMLImageElement).src = ph(p.kind, p.color, p.name); }} />
                     <div className="p-2"><div className="truncate text-[11px] font-bold">{p.name}</div><div className="text-xs font-black text-yellow-300">{taka(p.price)}</div></div>
                     <div className="grid grid-cols-3 gap-1 p-1 pt-0 text-xs">
                       <button className="rounded-lg bg-white/10 py-1 transition hover:bg-white/20" title="নাম ও দাম বদলান" onClick={() => { const n = prompt('পণ্যের নাম', p.name); if (n === null) return; const pr = toPrice(prompt('দাম (৳)', String(p.price))); patchShop(shop.id, (s) => ({ ...s, products: s.products.map((x) => (x.id === p.id ? { ...x, name: n.trim() || x.name, price: pr > 0 ? pr : x.price } : x)) })); }}>✏️</button>
@@ -2112,7 +2112,7 @@ export default function Page() {
           <div className="space-y-2">
             {cart.length === 0 ? <div className="rounded-2xl bg-white/5 p-6 text-center text-xs text-slate-400">🛍️<br />কার্ট এখনো খালি — পণ্যে ক্লিক করে যোগ করুন</div> : cart.map((item) => (
               <div key={item.id} className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/5 p-2">
-                <img src={item.image} alt="" className="h-12 w-12 shrink-0 rounded-xl object-cover" onError={(e) => { (e.target as HTMLImageElement).src = ph(item.kind, item.color, item.name); }} />
+                <img src={item.image} alt={item.name || "পণ্য"} loading="lazy" decoding="async" className="h-12 w-12 shrink-0 rounded-xl object-cover" onError={(e) => { (e.target as HTMLImageElement).src = ph(item.kind, item.color, item.name); }} />
                 <div className="min-w-0 flex-1"><div className="truncate text-xs font-bold">{item.name}</div><div className="text-[11px] text-yellow-300">{taka(item.price)}</div></div>
                 <div className="flex items-center gap-1 rounded-xl bg-white/10 p-0.5 text-xs">
                   <button onClick={() => changeQty(item.id, -1)} className="h-7 w-7 rounded-lg transition hover:bg-white/10">−</button><b className="w-5 text-center">{item.count}</b>

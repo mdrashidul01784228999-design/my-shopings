@@ -28,7 +28,7 @@ export const metadata: Metadata = {
     locale: "bn_BD",
     images: [
       {
-        url: "https://my-shopings.com/og-image.png",
+        url: "https://my-shopings.com/opengraph-image",
         width: 1200,
         height: 630,
         alt: "Refer & Earn Banner",
@@ -41,7 +41,7 @@ export const metadata: Metadata = {
     title: "রেফার করলেই আয় | MyApp",
     description:
       "লগইন করুন এবং রেফার করে আয় করুন সহজেই। এখনই শুরু করুন!",
-    images: ["https://my-shopings.com/og-image.png"],
+    images: ["https://my-shopings.com/opengraph-image"],
   },
 
   robots: {

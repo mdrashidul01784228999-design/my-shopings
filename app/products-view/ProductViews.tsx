@@ -1,11 +1,21 @@
-
 "use client";
 
 import React, { useEffect, useState, useRef, useCallback } from "react";
 import Api from "../api/Api";
 import { motion, AnimatePresence, MotionConfig } from "framer-motion";
 import { useCartStore } from "../api/Carssotres";
-import { Facebook, Twitter, ShoppingBag, Trash2, Minus, Plus, X, Link2, Check } from "lucide-react";
+import {
+  Facebook,
+  Twitter,
+  ShoppingBag,
+  Trash2,
+  Minus,
+  Plus,
+  X,
+  Link2,
+  Check,
+  Share2,
+} from "lucide-react";
 import { useRouter } from "next/navigation";
 import { Cormorant_Garamond, Manrope } from "next/font/google";
 
@@ -64,6 +74,7 @@ export default function ProductViews({ Ids }: ProductViewsProps) {
   const [reviews, setReviews] = useState<string[]>([]);
   const [text, setText] = useState("");
   const [copied, setCopied] = useState(false);
+  const [sharing, setSharing] = useState(false);
   const [category, setCategory] = useState<string | null>(null);
   const [related, setRelated] = useState<ProductType[]>([]);
 
@@ -146,6 +157,23 @@ export default function ProductViews({ Ids }: ProductViewsProps) {
     router.push("/checkout/order");
   };
 
+  /* ---------- recommended product actions ---------- */
+  const isInCart = (id: string | number) =>
+    cart.some((c: CartItemType) => c.id === id);
+
+  const handleRelatedAdd = (e: React.MouseEvent<HTMLButtonElement>, item: ProductType) => {
+    e.stopPropagation();
+    flyToCart(e.currentTarget);
+    addToCart(item);
+  };
+
+  const handleRelatedBuy = (e: React.MouseEvent<HTMLButtonElement>, item: ProductType) => {
+    e.stopPropagation();
+    if (!isInCart(item.id)) addToCart(item);
+    setIsLoading(true);
+    router.push("/checkout/order");
+  };
+
   const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
     const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
     const x = ((e.clientX - left) / width) * 100;
@@ -159,6 +187,7 @@ export default function ProductViews({ Ids }: ProductViewsProps) {
     setText("");
   };
 
+  /* ---------- share ---------- */
   const copyLink = async () => {
     try {
       await navigator.clipboard.writeText(window.location.href);
@@ -166,6 +195,45 @@ export default function ProductViews({ Ids }: ProductViewsProps) {
       setTimeout(() => setCopied(false), 1800);
     } catch (err) {
       console.error(err);
+    }
+  };
+
+  const shareProduct = async () => {
+    if (!product || sharing) return;
+    setSharing(true);
+    const url = window.location.href;
+    const title = product.name;
+    const msg = `${product.name} - ${money(product.pricee)}\n${url}`;
+
+    try {
+      // 1) Phone share sheet WITH the image file
+      try {
+        const res = await fetch(imageOf(product));
+        const blob = await res.blob();
+        const file = new File([blob], "product.jpg", { type: blob.type || "image/jpeg" });
+        if (navigator.canShare?.({ files: [file] })) {
+          await navigator.share({ title, text: msg, files: [file] });
+          return;
+        }
+      } catch (err: any) {
+        if (err?.name === "AbortError") return; // user closed the share sheet
+        /* image blocked (CORS), try link share next */
+      }
+
+      // 2) Share sheet with link only (preview image comes from meta tags)
+      if (navigator.share) {
+        try {
+          await navigator.share({ title, text: product.name, url });
+        } catch {
+          /* cancelled */
+        }
+        return;
+      }
+
+      // 3) Desktop fallback
+      await copyLink();
+    } finally {
+      setSharing(false);
     }
   };
 
@@ -331,43 +399,79 @@ export default function ProductViews({ Ids }: ProductViewsProps) {
               </div>
 
               {/* share */}
-              <div className="mt-10 flex flex-wrap items-center gap-3 border-t border-[#f3eee6]/10 pt-6">
-                <span className="mr-1 text-sm text-[#8e8a83]">Share</span>
-                <a
-                  href={`https://facebook.com/sharer/sharer.php?u=${pageUrl}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Share on Facebook"
-                  className="grid h-10 w-10 place-items-center rounded-full border border-[#f3eee6]/15 text-[#b9b4ab] transition hover:border-[#d8b98a] hover:text-[#d8b98a]"
-                >
-                  <Facebook size={17} />
-                </a>
-                <a
-                  href={`https://twitter.com/intent/tweet?url=${pageUrl}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Share on Twitter"
-                  className="grid h-10 w-10 place-items-center rounded-full border border-[#f3eee6]/15 text-[#b9b4ab] transition hover:border-[#d8b98a] hover:text-[#d8b98a]"
-                >
-                  <Twitter size={17} />
-                </a>
-                <a
-                  href={`https://wa.me/?text=${pageUrl}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  aria-label="Share on WhatsApp"
-                  className="grid h-10 w-10 place-items-center rounded-full border border-[#f3eee6]/15 text-sm transition hover:border-[#d8b98a]"
-                >
-                  💬
-                </a>
+              <div className="mt-10 border-t border-[#f3eee6]/10 pt-6">
+                {/* share preview card (image + name + link) */}
+                <div className="flex items-center gap-4 rounded-2xl border border-[#f3eee6]/10 bg-[#171819] p-3">
+                  <img
+                    src={imageOf(product)}
+                    alt={product.name}
+                    className="h-16 w-16 shrink-0 rounded-xl bg-[#ece6db] object-contain p-1"
+                  />
+                  <div className="min-w-0">
+                    <p className="truncate text-sm font-medium">{product.name}</p>
+                    <p className="text-sm font-semibold text-[#d8b98a]">{money(price)}</p>
+                    <p className="truncate text-xs text-[#8e8a83]">
+                      {pageUrl ? decodeURIComponent(pageUrl) : ""}
+                    </p>
+                  </div>
+                </div>
+
+                {/* phone: native share sheet with image */}
                 <button
-                  onClick={copyLink}
-                  aria-label="Copy link"
-                  className="grid h-10 w-10 place-items-center rounded-full border border-[#f3eee6]/15 text-[#b9b4ab] transition hover:border-[#d8b98a] hover:text-[#d8b98a]"
+                  onClick={shareProduct}
+                  disabled={sharing}
+                  className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#d8b98a] text-sm font-semibold text-[#0f1112] transition hover:bg-[#e4c9a0] disabled:opacity-60 sm:hidden"
                 >
-                  {copied ? <Check size={17} /> : <Link2 size={17} />}
+                  <Share2 size={17} /> {sharing ? "Please wait…" : "Share with image"}
                 </button>
-                {copied && <span className="text-xs text-[#d8b98a]">Link copied</span>}
+
+                <div className="mt-4 flex flex-wrap items-center gap-3">
+                  <span className="mr-1 text-sm text-[#8e8a83]">Share</span>
+                  <a
+                    href={`https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Share on Facebook"
+                    className="grid h-10 w-10 place-items-center rounded-full border border-[#f3eee6]/15 text-[#b9b4ab] transition hover:border-[#d8b98a] hover:text-[#d8b98a]"
+                  >
+                    <Facebook size={17} />
+                  </a>
+                  <a
+                    href={`https://twitter.com/intent/tweet?url=${pageUrl}&text=${encodeURIComponent(product.name)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Share on Twitter"
+                    className="grid h-10 w-10 place-items-center rounded-full border border-[#f3eee6]/15 text-[#b9b4ab] transition hover:border-[#d8b98a] hover:text-[#d8b98a]"
+                  >
+                    <Twitter size={17} />
+                  </a>
+                  <a
+                    href={`https://wa.me/?text=${encodeURIComponent(`${product.name} - ${money(price)}\n`)}${pageUrl}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Share on WhatsApp"
+                    className="grid h-10 w-10 place-items-center rounded-full border border-[#f3eee6]/15 text-sm transition hover:border-[#d8b98a]"
+                  >
+                    💬
+                  </a>
+                  <a
+                    href={`https://t.me/share/url?url=${pageUrl}&text=${encodeURIComponent(product.name)}`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Share on Telegram"
+                    className="grid h-10 w-10 place-items-center rounded-full border border-[#f3eee6]/15 text-sm transition hover:border-[#d8b98a]"
+                  >
+                    ✈️
+                  </a>
+                  <button
+                    onClick={copyLink}
+                    aria-label="Copy link"
+                    className="grid h-10 w-10 place-items-center rounded-full border border-[#f3eee6]/15 text-[#b9b4ab] transition hover:border-[#d8b98a] hover:text-[#d8b98a]"
+                  >
+                    {copied ? <Check size={17} /> : <Link2 size={17} />}
+                  </button>
+                  {copied && <span className="text-xs text-[#d8b98a]">Link copied</span>}
+                </div>
               </div>
             </motion.div>
           </section>
@@ -441,18 +545,42 @@ export default function ProductViews({ Ids }: ProductViewsProps) {
                     key={item.id || idx}
                     className="group w-[62%] shrink-0 snap-start sm:w-auto"
                   >
-                    <div className="aspect-square overflow-hidden rounded-2xl bg-[#ece6db]">
+                    <div className="relative aspect-square overflow-hidden rounded-2xl bg-[#ece6db]">
                       <img
                         src={imageOf(item)}
                         alt={item.name || "Related product"}
                         loading="lazy"
                         className="h-full w-full object-contain p-4 transition-transform duration-500 group-hover:scale-105"
                       />
+
+                      {/* quick add button on image */}
+                      <button
+                        onClick={(e) => handleRelatedAdd(e, item)}
+                        aria-label={`Add ${item.name} to cart`}
+                        className="absolute bottom-3 right-3 grid h-10 w-10 place-items-center rounded-full bg-[#0f1112] text-[#d8b98a] shadow-lg transition hover:scale-105 active:scale-95"
+                      >
+                        {isInCart(item.id) ? <Check size={18} /> : <ShoppingBag size={18} />}
+                      </button>
                     </div>
+
                     <h3 className="mt-3 truncate font-medium text-[#f3eee6]">
                       {item.name || `Product ${idx + 1}`}
                     </h3>
-                    <p className="mt-0.5 font-semibold text-[#d8b98a]">{money(item.pricee)}</p>
+
+                    <div className="mt-0.5 flex items-baseline gap-2">
+                      <p className="font-semibold text-[#d8b98a]">{money(item.pricee)}</p>
+                      {Number(item.reprice) > Number(item.pricee) && (
+                        <del className="text-xs text-[#8e8a83]">{money(item.reprice!)}</del>
+                      )}
+                    </div>
+
+                    <button
+                      onClick={(e) => handleRelatedBuy(e, item)}
+                      disabled={isLoading}
+                      className="mt-3 h-11 w-full rounded-full bg-[#d8b98a] text-sm font-semibold text-[#0f1112] transition hover:bg-[#e4c9a0] disabled:opacity-60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d8b98a]"
+                    >
+                      {isLoading ? "Please wait…" : "Buy now"}
+                    </button>
                   </article>
                 ))}
               </div>
@@ -612,6 +740,1365 @@ export default function ProductViews({ Ids }: ProductViewsProps) {
     </MotionConfig>
   );
 }
+
+
+// "use client";
+
+// import React, { useEffect, useState, useRef, useCallback } from "react";
+// import Api from "../api/Api";
+// import { motion, AnimatePresence, MotionConfig } from "framer-motion";
+// import { useCartStore } from "../api/Carssotres";
+// import {
+//   Facebook,
+//   Twitter,
+//   ShoppingBag,
+//   Trash2,
+//   Minus,
+//   Plus,
+//   X,
+//   Link2,
+//   Check,
+//   Share2,
+// } from "lucide-react";
+// import { useRouter } from "next/navigation";
+// import { Cormorant_Garamond, Manrope } from "next/font/google";
+
+// const serif = Cormorant_Garamond({
+//   subsets: ["latin"],
+//   weight: ["500", "600", "700"],
+//   variable: "--font-serif",
+// });
+// const sans = Manrope({
+//   subsets: ["latin"],
+//   weight: ["400", "500", "600", "700"],
+//   variable: "--font-sans",
+// });
+
+// interface CartItemType {
+//   id: string | number;
+//   name: string;
+//   img?: string;
+//   imglink?: string;
+//   pricee: number | string;
+//   qty?: number;
+// }
+
+// interface ProductType {
+//   id: string | number;
+//   name: string;
+//   img?: string;
+//   imglink?: string;
+//   catagori?: string;
+//   discript?: string;
+//   pricee: number | string;
+//   reprice?: number | string;
+// }
+
+// interface ProductViewsProps {
+//   Ids: string | number;
+// }
+
+// const imageOf = (p: { img?: string; imglink?: string }) =>
+//   p.img
+//     ? `${process.env.NEXT_PUBLIC_IMAGE_URL}/uploads_product/${p.img}`
+//     : p.imglink || "/fallback.png";
+
+// const money = (n: number | string) => `৳ ${Number(n || 0).toLocaleString("en-US")}`;
+
+// export default function ProductViews({ Ids }: ProductViewsProps) {
+//   const { cart, addToCart, removeFromCart, updateQty } = useCartStore() as any;
+//   const router = useRouter();
+
+//   const [product, setProduct] = useState<ProductType | null>(null);
+//   const [loading, setLoading] = useState(true);
+//   const [cartOpen, setCartOpen] = useState(false);
+//   const [isLoading, setIsLoading] = useState(false);
+//   const [showZoom, setShowZoom] = useState(false);
+//   const [zoomPos, setZoomPos] = useState("50% 50%");
+//   const [reviews, setReviews] = useState<string[]>([]);
+//   const [text, setText] = useState("");
+//   const [copied, setCopied] = useState(false);
+//   const [sharing, setSharing] = useState(false);
+//   const [category, setCategory] = useState<string | null>(null);
+//   const [related, setRelated] = useState<ProductType[]>([]);
+
+//   const cartRef = useRef<HTMLButtonElement | null>(null);
+
+//   /* ---------- data ---------- */
+//   const fetchRelated = useCallback(async (categoryName: string) => {
+//     if (!categoryName) return;
+//     try {
+//       const res = await Api.get(`/recomentcatagoris/${categoryName}`);
+//       const data = res.data.message;
+//       setRelated(Array.isArray(data) ? data : []);
+//     } catch (err) {
+//       console.error(err);
+//     }
+//   }, []);
+
+//   useEffect(() => {
+//     if (category) fetchRelated(category);
+//   }, [category, fetchRelated]);
+
+//   useEffect(() => {
+//     const run = async () => {
+//       if (!Ids) return;
+//       try {
+//         setLoading(true);
+//         const res = await Api.get(`/productdateid/${Ids}`);
+//         const data = res.data.message;
+//         const p = Array.isArray(data) ? data[0] : data;
+//         setProduct(p);
+//         if (p?.catagori) setCategory(p.catagori);
+//       } catch (err) {
+//         console.error(err);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+//     run();
+//   }, [Ids]);
+
+//   /* lock body scroll while drawer is open */
+//   useEffect(() => {
+//     document.body.style.overflow = cartOpen ? "hidden" : "";
+//     return () => {
+//       document.body.style.overflow = "";
+//     };
+//   }, [cartOpen]);
+
+//   /* ---------- actions ---------- */
+//   const flyToCart = (from: HTMLElement) => {
+//     const item = from.getBoundingClientRect();
+//     const bag = cartRef.current?.getBoundingClientRect();
+//     if (!bag) return;
+//     const fly = document.createElement("div");
+//     fly.innerText = "🛍️";
+//     fly.style.cssText = `position:fixed;left:${item.left + item.width / 2}px;top:${item.top}px;font-size:28px;z-index:9999;transition:transform .8s cubic-bezier(.5,0,.2,1),opacity .8s ease;pointer-events:none;`;
+//     document.body.appendChild(fly);
+//     requestAnimationFrame(() => {
+//       fly.style.transform = `translate(${bag.left - item.left - item.width / 2 + 10}px, ${bag.top - item.top}px) scale(.5) rotate(25deg)`;
+//       fly.style.opacity = "0.2";
+//     });
+//     setTimeout(() => fly.remove(), 850);
+//   };
+
+//   const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
+//     flyToCart(e.currentTarget);
+//     if (product) addToCart(product);
+//   };
+
+//   const handleBuyNow = () => {
+//     if (!product) return;
+//     const exists = cart.some((c: CartItemType) => c.id === product.id);
+//     if (!exists) addToCart(product);
+//     setIsLoading(true);
+//     router.push("/checkout/order");
+//   };
+
+//   const handleCheckout = () => {
+//     setIsLoading(true);
+//     router.push("/checkout/order");
+//   };
+
+//   /* ---------- recommended product actions ---------- */
+//   const isInCart = (id: string | number) =>
+//     cart.some((c: CartItemType) => c.id === id);
+
+//   const handleRelatedAdd = (e: React.MouseEvent<HTMLButtonElement>, item: ProductType) => {
+//     e.stopPropagation();
+//     flyToCart(e.currentTarget);
+//     addToCart(item);
+//   };
+
+//   const handleRelatedBuy = (e: React.MouseEvent<HTMLButtonElement>, item: ProductType) => {
+//     e.stopPropagation();
+//     if (!isInCart(item.id)) addToCart(item);
+//     setIsLoading(true);
+//     router.push("/checkout/order");
+//   };
+
+//   const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
+//     const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
+//     const x = ((e.clientX - left) / width) * 100;
+//     const y = ((e.clientY - top) / height) * 100;
+//     setZoomPos(`${x}% ${y}%`);
+//   };
+
+//   const addReview = () => {
+//     if (!text.trim()) return;
+//     setReviews([text.trim(), ...reviews]);
+//     setText("");
+//   };
+
+//   /* ---------- share ---------- */
+//   const copyLink = async () => {
+//     try {
+//       await navigator.clipboard.writeText(window.location.href);
+//       setCopied(true);
+//       setTimeout(() => setCopied(false), 1800);
+//     } catch (err) {
+//       console.error(err);
+//     }
+//   };
+
+//   const shareProduct = async () => {
+//     if (!product || sharing) return;
+//     setSharing(true);
+//     const url = window.location.href;
+//     const title = product.name;
+//     const msg = `${product.name} - ${money(product.pricee)}\n${url}`;
+
+//     try {
+//       // 1) Phone share sheet WITH the image file
+//       try {
+//         const res = await fetch(imageOf(product));
+//         const blob = await res.blob();
+//         const file = new File([blob], "product.jpg", { type: blob.type || "image/jpeg" });
+//         if (navigator.canShare?.({ files: [file] })) {
+//           await navigator.share({ title, text: msg, files: [file] });
+//           return;
+//         }
+//       } catch (err: any) {
+//         if (err?.name === "AbortError") return; // user closed the share sheet
+//         /* image blocked (CORS), try link share next */
+//       }
+
+//       // 2) Share sheet with link only (preview image comes from meta tags)
+//       if (navigator.share) {
+//         try {
+//           await navigator.share({ title, text: product.name, url });
+//         } catch {
+//           /* cancelled */
+//         }
+//         return;
+//       }
+
+//       // 3) Desktop fallback
+//       await copyLink();
+//     } finally {
+//       setSharing(false);
+//     }
+//   };
+
+//   const pageUrl = typeof window !== "undefined" ? encodeURIComponent(window.location.href) : "";
+
+//   /* ---------- states ---------- */
+//   if (loading)
+//     return (
+//       <div className={`${serif.variable} ${sans.variable} grid h-screen place-items-center bg-[#0f1112]`}>
+//         <div className="h-9 w-9 animate-spin rounded-full border-2 border-[#d8b98a] border-t-transparent" />
+//       </div>
+//     );
+
+//   if (!product)
+//     return (
+//       <div
+//         className={`${serif.variable} ${sans.variable} grid min-h-screen place-items-center bg-[#0f1112] px-6 text-center font-[family-name:var(--font-sans)] text-[#f3eee6]`}
+//       >
+//         <div>
+//           <p className="font-[family-name:var(--font-serif)] text-3xl">Product not found</p>
+//           <p className="mt-2 text-sm text-[#8e8a83]">This item may have been removed.</p>
+//           <button
+//             onClick={() => router.back()}
+//             className="mt-6 rounded-full border border-[#d8b98a]/40 px-6 py-3 text-sm text-[#d8b98a]"
+//           >
+//             Go back
+//           </button>
+//         </div>
+//       </div>
+//     );
+
+//   const price = Number(product.pricee || 0);
+//   const oldPrice = Number(product.reprice || 0);
+//   const discount = oldPrice > price ? Math.round(((oldPrice - price) / oldPrice) * 100) : 0;
+//   const cartCount = cart.reduce((n: number, i: CartItemType) => n + Number(i.qty || 1), 0);
+//   const subtotal = cart.reduce(
+//     (t: number, i: CartItemType) => t + Number(i.pricee || 0) * Number(i.qty || 1),
+//     0
+//   );
+
+//   return (
+//     <MotionConfig reducedMotion="user">
+//       <div
+//         className={`${serif.variable} ${sans.variable} min-h-screen overflow-x-hidden bg-[#0f1112] font-[family-name:var(--font-sans)] text-[#f3eee6] antialiased`}
+//       >
+//         {/* ---------- top bar ---------- */}
+//         <header className="sticky top-0 z-40 border-b border-[#f3eee6]/10 bg-[#0f1112]/80 backdrop-blur-xl">
+//           <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+//             <button
+//               onClick={() => router.back()}
+//               className="rounded-full px-3 py-2 text-sm text-[#8e8a83] transition hover:text-[#f3eee6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d8b98a]"
+//             >
+//               ← Back
+//             </button>
+
+//             <button
+//               ref={cartRef}
+//               onClick={() => setCartOpen(true)}
+//               aria-label={`Open cart, ${cartCount} items`}
+//               className="relative grid h-11 w-11 place-items-center rounded-full border border-[#f3eee6]/15 bg-[#171819] transition hover:border-[#d8b98a]/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d8b98a]"
+//             >
+//               <ShoppingBag className="h-5 w-5 text-[#d8b98a]" />
+//               {cartCount > 0 && (
+//                 <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-[#d8b98a] px-1 text-[11px] font-bold text-[#0f1112]">
+//                   {cartCount}
+//                 </span>
+//               )}
+//             </button>
+//           </div>
+//         </header>
+
+//         <main className="mx-auto max-w-7xl px-4 pb-28 pt-6 sm:px-6 lg:px-8 lg:pb-20 lg:pt-12">
+//           {/* ---------- hero ---------- */}
+//           <section className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-14">
+//             {/* image */}
+//             <div className="lg:col-span-7">
+//               <div className="lg:sticky lg:top-24">
+//                 <motion.div
+//                   initial={{ opacity: 0 }}
+//                   animate={{ opacity: 1 }}
+//                   transition={{ duration: 0.6 }}
+//                   onMouseMove={handleMove}
+//                   onMouseEnter={() => setShowZoom(true)}
+//                   onMouseLeave={() => setShowZoom(false)}
+//                   className="relative aspect-square w-full overflow-hidden rounded-[1.75rem] border border-[#f3eee6]/10 bg-[#ece6db] sm:rounded-[2.25rem] lg:aspect-[5/4] lg:cursor-zoom-in"
+//                 >
+//                   <img
+//                     src={imageOf(product)}
+//                     alt={product.name}
+//                     className="absolute inset-0 h-full w-full object-contain p-6 sm:p-10"
+//                   />
+
+//                   {/* zoom only on devices with a mouse */}
+//                   <div
+//                     aria-hidden
+//                     className={`pointer-events-none absolute inset-0 hidden bg-no-repeat transition-opacity duration-200 lg:block ${
+//                       showZoom ? "opacity-100" : "opacity-0"
+//                     }`}
+//                     style={{
+//                       backgroundColor: "#ece6db",
+//                       backgroundImage: `url(${imageOf(product)})`,
+//                       backgroundSize: "200%",
+//                       backgroundPosition: zoomPos,
+//                     }}
+//                   />
+
+//                   {discount > 0 && (
+//                     <span className="absolute left-4 top-4 rounded-full bg-[#0f1112] px-3.5 py-1.5 text-xs font-semibold text-[#d8b98a] sm:left-6 sm:top-6">
+//                       {discount}% off
+//                     </span>
+//                   )}
+//                 </motion.div>
+//               </div>
+//             </div>
+
+//             {/* details */}
+//             <motion.div
+//               initial={{ opacity: 0, y: 16 }}
+//               animate={{ opacity: 1, y: 0 }}
+//               transition={{ duration: 0.6, delay: 0.1 }}
+//               className="flex flex-col lg:col-span-5 lg:pt-4"
+//             >
+//               {product.catagori && (
+//                 <p className="mb-3 text-sm text-[#d8b98a]">{product.catagori}</p>
+//               )}
+
+//               <h1 className="font-[family-name:var(--font-serif)] text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl xl:text-6xl">
+//                 {product.name}
+//               </h1>
+
+//               <div className="mt-6 flex flex-wrap items-baseline gap-x-4 gap-y-1">
+//                 <span className="font-[family-name:var(--font-serif)] text-4xl font-semibold text-[#f3eee6] sm:text-5xl">
+//                   {money(price)}
+//                 </span>
+//                 {oldPrice > price && (
+//                   <del className="text-lg text-[#8e8a83]">{money(oldPrice)}</del>
+//                 )}
+//               </div>
+
+//               {product.discript && (
+//                 <p className="mt-6 max-w-[60ch] text-base leading-relaxed text-[#b9b4ab]">
+//                   {product.discript}
+//                 </p>
+//               )}
+
+//               {/* actions (hidden on phones, replaced by sticky bar) */}
+//               <div className="mt-8 hidden grid-cols-2 gap-3 sm:grid">
+//                 <motion.button
+//                   onClick={handleAddToCart}
+//                   whileTap={{ scale: 0.97 }}
+//                   className="flex h-14 items-center justify-center gap-2.5 rounded-full bg-[#d8b98a] text-base font-semibold text-[#0f1112] transition hover:bg-[#e4c9a0] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d8b98a]"
+//                 >
+//                   <ShoppingBag size={18} /> Add to cart
+//                 </motion.button>
+//                 <motion.button
+//                   onClick={handleBuyNow}
+//                   disabled={isLoading}
+//                   whileTap={{ scale: 0.97 }}
+//                   className="h-14 rounded-full border border-[#f3eee6]/25 text-base font-semibold transition hover:border-[#d8b98a] hover:text-[#d8b98a] disabled:opacity-60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d8b98a]"
+//                 >
+//                   {isLoading ? "Please wait…" : "Buy now"}
+//                 </motion.button>
+//               </div>
+
+//               {/* share */}
+//               <div className="mt-10 border-t border-[#f3eee6]/10 pt-6">
+//                 {/* share preview card (image + name + link) */}
+//                 <div className="flex items-center gap-4 rounded-2xl border border-[#f3eee6]/10 bg-[#171819] p-3">
+//                   <img
+//                     src={imageOf(product)}
+//                     alt={product.name}
+//                     className="h-16 w-16 shrink-0 rounded-xl bg-[#ece6db] object-contain p-1"
+//                   />
+//                   <div className="min-w-0">
+//                     <p className="truncate text-sm font-medium">{product.name}</p>
+//                     <p className="text-sm font-semibold text-[#d8b98a]">{money(price)}</p>
+//                     <p className="truncate text-xs text-[#8e8a83]">
+//                       {pageUrl ? decodeURIComponent(pageUrl) : ""}
+//                     </p>
+//                   </div>
+//                 </div>
+
+//                 {/* phone: native share sheet with image */}
+//                 <button
+//                   onClick={shareProduct}
+//                   disabled={sharing}
+//                   className="mt-4 flex h-12 w-full items-center justify-center gap-2 rounded-full bg-[#d8b98a] text-sm font-semibold text-[#0f1112] transition hover:bg-[#e4c9a0] disabled:opacity-60 sm:hidden"
+//                 >
+//                   <Share2 size={17} /> {sharing ? "Please wait…" : "Share with image"}
+//                 </button>
+
+//                 <div className="mt-4 flex flex-wrap items-center gap-3">
+//                   <span className="mr-1 text-sm text-[#8e8a83]">Share</span>
+//                   <a
+//                     href={`https://www.facebook.com/sharer/sharer.php?u=${pageUrl}`}
+//                     target="_blank"
+//                     rel="noopener noreferrer"
+//                     aria-label="Share on Facebook"
+//                     className="grid h-10 w-10 place-items-center rounded-full border border-[#f3eee6]/15 text-[#b9b4ab] transition hover:border-[#d8b98a] hover:text-[#d8b98a]"
+//                   >
+//                     <Facebook size={17} />
+//                   </a>
+//                   <a
+//                     href={`https://twitter.com/intent/tweet?url=${pageUrl}&text=${encodeURIComponent(product.name)}`}
+//                     target="_blank"
+//                     rel="noopener noreferrer"
+//                     aria-label="Share on Twitter"
+//                     className="grid h-10 w-10 place-items-center rounded-full border border-[#f3eee6]/15 text-[#b9b4ab] transition hover:border-[#d8b98a] hover:text-[#d8b98a]"
+//                   >
+//                     <Twitter size={17} />
+//                   </a>
+//                   <a
+//                     href={`https://wa.me/?text=${encodeURIComponent(`${product.name} - ${money(price)}\n`)}${pageUrl}`}
+//                     target="_blank"
+//                     rel="noopener noreferrer"
+//                     aria-label="Share on WhatsApp"
+//                     className="grid h-10 w-10 place-items-center rounded-full border border-[#f3eee6]/15 text-sm transition hover:border-[#d8b98a]"
+//                   >
+//                     💬
+//                   </a>
+//                   <a
+//                     href={`https://t.me/share/url?url=${pageUrl}&text=${encodeURIComponent(product.name)}`}
+//                     target="_blank"
+//                     rel="noopener noreferrer"
+//                     aria-label="Share on Telegram"
+//                     className="grid h-10 w-10 place-items-center rounded-full border border-[#f3eee6]/15 text-sm transition hover:border-[#d8b98a]"
+//                   >
+//                     ✈️
+//                   </a>
+//                   <button
+//                     onClick={copyLink}
+//                     aria-label="Copy link"
+//                     className="grid h-10 w-10 place-items-center rounded-full border border-[#f3eee6]/15 text-[#b9b4ab] transition hover:border-[#d8b98a] hover:text-[#d8b98a]"
+//                   >
+//                     {copied ? <Check size={17} /> : <Link2 size={17} />}
+//                   </button>
+//                   {copied && <span className="text-xs text-[#d8b98a]">Link copied</span>}
+//                 </div>
+//               </div>
+//             </motion.div>
+//           </section>
+
+//           {/* ---------- reviews ---------- */}
+//           <section className="mt-20 sm:mt-28">
+//             <div className="mb-8 flex items-end justify-between gap-4">
+//               <h2 className="font-[family-name:var(--font-serif)] text-3xl font-semibold sm:text-4xl">
+//                 Customer reviews
+//               </h2>
+//               <span className="text-sm text-[#8e8a83]">
+//                 {reviews.length} {reviews.length === 1 ? "review" : "reviews"}
+//               </span>
+//             </div>
+
+//             <div className="rounded-[1.75rem] border border-[#f3eee6]/10 bg-[#171819] p-5 sm:p-8">
+//               <div className="flex flex-col gap-3 sm:flex-row">
+//                 <input
+//                   value={text}
+//                   onChange={(e) => setText(e.target.value)}
+//                   onKeyDown={(e) => e.key === "Enter" && addReview()}
+//                   placeholder="Write what you think of this product"
+//                   className="h-14 flex-1 rounded-full border border-[#f3eee6]/10 bg-[#0f1112] px-6 text-base text-[#f3eee6] placeholder:text-[#8e8a83] focus:border-[#d8b98a] focus:outline-none"
+//                 />
+//                 <button
+//                   onClick={addReview}
+//                   className="h-14 rounded-full bg-[#d8b98a] px-8 font-semibold text-[#0f1112] transition hover:bg-[#e4c9a0] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d8b98a]"
+//                 >
+//                   Post review
+//                 </button>
+//               </div>
+
+//               <div className="mt-6 space-y-3">
+//                 {reviews.length === 0 && (
+//                   <p className="py-10 text-center text-[#8e8a83]">
+//                     No reviews yet. Share the first one.
+//                   </p>
+//                 )}
+//                 {reviews.map((r, i) => (
+//                   <motion.div
+//                     key={i}
+//                     initial={{ opacity: 0, y: 8 }}
+//                     animate={{ opacity: 1, y: 0 }}
+//                     className="rounded-2xl border border-[#f3eee6]/8 bg-[#0f1112] p-5"
+//                   >
+//                     <div className="mb-2 flex items-center gap-3">
+//                       <div className="grid h-8 w-8 place-items-center rounded-full bg-[#d8b98a]/15 text-xs font-bold text-[#d8b98a]">
+//                         U
+//                       </div>
+//                       <span className="text-sm font-medium">Customer</span>
+//                     </div>
+//                     <p className="break-words leading-relaxed text-[#b9b4ab]">{r}</p>
+//                   </motion.div>
+//                 ))}
+//               </div>
+//             </div>
+//           </section>
+
+//           {/* ---------- related ---------- */}
+//           <section className="mt-20 sm:mt-28">
+//             <h2 className="mb-8 font-[family-name:var(--font-serif)] text-3xl font-semibold sm:text-4xl">
+//               You may also like
+//             </h2>
+
+//             {related.length === 0 ? (
+//               <p className="text-[#8e8a83]">No other items in this category yet.</p>
+//             ) : (
+//               <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 sm:mx-0 sm:grid sm:grid-cols-3 sm:gap-5 sm:overflow-visible sm:px-0 lg:grid-cols-4">
+//                 {related.map((item, idx) => (
+//                   <article
+//                     key={item.id || idx}
+//                     className="group w-[62%] shrink-0 snap-start sm:w-auto"
+//                   >
+//                     <div className="relative aspect-square overflow-hidden rounded-2xl bg-[#ece6db]">
+//                       <img
+//                         src={imageOf(item)}
+//                         alt={item.name || "Related product"}
+//                         loading="lazy"
+//                         className="h-full w-full object-contain p-4 transition-transform duration-500 group-hover:scale-105"
+//                       />
+
+//                       {/* quick add button on image */}
+//                       <button
+//                         onClick={(e) => handleRelatedAdd(e, item)}
+//                         aria-label={`Add ${item.name} to cart`}
+//                         className="absolute bottom-3 right-3 grid h-10 w-10 place-items-center rounded-full bg-[#0f1112] text-[#d8b98a] shadow-lg transition hover:scale-105 active:scale-95"
+//                       >
+//                         {isInCart(item.id) ? <Check size={18} /> : <ShoppingBag size={18} />}
+//                       </button>
+//                     </div>
+
+//                     <h3 className="mt-3 truncate font-medium text-[#f3eee6]">
+//                       {item.name || `Product ${idx + 1}`}
+//                     </h3>
+
+//                     <div className="mt-0.5 flex items-baseline gap-2">
+//                       <p className="font-semibold text-[#d8b98a]">{money(item.pricee)}</p>
+//                       {Number(item.reprice) > Number(item.pricee) && (
+//                         <del className="text-xs text-[#8e8a83]">{money(item.reprice!)}</del>
+//                       )}
+//                     </div>
+
+//                     <button
+//                       onClick={(e) => handleRelatedBuy(e, item)}
+//                       disabled={isLoading}
+//                       className="mt-3 h-11 w-full rounded-full bg-[#d8b98a] text-sm font-semibold text-[#0f1112] transition hover:bg-[#e4c9a0] disabled:opacity-60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d8b98a]"
+//                     >
+//                       {isLoading ? "Please wait…" : "Buy now"}
+//                     </button>
+//                   </article>
+//                 ))}
+//               </div>
+//             )}
+//           </section>
+//         </main>
+
+//         {/* ---------- sticky mobile buy bar ---------- */}
+//         {!cartOpen && (
+//           <div className="fixed inset-x-0 bottom-0 z-30 border-t border-[#f3eee6]/10 bg-[#0f1112]/90 px-4 pt-3 backdrop-blur-xl sm:hidden pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))]">
+//             <div className="flex items-center gap-3">
+//               <div className="min-w-0 flex-1">
+//                 <p className="truncate text-xs text-[#8e8a83]">{product.name}</p>
+//                 <p className="font-[family-name:var(--font-serif)] text-2xl font-semibold leading-tight">
+//                   {money(price)}
+//                 </p>
+//               </div>
+//               <button
+//                 onClick={handleAddToCart}
+//                 aria-label="Add to cart"
+//                 className="grid h-12 w-12 place-items-center rounded-full border border-[#d8b98a]/60 text-[#d8b98a]"
+//               >
+//                 <ShoppingBag size={19} />
+//               </button>
+//               <button
+//                 onClick={handleBuyNow}
+//                 disabled={isLoading}
+//                 className="h-12 rounded-full bg-[#d8b98a] px-7 text-sm font-semibold text-[#0f1112] disabled:opacity-60"
+//               >
+//                 {isLoading ? "Please wait…" : "Buy now"}
+//               </button>
+//             </div>
+//           </div>
+//         )}
+
+//         {/* ---------- cart drawer ---------- */}
+//         <AnimatePresence>
+//           {cartOpen && (
+//             <>
+//               <motion.div
+//                 initial={{ opacity: 0 }}
+//                 animate={{ opacity: 1 }}
+//                 exit={{ opacity: 0 }}
+//                 onClick={() => setCartOpen(false)}
+//                 className="fixed inset-0 z-[100] bg-black/70 backdrop-blur-sm"
+//               />
+//               <motion.aside
+//                 role="dialog"
+//                 aria-label="Cart"
+//                 initial={{ x: "100%" }}
+//                 animate={{ x: 0 }}
+//                 exit={{ x: "100%" }}
+//                 transition={{ type: "spring", damping: 30, stiffness: 260 }}
+//                 className="fixed right-0 top-0 z-[101] flex h-[100dvh] w-full flex-col border-l border-[#f3eee6]/10 bg-[#131415] sm:w-[420px]"
+//               >
+//                 <div className="flex items-center justify-between px-5 py-5 sm:px-7">
+//                   <h2 className="font-[family-name:var(--font-serif)] text-3xl font-semibold">
+//                     Your cart
+//                   </h2>
+//                   <button
+//                     onClick={() => setCartOpen(false)}
+//                     aria-label="Close cart"
+//                     className="grid h-10 w-10 place-items-center rounded-full border border-[#f3eee6]/15 text-[#b9b4ab] transition hover:text-[#f3eee6]"
+//                   >
+//                     <X size={18} />
+//                   </button>
+//                 </div>
+
+//                 <div className="flex-1 space-y-3 overflow-y-auto px-5 pb-4 sm:px-7">
+//                   {cart.length === 0 ? (
+//                     <div className="flex h-full flex-col items-center justify-center text-center text-[#8e8a83]">
+//                       <ShoppingBag size={44} className="mb-4 opacity-50" />
+//                       <p>Your cart is empty</p>
+//                       <p className="mt-1 text-sm">Add something you like to get started.</p>
+//                     </div>
+//                   ) : (
+//                     cart.map((item: CartItemType, index: number) => (
+//                       <motion.div
+//                         key={item.id || index}
+//                         layout
+//                         className="flex gap-4 rounded-2xl border border-[#f3eee6]/10 bg-[#171819] p-3"
+//                       >
+//                         <img
+//                           src={imageOf(item)}
+//                           alt={item.name}
+//                           className="h-20 w-20 shrink-0 rounded-xl bg-[#ece6db] object-contain p-1.5"
+//                         />
+//                         <div className="flex min-w-0 flex-1 flex-col justify-between">
+//                           <div>
+//                             <p className="line-clamp-2 text-sm font-medium leading-snug">
+//                               {item.name}
+//                             </p>
+//                             <p className="mt-0.5 text-sm font-semibold text-[#d8b98a]">
+//                               {money(item.pricee)}
+//                             </p>
+//                           </div>
+//                           <div className="mt-2 flex items-center gap-1">
+//                             <button
+//                               onClick={() => updateQty(item.id, Math.max((item.qty || 1) - 1, 1))}
+//                               aria-label="Decrease quantity"
+//                               className="grid h-8 w-8 place-items-center rounded-full border border-[#f3eee6]/15 hover:border-[#d8b98a]"
+//                             >
+//                               <Minus size={14} />
+//                             </button>
+//                             <span className="w-8 text-center text-sm font-medium">
+//                               {item.qty || 1}
+//                             </span>
+//                             <button
+//                               onClick={() => updateQty(item.id, (item.qty || 1) + 1)}
+//                               aria-label="Increase quantity"
+//                               className="grid h-8 w-8 place-items-center rounded-full border border-[#f3eee6]/15 hover:border-[#d8b98a]"
+//                             >
+//                               <Plus size={14} />
+//                             </button>
+//                           </div>
+//                         </div>
+//                         <button
+//                           onClick={() => removeFromCart(item.id)}
+//                           aria-label="Remove item"
+//                           className="self-start p-1 text-[#8e8a83] transition hover:text-red-400"
+//                         >
+//                           <Trash2 size={17} />
+//                         </button>
+//                       </motion.div>
+//                     ))
+//                   )}
+//                 </div>
+
+//                 {cart.length > 0 && (
+//                   <div className="border-t border-[#f3eee6]/10 px-5 pt-5 sm:px-7 pb-[calc(1.25rem+env(safe-area-inset-bottom,0px))]">
+//                     <div className="mb-4 flex items-baseline justify-between">
+//                       <span className="text-[#b9b4ab]">Subtotal</span>
+//                       <span className="font-[family-name:var(--font-serif)] text-3xl font-semibold text-[#d8b98a]">
+//                         {money(subtotal)}
+//                       </span>
+//                     </div>
+//                     <button
+//                       onClick={handleCheckout}
+//                       disabled={isLoading}
+//                       className="h-14 w-full rounded-full bg-[#d8b98a] font-semibold text-[#0f1112] transition hover:bg-[#e4c9a0] disabled:opacity-60"
+//                     >
+//                       {isLoading ? "Please wait…" : "Checkout"}
+//                     </button>
+//                     <button
+//                       onClick={() => setCartOpen(false)}
+//                       className="mt-3 w-full py-2 text-sm text-[#8e8a83] hover:text-[#f3eee6]"
+//                     >
+//                       Continue shopping
+//                     </button>
+//                   </div>
+//                 )}
+//               </motion.aside>
+//             </>
+//           )}
+//         </AnimatePresence>
+//       </div>
+//     </MotionConfig>
+//   );
+// }
+
+
+// "use client";
+
+// import React, { useEffect, useState, useRef, useCallback } from "react";
+// import Api from "../api/Api";
+// import { motion, AnimatePresence, MotionConfig } from "framer-motion";
+// import { useCartStore } from "../api/Carssotres";
+// import { Facebook, Twitter, ShoppingBag, Trash2, Minus, Plus, X, Link2, Check } from "lucide-react";
+// import { useRouter } from "next/navigation";
+// import { Cormorant_Garamond, Manrope } from "next/font/google";
+
+// const serif = Cormorant_Garamond({
+//   subsets: ["latin"],
+//   weight: ["500", "600", "700"],
+//   variable: "--font-serif",
+// });
+// const sans = Manrope({
+//   subsets: ["latin"],
+//   weight: ["400", "500", "600", "700"],
+//   variable: "--font-sans",
+// });
+
+// interface CartItemType {
+//   id: string | number;
+//   name: string;
+//   img?: string;
+//   imglink?: string;
+//   pricee: number | string;
+//   qty?: number;
+// }
+
+// interface ProductType {
+//   id: string | number;
+//   name: string;
+//   img?: string;
+//   imglink?: string;
+//   catagori?: string;
+//   discript?: string;
+//   pricee: number | string;
+//   reprice?: number | string;
+// }
+
+// interface ProductViewsProps {
+//   Ids: string | number;
+// }
+
+// const imageOf = (p: { img?: string; imglink?: string }) =>
+//   p.img
+//     ? `${process.env.NEXT_PUBLIC_IMAGE_URL}/uploads_product/${p.img}`
+//     : p.imglink || "/fallback.png";
+
+// const money = (n: number | string) => `৳ ${Number(n || 0).toLocaleString("en-US")}`;
+
+// export default function ProductViews({ Ids }: ProductViewsProps) {
+//   const { cart, addToCart, removeFromCart, updateQty } = useCartStore() as any;
+//   const router = useRouter();
+
+//   const [product, setProduct] = useState<ProductType | null>(null);
+//   const [loading, setLoading] = useState(true);
+//   const [cartOpen, setCartOpen] = useState(false);
+//   const [isLoading, setIsLoading] = useState(false);
+//   const [showZoom, setShowZoom] = useState(false);
+//   const [zoomPos, setZoomPos] = useState("50% 50%");
+//   const [reviews, setReviews] = useState<string[]>([]);
+//   const [text, setText] = useState("");
+//   const [copied, setCopied] = useState(false);
+//   const [category, setCategory] = useState<string | null>(null);
+//   const [related, setRelated] = useState<ProductType[]>([]);
+
+//   const cartRef = useRef<HTMLButtonElement | null>(null);
+
+//   /* ---------- data ---------- */
+//   const fetchRelated = useCallback(async (categoryName: string) => {
+//     if (!categoryName) return;
+//     try {
+//       const res = await Api.get(`/recomentcatagoris/${categoryName}`);
+//       const data = res.data.message;
+//       setRelated(Array.isArray(data) ? data : []);
+//     } catch (err) {
+//       console.error(err);
+//     }
+//   }, []);
+
+//   useEffect(() => {
+//     if (category) fetchRelated(category);
+//   }, [category, fetchRelated]);
+
+//   useEffect(() => {
+//     const run = async () => {
+//       if (!Ids) return;
+//       try {
+//         setLoading(true);
+//         const res = await Api.get(`/productdateid/${Ids}`);
+//         const data = res.data.message;
+//         const p = Array.isArray(data) ? data[0] : data;
+//         setProduct(p);
+//         if (p?.catagori) setCategory(p.catagori);
+//       } catch (err) {
+//         console.error(err);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+//     run();
+//   }, [Ids]);
+
+//   /* lock body scroll while drawer is open */
+//   useEffect(() => {
+//     document.body.style.overflow = cartOpen ? "hidden" : "";
+//     return () => {
+//       document.body.style.overflow = "";
+//     };
+//   }, [cartOpen]);
+
+//   /* ---------- actions ---------- */
+//   const flyToCart = (from: HTMLElement) => {
+//     const item = from.getBoundingClientRect();
+//     const bag = cartRef.current?.getBoundingClientRect();
+//     if (!bag) return;
+//     const fly = document.createElement("div");
+//     fly.innerText = "🛍️";
+//     fly.style.cssText = `position:fixed;left:${item.left + item.width / 2}px;top:${item.top}px;font-size:28px;z-index:9999;transition:transform .8s cubic-bezier(.5,0,.2,1),opacity .8s ease;pointer-events:none;`;
+//     document.body.appendChild(fly);
+//     requestAnimationFrame(() => {
+//       fly.style.transform = `translate(${bag.left - item.left - item.width / 2 + 10}px, ${bag.top - item.top}px) scale(.5) rotate(25deg)`;
+//       fly.style.opacity = "0.2";
+//     });
+//     setTimeout(() => fly.remove(), 850);
+//   };
+
+//   const handleAddToCart = (e: React.MouseEvent<HTMLButtonElement>) => {
+//     flyToCart(e.currentTarget);
+//     if (product) addToCart(product);
+//   };
+
+//   const handleBuyNow = () => {
+//     if (!product) return;
+//     const exists = cart.some((c: CartItemType) => c.id === product.id);
+//     if (!exists) addToCart(product);
+//     setIsLoading(true);
+//     router.push("/checkout/order");
+//   };
+
+//   const handleCheckout = () => {
+//     setIsLoading(true);
+//     router.push("/checkout/order");
+//   };
+
+//   const handleMove = (e: React.MouseEvent<HTMLDivElement>) => {
+//     const { left, top, width, height } = e.currentTarget.getBoundingClientRect();
+//     const x = ((e.clientX - left) / width) * 100;
+//     const y = ((e.clientY - top) / height) * 100;
+//     setZoomPos(`${x}% ${y}%`);
+//   };
+
+//   const addReview = () => {
+//     if (!text.trim()) return;
+//     setReviews([text.trim(), ...reviews]);
+//     setText("");
+//   };
+
+//   const copyLink = async () => {
+//     try {
+//       await navigator.clipboard.writeText(window.location.href);
+//       setCopied(true);
+//       setTimeout(() => setCopied(false), 1800);
+//     } catch (err) {
+//       console.error(err);
+//     }
+//   };
+
+//   const pageUrl = typeof window !== "undefined" ? encodeURIComponent(window.location.href) : "";
+
+//   /* ---------- states ---------- */
+//   if (loading)
+//     return (
+//       <div className={`${serif.variable} ${sans.variable} grid h-screen place-items-center bg-[#0f1112]`}>
+//         <div className="h-9 w-9 animate-spin rounded-full border-2 border-[#d8b98a] border-t-transparent" />
+//       </div>
+//     );
+
+//   if (!product)
+//     return (
+//       <div
+//         className={`${serif.variable} ${sans.variable} grid min-h-screen place-items-center bg-[#0f1112] px-6 text-center font-[family-name:var(--font-sans)] text-[#f3eee6]`}
+//       >
+//         <div>
+//           <p className="font-[family-name:var(--font-serif)] text-3xl">Product not found</p>
+//           <p className="mt-2 text-sm text-[#8e8a83]">This item may have been removed.</p>
+//           <button
+//             onClick={() => router.back()}
+//             className="mt-6 rounded-full border border-[#d8b98a]/40 px-6 py-3 text-sm text-[#d8b98a]"
+//           >
+//             Go back
+//           </button>
+//         </div>
+//       </div>
+//     );
+
+//   const price = Number(product.pricee || 0);
+//   const oldPrice = Number(product.reprice || 0);
+//   const discount = oldPrice > price ? Math.round(((oldPrice - price) / oldPrice) * 100) : 0;
+//   const cartCount = cart.reduce((n: number, i: CartItemType) => n + Number(i.qty || 1), 0);
+//   const subtotal = cart.reduce(
+//     (t: number, i: CartItemType) => t + Number(i.pricee || 0) * Number(i.qty || 1),
+//     0
+//   );
+
+//   return (
+//     <MotionConfig reducedMotion="user">
+//       <div
+//         className={`${serif.variable} ${sans.variable} min-h-screen overflow-x-hidden bg-[#0f1112] font-[family-name:var(--font-sans)] text-[#f3eee6] antialiased`}
+//       >
+//         {/* ---------- top bar ---------- */}
+//         <header className="sticky top-0 z-40 border-b border-[#f3eee6]/10 bg-[#0f1112]/80 backdrop-blur-xl">
+//           <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6 lg:px-8">
+//             <button
+//               onClick={() => router.back()}
+//               className="rounded-full px-3 py-2 text-sm text-[#8e8a83] transition hover:text-[#f3eee6] focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d8b98a]"
+//             >
+//               ← Back
+//             </button>
+
+//             <button
+//               ref={cartRef}
+//               onClick={() => setCartOpen(true)}
+//               aria-label={`Open cart, ${cartCount} items`}
+//               className="relative grid h-11 w-11 place-items-center rounded-full border border-[#f3eee6]/15 bg-[#171819] transition hover:border-[#d8b98a]/60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-[#d8b98a]"
+//             >
+//               <ShoppingBag className="h-5 w-5 text-[#d8b98a]" />
+//               {cartCount > 0 && (
+//                 <span className="absolute -right-1 -top-1 grid h-5 min-w-5 place-items-center rounded-full bg-[#d8b98a] px-1 text-[11px] font-bold text-[#0f1112]">
+//                   {cartCount}
+//                 </span>
+//               )}
+//             </button>
+//           </div>
+//         </header>
+
+//         <main className="mx-auto max-w-7xl px-4 pb-28 pt-6 sm:px-6 lg:px-8 lg:pb-20 lg:pt-12">
+//           {/* ---------- hero ---------- */}
+//           <section className="grid grid-cols-1 gap-8 lg:grid-cols-12 lg:gap-14">
+//             {/* image */}
+//             <div className="lg:col-span-7">
+//               <div className="lg:sticky lg:top-24">
+//                 <motion.div
+//                   initial={{ opacity: 0 }}
+//                   animate={{ opacity: 1 }}
+//                   transition={{ duration: 0.6 }}
+//                   onMouseMove={handleMove}
+//                   onMouseEnter={() => setShowZoom(true)}
+//                   onMouseLeave={() => setShowZoom(false)}
+//                   className="relative aspect-square w-full overflow-hidden rounded-[1.75rem] border border-[#f3eee6]/10 bg-[#ece6db] sm:rounded-[2.25rem] lg:aspect-[5/4] lg:cursor-zoom-in"
+//                 >
+//                   <img
+//                     src={imageOf(product)}
+//                     alt={product.name}
+//                     className="absolute inset-0 h-full w-full object-contain p-6 sm:p-10"
+//                   />
+
+//                   {/* zoom only on devices with a mouse */}
+//                   <div
+//                     aria-hidden
+//                     className={`pointer-events-none absolute inset-0 hidden bg-no-repeat transition-opacity duration-200 lg:block ${
+//                       showZoom ? "opacity-100" : "opacity-0"
+//                     }`}
+//                     style={{
+//                       backgroundColor: "#ece6db",
+//                       backgroundImage: `url(${imageOf(product)})`,
+//                       backgroundSize: "200%",
+//                       backgroundPosition: zoomPos,
+//                     }}
+//                   />
+
+//                   {discount > 0 && (
+//                     <span className="absolute left-4 top-4 rounded-full bg-[#0f1112] px-3.5 py-1.5 text-xs font-semibold text-[#d8b98a] sm:left-6 sm:top-6">
+//                       {discount}% off
+//                     </span>
+//                   )}
+//                 </motion.div>
+//               </div>
+//             </div>
+
+//             {/* details */}
+//             <motion.div
+//               initial={{ opacity: 0, y: 16 }}
+//               animate={{ opacity: 1, y: 0 }}
+//               transition={{ duration: 0.6, delay: 0.1 }}
+//               className="flex flex-col lg:col-span-5 lg:pt-4"
+//             >
+//               {product.catagori && (
+//                 <p className="mb-3 text-sm text-[#d8b98a]">{product.catagori}</p>
+//               )}
+
+//               <h1 className="font-[family-name:var(--font-serif)] text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl xl:text-6xl">
+//                 {product.name}
+//               </h1>
+
+//               <div className="mt-6 flex flex-wrap items-baseline gap-x-4 gap-y-1">
+//                 <span className="font-[family-name:var(--font-serif)] text-4xl font-semibold text-[#f3eee6] sm:text-5xl">
+//                   {money(price)}
+//                 </span>
+//                 {oldPrice > price && (
+//                   <del className="text-lg text-[#8e8a83]">{money(oldPrice)}</del>
+//                 )}
+//               </div>
+
+//               {product.discript && (
+//                 <p className="mt-6 max-w-[60ch] text-base leading-relaxed text-[#b9b4ab]">
+//                   {product.discript}
+//                 </p>
+//               )}
+
+//               {/* actions (hidden on phones, replaced by sticky bar) */}
+//               <div className="mt-8 hidden grid-cols-2 gap-3 sm:grid">
+//                 <motion.button
+//                   onClick={handleAddToCart}
+//                   whileTap={{ scale: 0.97 }}
+//                   className="flex h-14 items-center justify-center gap-2.5 rounded-full bg-[#d8b98a] text-base font-semibold text-[#0f1112] transition hover:bg-[#e4c9a0] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d8b98a]"
+//                 >
+//                   <ShoppingBag size={18} /> Add to cart
+//                 </motion.button>
+//                 <motion.button
+//                   onClick={handleBuyNow}
+//                   disabled={isLoading}
+//                   whileTap={{ scale: 0.97 }}
+//                   className="h-14 rounded-full border border-[#f3eee6]/25 text-base font-semibold transition hover:border-[#d8b98a] hover:text-[#d8b98a] disabled:opacity-60 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d8b98a]"
+//                 >
+//                   {isLoading ? "Please wait…" : "Buy now"}
+//                 </motion.button>
+//               </div>
+
+//               {/* share */}
+//               <div className="mt-10 flex flex-wrap items-center gap-3 border-t border-[#f3eee6]/10 pt-6">
+//                 <span className="mr-1 text-sm text-[#8e8a83]">Share</span>
+//                 <a
+//                   href={`https://facebook.com/sharer/sharer.php?u=${pageUrl}`}
+//                   target="_blank"
+//                   rel="noopener noreferrer"
+//                   aria-label="Share on Facebook"
+//                   className="grid h-10 w-10 place-items-center rounded-full border border-[#f3eee6]/15 text-[#b9b4ab] transition hover:border-[#d8b98a] hover:text-[#d8b98a]"
+//                 >
+//                   <Facebook size={17} />
+//                 </a>
+//                 <a
+//                   href={`https://twitter.com/intent/tweet?url=${pageUrl}`}
+//                   target="_blank"
+//                   rel="noopener noreferrer"
+//                   aria-label="Share on Twitter"
+//                   className="grid h-10 w-10 place-items-center rounded-full border border-[#f3eee6]/15 text-[#b9b4ab] transition hover:border-[#d8b98a] hover:text-[#d8b98a]"
+//                 >
+//                   <Twitter size={17} />
+//                 </a>
+//                 <a
+//                   href={`https://wa.me/?text=${pageUrl}`}
+//                   target="_blank"
+//                   rel="noopener noreferrer"
+//                   aria-label="Share on WhatsApp"
+//                   className="grid h-10 w-10 place-items-center rounded-full border border-[#f3eee6]/15 text-sm transition hover:border-[#d8b98a]"
+//                 >
+//                   💬
+//                 </a>
+//                 <button
+//                   onClick={copyLink}
+//                   aria-label="Copy link"
+//                   className="grid h-10 w-10 place-items-center rounded-full border border-[#f3eee6]/15 text-[#b9b4ab] transition hover:border-[#d8b98a] hover:text-[#d8b98a]"
+//                 >
+//                   {copied ? <Check size={17} /> : <Link2 size={17} />}
+//                 </button>
+//                 {copied && <span className="text-xs text-[#d8b98a]">Link copied</span>}
+//               </div>
+//             </motion.div>
+//           </section>
+
+//           {/* ---------- reviews ---------- */}
+//           <section className="mt-20 sm:mt-28">
+//             <div className="mb-8 flex items-end justify-between gap-4">
+//               <h2 className="font-[family-name:var(--font-serif)] text-3xl font-semibold sm:text-4xl">
+//                 Customer reviews
+//               </h2>
+//               <span className="text-sm text-[#8e8a83]">
+//                 {reviews.length} {reviews.length === 1 ? "review" : "reviews"}
+//               </span>
+//             </div>
+
+//             <div className="rounded-[1.75rem] border border-[#f3eee6]/10 bg-[#171819] p-5 sm:p-8">
+//               <div className="flex flex-col gap-3 sm:flex-row">
+//                 <input
+//                   value={text}
+//                   onChange={(e) => setText(e.target.value)}
+//                   onKeyDown={(e) => e.key === "Enter" && addReview()}
+//                   placeholder="Write what you think of this product"
+//                   className="h-14 flex-1 rounded-full border border-[#f3eee6]/10 bg-[#0f1112] px-6 text-base text-[#f3eee6] placeholder:text-[#8e8a83] focus:border-[#d8b98a] focus:outline-none"
+//                 />
+//                 <button
+//                   onClick={addReview}
+//                   className="h-14 rounded-full bg-[#d8b98a] px-8 font-semibold text-[#0f1112] transition hover:bg-[#e4c9a0] focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-[#d8b98a]"
+//                 >
+//                   Post review
+//                 </button>
+//               </div>
+
+//               <div className="mt-6 space-y-3">
+//                 {reviews.length === 0 && (
+//                   <p className="py-10 text-center text-[#8e8a83]">
+//                     No reviews yet. Share the first one.
+//                   </p>
+//                 )}
+//                 {reviews.map((r, i) => (
+//                   <motion.div
+//                     key={i}
+//                     initial={{ opacity: 0, y: 8 }}
+//                     animate={{ opacity: 1, y: 0 }}
+//                     className="rounded-2xl border border-[#f3eee6]/8 bg-[#0f1112] p-5"
+//                   >
+//                     <div className="mb-2 flex items-center gap-3">
+//                       <div className="grid h-8 w-8 place-items-center rounded-full bg-[#d8b98a]/15 text-xs font-bold text-[#d8b98a]">
+//                         U
+//                       </div>
+//                       <span className="text-sm font-medium">Customer</span>
+//                     </div>
+//                     <p className="break-words leading-relaxed text-[#b9b4ab]">{r}</p>
+//                   </motion.div>
+//                 ))}
+//               </div>
+//             </div>
+//           </section>
+
+//           {/* ---------- related ---------- */}
+//           <section className="mt-20 sm:mt-28">
+//             <h2 className="mb-8 font-[family-name:var(--font-serif)] text-3xl font-semibold sm:text-4xl">
+//               You may also like
+//             </h2>
+
+//             {related.length === 0 ? (
+//               <p className="text-[#8e8a83]">No other items in this category yet.</p>
+//             ) : (
+//               <div className="-mx-4 flex snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-4 sm:mx-0 sm:grid sm:grid-cols-3 sm:gap-5 sm:overflow-visible sm:px-0 lg:grid-cols-4">
+//                 {related.map((item, idx) => (
+//                   <article
+//                     key={item.id || idx}
+//                     className="group w-[62%] shrink-0 snap-start sm:w-auto"
+//                   >
+//                     <div className="aspect-square overflow-hidden rounded-2xl bg-[#ece6db]">
+//                       <img
+//                         src={imageOf(item)}
+//                         alt={item.name || "Related product"}
+//                         loading="lazy"
+//                         className="h-full w-full object-contain p-4 transition-transform duration-500 group-hover:scale-105"
+//                       />
+//                     </div>
+//                     <h3 className="mt-3 truncate font-medium text-[#f3eee6]">
+//                       {item.name || `Product ${idx + 1}`}
+//                     </h3>
+//                     <p className="mt-0.5 font-semibold text-[#d8b98a]">{money(item.pricee)}</p>
+//                   </article>
+//                 ))}
+//               </div>
+//             )}
+//           </section>
+//         </main>
+
+//         {/* ---------- sticky mobile buy bar ---------- */}
+//         {!cartOpen && (
+//           <div className="fixed inset-x-0 bottom-0 z-30 border-t border-[#f3eee6]/10 bg-[#0f1112]/90 px-4 pt-3 backdrop-blur-xl sm:hidden pb-[calc(0.75rem+env(safe-area-inset-bottom,0px))]">
+//             <div className="flex items-center gap-3">
+//               <div className="min-w-0 flex-1">
+//                 <p className="truncate text-xs text-[#8e8a83]">{product.name}</p>
+//                 <p className="font-[family-name:var(--font-serif)] text-2xl font-semibold leading-tight">
+//                   {money(price)}
+//                 </p>
+//               </div>
+//               <button
+//                 onClick={handleAddToCart}
+//                 aria-label="Add to cart"
+//                 className="grid h-12 w-12 place-items-center rounded-full border border-[#d8b98a]/60 text-[#d8b98a]"
+//               >
+//                 <ShoppingBag size={19} />
+//               </button>
+//               <button
+//                 onClick={handleBuyNow}
+//                 disabled={isLoading}
+//                 className="h-12 rounded-full bg-[#d8b98a] px-7 text-sm font-semibold text-[#0f1112] disabled:opacity-60"
+//               >
+//                 {isLoading ? "Please wait…" : "Buy now"}
+//               </button>
+//             </div>
+//           </div>
+//         )}
+
+//         {/* ---------- cart drawer ---------- */}
+//         <AnimatePresence>
+//           {cartOpen && (
+//             <>
+//               <motion.div
+//                 initial={{ opacity: 0 }}
+//                 animate={{ opacity: 1 }}
+//                 exit={{ opacity: 0 }}
+//                 onClick={() => setCartOpen(false)}
+//                 className="fixed inset-0 z-[100] bg-black/70 backdrop-blur-sm"
+//               />
+//               <motion.aside
+//                 role="dialog"
+//                 aria-label="Cart"
+//                 initial={{ x: "100%" }}
+//                 animate={{ x: 0 }}
+//                 exit={{ x: "100%" }}
+//                 transition={{ type: "spring", damping: 30, stiffness: 260 }}
+//                 className="fixed right-0 top-0 z-[101] flex h-[100dvh] w-full flex-col border-l border-[#f3eee6]/10 bg-[#131415] sm:w-[420px]"
+//               >
+//                 <div className="flex items-center justify-between px-5 py-5 sm:px-7">
+//                   <h2 className="font-[family-name:var(--font-serif)] text-3xl font-semibold">
+//                     Your cart
+//                   </h2>
+//                   <button
+//                     onClick={() => setCartOpen(false)}
+//                     aria-label="Close cart"
+//                     className="grid h-10 w-10 place-items-center rounded-full border border-[#f3eee6]/15 text-[#b9b4ab] transition hover:text-[#f3eee6]"
+//                   >
+//                     <X size={18} />
+//                   </button>
+//                 </div>
+
+//                 <div className="flex-1 space-y-3 overflow-y-auto px-5 pb-4 sm:px-7">
+//                   {cart.length === 0 ? (
+//                     <div className="flex h-full flex-col items-center justify-center text-center text-[#8e8a83]">
+//                       <ShoppingBag size={44} className="mb-4 opacity-50" />
+//                       <p>Your cart is empty</p>
+//                       <p className="mt-1 text-sm">Add something you like to get started.</p>
+//                     </div>
+//                   ) : (
+//                     cart.map((item: CartItemType, index: number) => (
+//                       <motion.div
+//                         key={item.id || index}
+//                         layout
+//                         className="flex gap-4 rounded-2xl border border-[#f3eee6]/10 bg-[#171819] p-3"
+//                       >
+//                         <img
+//                           src={imageOf(item)}
+//                           alt={item.name}
+//                           className="h-20 w-20 shrink-0 rounded-xl bg-[#ece6db] object-contain p-1.5"
+//                         />
+//                         <div className="flex min-w-0 flex-1 flex-col justify-between">
+//                           <div>
+//                             <p className="line-clamp-2 text-sm font-medium leading-snug">
+//                               {item.name}
+//                             </p>
+//                             <p className="mt-0.5 text-sm font-semibold text-[#d8b98a]">
+//                               {money(item.pricee)}
+//                             </p>
+//                           </div>
+//                           <div className="mt-2 flex items-center gap-1">
+//                             <button
+//                               onClick={() => updateQty(item.id, Math.max((item.qty || 1) - 1, 1))}
+//                               aria-label="Decrease quantity"
+//                               className="grid h-8 w-8 place-items-center rounded-full border border-[#f3eee6]/15 hover:border-[#d8b98a]"
+//                             >
+//                               <Minus size={14} />
+//                             </button>
+//                             <span className="w-8 text-center text-sm font-medium">
+//                               {item.qty || 1}
+//                             </span>
+//                             <button
+//                               onClick={() => updateQty(item.id, (item.qty || 1) + 1)}
+//                               aria-label="Increase quantity"
+//                               className="grid h-8 w-8 place-items-center rounded-full border border-[#f3eee6]/15 hover:border-[#d8b98a]"
+//                             >
+//                               <Plus size={14} />
+//                             </button>
+//                           </div>
+//                         </div>
+//                         <button
+//                           onClick={() => removeFromCart(item.id)}
+//                           aria-label="Remove item"
+//                           className="self-start p-1 text-[#8e8a83] transition hover:text-red-400"
+//                         >
+//                           <Trash2 size={17} />
+//                         </button>
+//                       </motion.div>
+//                     ))
+//                   )}
+//                 </div>
+
+//                 {cart.length > 0 && (
+//                   <div className="border-t border-[#f3eee6]/10 px-5 pt-5 sm:px-7 pb-[calc(1.25rem+env(safe-area-inset-bottom,0px))]">
+//                     <div className="mb-4 flex items-baseline justify-between">
+//                       <span className="text-[#b9b4ab]">Subtotal</span>
+//                       <span className="font-[family-name:var(--font-serif)] text-3xl font-semibold text-[#d8b98a]">
+//                         {money(subtotal)}
+//                       </span>
+//                     </div>
+//                     <button
+//                       onClick={handleCheckout}
+//                       disabled={isLoading}
+//                       className="h-14 w-full rounded-full bg-[#d8b98a] font-semibold text-[#0f1112] transition hover:bg-[#e4c9a0] disabled:opacity-60"
+//                     >
+//                       {isLoading ? "Please wait…" : "Checkout"}
+//                     </button>
+//                     <button
+//                       onClick={() => setCartOpen(false)}
+//                       className="mt-3 w-full py-2 text-sm text-[#8e8a83] hover:text-[#f3eee6]"
+//                     >
+//                       Continue shopping
+//                     </button>
+//                   </div>
+//                 )}
+//               </motion.aside>
+//             </>
+//           )}
+//         </AnimatePresence>
+//       </div>
+//     </MotionConfig>
+//   );
+// }
 
 
 

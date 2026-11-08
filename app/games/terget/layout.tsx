@@ -28,9 +28,9 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website', url: `${SITE_URL}/games/terget`, siteName: 'Find The Target', title, description,
     locale: 'bn_BD',
-    images: [{ url: '/og-image.png', width: 1200, height: 630, alt: 'Find The Target গেম' }],
+    images: [{ url: '/opengraph-image', width: 1200, height: 630, alt: 'Find The Target গেম' }],
   },
-  twitter: { card: 'summary_large_image', title, description, images: ['/og-image.png'] },
+  twitter: { card: 'summary_large_image', title, description, images: ['/opengraph-image'] },
   robots: {
     index: true, follow: true,
     googleBot: { index: true, follow: true, 'max-image-preview': 'large', 'max-snippet': -1 },

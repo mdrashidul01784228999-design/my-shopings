@@ -11,8 +11,8 @@ export const metadata: Metadata = {
   title,
   description,
   alternates: { canonical: abs(path) },
-  openGraph: { title, description, url: abs(path), type: "website", locale: "bn_BD", siteName: SITE_NAME },
-  twitter: { card: "summary_large_image", title, description },
+  openGraph: { title, description, url: abs(path), type: "website", locale: "bn_BD", siteName: SITE_NAME, images: [{ url: abs("/opengraph-image"), width: 1200, height: 630, alt: title }] },
+  twitter: { card: "summary_large_image", title, description, images: [abs("/opengraph-image")] },
 };
 
 export default function Layout({ children }: { children: React.ReactNode }) {

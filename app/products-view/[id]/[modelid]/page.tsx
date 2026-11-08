@@ -7,6 +7,8 @@ type Props = {
   params: Promise<{ id: string }>;
 };
 
+import { productImageUrl } from "../../../seo/site";
+
 const baseUrl = "https://my-shopings.com";
 
 /**
@@ -34,7 +36,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   const title = `${product?.model || "Product"} | Buy Online Bangladesh | My Shopings`;
   const description = product?.discript?.slice(0, 155) || `Buy ${id} at the best price in Bangladesh with fast home delivery.`;
-  const productImg = product?.img || `${baseUrl}/logo.png`;
+  const productImg = productImageUrl(product); // পূর্ণ URL (আগে শুধু ফাইলের নাম যাচ্ছিল → শেয়ারে ছবি আসত না)
   const url = `${baseUrl}/products-view/${id}`;
 
   return {
@@ -59,8 +61,6 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       images: [
         {
           url: productImg,
-          width: 1200,
-          height: 630,
           alt: product?.name || "Product Image",
         },
       ],
@@ -100,7 +100,7 @@ export default async function Page({ params }: Props) {
     "@context": "https://schema.org",
     "@type": "Product",
     name: productData?.name || "Product Name",
-    image: [/^https?:\/\//i.test(productData?.img || "") ? productData.img : `${baseUrl}${productData?.img ? "/" + String(productData.img).replace(/^\//,"") : "/opengraph-image"}`],
+    image: [productImageUrl(productData)],
     description: productData?.discript || "Quality product available at My Shopings.",
     sku: id,
     brand: {

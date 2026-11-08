@@ -51,20 +51,19 @@ export default function Page() {
     "@context": "https://schema.org",
     "@type": "LocalBusiness",
     "name": "Md Rashidul Official",
-    "image": "https://images.unsplash.com/photo-1504711434969-e33886168f5c",
+    "image": "https://my-shopings.com/opengraph-image",
     "description": "Premium digital services including E-paper and IT support in Bangladesh.",
-    "url": "https://rashidulofficial.com",
-    "telephone": "+8801XXXXXXXXX",
+    "url": "https://my-shopings.com/services",
+    "telephone": "+8801784228999",
+    "founder": { "@type": "Person", "name": "Md Rashidul Islam" },
     "address": {
       "@type": "PostalAddress",
-      "streetAddress": "Your Street",
-      "addressLocality": "Dhaka",
+      "streetAddress": "পিপুলবাড়ীয়া বাজার",
+      "addressLocality": "সিরাজগঞ্জ সদর",
+      "addressRegion": "সিরাজগঞ্জ",
+      "postalCode": "6700",
       "addressCountry": "BD"
-    },
-    "sameAs": [
-      "https://facebook.com/yourpage",
-      "https://youtube.com/yourchannel"
-    ]
+    }
   };
 
   const services = [

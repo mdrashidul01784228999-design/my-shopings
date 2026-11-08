@@ -17,7 +17,7 @@ export const metadata = {
     siteName: 'Age Calculator Bangla',
     images: [
       {
-        url: 'https://my-shopings.com/og-image.jpg', 
+        url: 'https://my-shopings.com/opengraph-image', 
         width: 1200,
         height: 630,
         alt: 'বয়স ক্যালকুলেটর বাংলাদেশ',

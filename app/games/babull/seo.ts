@@ -2,8 +2,8 @@ import type { Metadata, MetadataRoute } from 'next';
 
 // .env.local এ NEXT_PUBLIC_SITE_URL=https://আপনার-ডোমেইন.com দিন
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL ?? 'https://my-shopings.com').replace(/\/$/, '');
-export const SITE_NAME = 'Premium Portal';
-export const OG_IMAGE = '/og-image.png'; // public/ ফোল্ডারে ১২০০×৬৩০ ছবি রাখুন
+export const SITE_NAME = 'My Shopings';
+export const OG_IMAGE = '/opengraph-image'; // public/ ফোল্ডারে ১২০০×৬৩০ ছবি রাখুন
 
 /** app/layout.tsx এ: export const metadata = rootMetadata; */
 export const rootMetadata: Metadata = {

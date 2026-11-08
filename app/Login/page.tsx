@@ -2,65 +2,10 @@ import type { Metadata } from "next";
 import Homeps from "./Home";
 
 export const metadata: Metadata = {
-  title: "লগইন করুন ও রেফার করে আয় করুন | MyApp 🚀",
-  description:
-    "এখনই লগইন করুন, বন্ধুদের রেফার করুন এবং প্রতি রেফারে ৫/১০/২০ টাকা আয় করুন। সহজে ইনকাম শুরু করুন অনলাইনে।",
-
-  keywords: [
-    "রেফার এন্ড আর্ন",
-    "লগইন",
-    "অনলাইন ইনকাম",
-    "বাংলা আয়",
-    "refer and earn",
-    "make money online",
-    "affiliate income",
-  ],
-
-  metadataBase: new URL("https://my-shopings.com"),
-
-  openGraph: {
-    title: "🔥 রেফার করলেই আয় শুরু করুন | MyApp",
-    description:
-      "লগইন করুন, রেফার লিংক শেয়ার করুন এবং প্রতিটি সফল রেফারে আয় করুন ৫/১০/২০ টাকা।",
-    url: "https://my-shopings.com/login",
-    siteName: "MyApp",
-    type: "website",
-    locale: "bn_BD",
-    images: [
-      {
-        url: "https://my-shopings.com/og-image.png",
-        width: 1200,
-        height: 630,
-        alt: "Refer & Earn Banner",
-      },
-    ],
-  },
-
-  twitter: {
-    card: "summary_large_image",
-    title: "রেফার করলেই আয় | MyApp",
-    description:
-      "লগইন করুন এবং রেফার করে আয় করুন সহজেই। এখনই শুরু করুন!",
-    images: ["https://my-shopings.com/og-image.png"],
-  },
-
-  robots: {
-    index: true,
-    follow: true,
-    googleBot: {
-      index: true,
-      follow: true,
-      "max-image-preview": "large",
-      "max-snippet": -1,
-      "max-video-preview": -1,
-    },
-  },
-
-  alternates: {
-    canonical: "https://my-shopings.com/login",
-  },
-
-  category: "finance",
+  title: "লগইন | My Shopings",
+  description: "My Shopings অ্যাকাউন্টে লগইন করুন।",
+  // লগইন পেজ সার্চ রেজাল্টে আসার দরকার নেই
+  robots: { index: false, follow: false, googleBot: { index: false, follow: false } },
 };
 
 export default function Page() {

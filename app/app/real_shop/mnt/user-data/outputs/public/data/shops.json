@@ -1,0 +1,30 @@
+[
+  {
+    "id": "fashion",
+    "name": "NOVA FASHION",
+    "subtitle": "Premium Fashion",
+    "style": "fashion",
+    "accent": "#7c3aed"
+  },
+  {
+    "id": "tech",
+    "name": "TECH ZONE",
+    "subtitle": "Smart Devices",
+    "style": "tech",
+    "accent": "#0ea5e9"
+  },
+  {
+    "id": "home",
+    "name": "HOME DECOR",
+    "subtitle": "Furniture & Decor",
+    "style": "home",
+    "accent": "#16a34a"
+  },
+  {
+    "id": "market",
+    "name": "FRESH MART",
+    "subtitle": "Grocery & Food",
+    "style": "market",
+    "accent": "#f59e0b"
+  }
+]

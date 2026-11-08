@@ -1,6 +1,6 @@
 import Game from './Game';
 
-const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://your-domain.com';
+const SITE_URL = process.env.NEXT_PUBLIC_SITE_URL ?? 'https://my-shopings.com';
 
 const jsonLd = {
   '@context': 'https://schema.org',

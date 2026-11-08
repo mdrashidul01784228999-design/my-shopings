@@ -22,9 +22,9 @@ export const metadata: Metadata = {
     siteName: "MATURITY.X6",
     type: "website",
     locale: "bn_BD",
-    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: TITLE }],
+    images: [{ url: "/opengraph-image", width: 1200, height: 630, alt: TITLE }],
   },
-  twitter: { card: "summary_large_image", title: TITLE, description: DESC, images: ["/og-image.png"] },
+  twitter: { card: "summary_large_image", title: TITLE, description: DESC, images: ["/opengraph-image"] },
   robots: { index: true, follow: true, googleBot: { index: true, follow: true, "max-image-preview": "large" } },
 };
 

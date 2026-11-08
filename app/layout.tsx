@@ -55,6 +55,11 @@ const siteJsonLd = [
     name: SITE_NAME,
     url: SITE_URL,
     logo: abs("/icon.png"),
+    founder: { "@type": "Person", name: "Md Rashidul Islam" },
+    address: { "@type": "PostalAddress", streetAddress: "পিপুলবাড়ীয়া বাজার", addressLocality: "সিরাজগঞ্জ সদর", addressRegion: "সিরাজগঞ্জ", postalCode: "6700", addressCountry: "BD" },
+    areaServed: "BD",
+    sameAs: ["https://youtube.com/@myshopingscom"],
+    contactPoint: { "@type": "ContactPoint", telephone: "+8801784228999", email: "myshopings@gmail.com", contactType: "customer support", areaServed: "BD", availableLanguage: ["bn", "en"] },
   },
   {
     "@context": "https://schema.org",

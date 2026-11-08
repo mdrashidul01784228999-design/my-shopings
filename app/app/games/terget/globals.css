@@ -1,0 +1,24 @@
+/* Tailwind v3 hole ei 3 line. Tailwind v4 hole ei 3 line muche shudhu: @import "tailwindcss"; */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+  min-height: 100%;
+  background: #070712;
+  color: #fff;
+  -webkit-text-size-adjust: 100%;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+/* mobile-e double-tap zoom ar text select bondho */
+body {
+  -webkit-tap-highlight-color: transparent;
+  overscroll-behavior: none;
+}
